@@ -1,0 +1,76 @@
+{
+  "project_info": {
+    "project_number": "333711271603",
+    "project_id": "uniconnecta-98fcc",
+    "storage_bucket": "uniconnecta-98fcc.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:333711271603:android:a602642c6246344bfd72c6",
+        "android_client_info": {
+          "package_name": "com.example.uniconnecta"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "333711271603-ntaefrn1kts4j1eirp554ij9u6u7eh38.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAb8lxkzqKLpPI_imAj7RfbNU82Hv0T_Iw"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "333711271603-ntaefrn1kts4j1eirp554ij9u6u7eh38.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:333711271603:android:3d74c619b20c3818fd72c6",
+        "android_client_info": {
+          "package_name": "com.exemple.uniconnecta"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "333711271603-6jhj3j1opkvm2f6sngnn92sophf9v8nk.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.exemple.uniconnecta",
+            "certificate_hash": "ca70c1bb493cea18e9f9f5491ccfb7e54a9d8659"
+          }
+        },
+        {
+          "client_id": "333711271603-ntaefrn1kts4j1eirp554ij9u6u7eh38.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAb8lxkzqKLpPI_imAj7RfbNU82Hv0T_Iw"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "333711271603-ntaefrn1kts4j1eirp554ij9u6u7eh38.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
