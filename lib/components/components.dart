@@ -6,3 +6,4 @@ export 'color_style.dart';
 export 'custom_carousel.dart';
 export 'nav_bar.dart';
 export 'university_header.dart';
+export 'back_button.dart';

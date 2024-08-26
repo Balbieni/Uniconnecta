@@ -7,10 +7,10 @@ class CadastroPage extends StatefulWidget {
   const CadastroPage({Key? key}) : super(key: key);
 
   @override
-  State<CadastroPage> createState() => _LoginPageState();
+  State<CadastroPage> createState() => _CadastroPageState();
 }
 
-class _LoginPageState extends State<CadastroPage> {
+class _CadastroPageState extends State<CadastroPage> {
   final TextEditingController _passwordController = TextEditingController();
   final TextEditingController _emailController = TextEditingController();
 
@@ -43,7 +43,7 @@ class _LoginPageState extends State<CadastroPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: ColorStyle.CinzaC5,
+      backgroundColor: const Color.fromARGB(255, 255, 255, 255),
       body: SingleChildScrollView(
         child: Center(
           child: Padding(
@@ -51,15 +51,28 @@ class _LoginPageState extends State<CadastroPage> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                const SizedBox(height: 100),
-                Image.asset(
-                  'lib/assets/uniconnectaRoxo.png',
-                  width: 331,
-                  height: 52,
+                const SizedBox(height: 40),
+                Row(
+                  children: [
+                    const BackButtonComponent(
+                        iconSize: 30.0), // Defina o tamanho do ícone
+                    const Spacer(),
+                  ],
+                ),
+                const SizedBox(height: 20),
+                const Center(
+                  child: Text(
+                    'Crie sua conta em alguns instantes',
+                    style: TextStyle(
+                      color: Colors.black, // Ajuste para a cor desejada
+                      fontSize: 20.0,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
                 ),
                 const SizedBox(height: 40),
                 const Text(
-                  'Conecte-se',
+                  'Digite suas informações',
                   style: TextStyle(
                     color: ColorStyle.RoxoP,
                     fontSize: 20.0,
@@ -69,7 +82,17 @@ class _LoginPageState extends State<CadastroPage> {
                 const SizedBox(height: 20),
                 BoxText(
                   controller: _emailController,
-                  fillColor: ColorStyle.CinzaC5,
+                  fillColor: const Color.fromARGB(255, 255, 255, 255),
+                  hintText: 'Nome Completo',
+                  isPassword: false,
+                  textColor: ColorStyle.CinzaE2,
+                  textStyle:
+                      const TextStyle(fontSize: 16.0, fontFamily: 'Quicksand'),
+                ),
+                const SizedBox(height: 20),
+                BoxText(
+                  controller: _emailController,
+                  fillColor: const Color.fromARGB(255, 255, 255, 255),
                   hintText: 'Email',
                   isPassword: false,
                   textColor: ColorStyle.CinzaE2,
@@ -86,20 +109,6 @@ class _LoginPageState extends State<CadastroPage> {
                   textStyle:
                       const TextStyle(fontSize: 16.0, fontFamily: 'Quicksand'),
                 ),
-                const SizedBox(height: 10),
-                GestureDetector(
-                  onTap: () {
-                    // Implemente a lógica para a ação de "Esqueci minha senha"
-                  },
-                  child: const Text(
-                    'Esqueci minha senha',
-                    style: TextStyle(
-                      color: ColorStyle.RoxoP,
-                      fontSize: 14.0,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                ),
                 const SizedBox(height: 20),
                 SizedBox(
                   width: MediaQuery.of(context).size.width - 58,
@@ -114,7 +123,7 @@ class _LoginPageState extends State<CadastroPage> {
                       ),
                     ),
                     child: const Text(
-                      'Login',
+                      'Criar conta',
                       style: TextStyle(
                         color: Colors.white,
                         fontWeight: FontWeight.bold,
@@ -179,6 +188,13 @@ class _LoginPageState extends State<CadastroPage> {
                               'lib/assets/Google.png',
                               width: 32,
                               height: 32,
+                              errorBuilder: (context, error, stackTrace) {
+                                return const Icon(
+                                  Icons.error,
+                                  color: Colors.red,
+                                  size: 32,
+                                );
+                              },
                             ),
                             const SizedBox(width: 10),
                             const Text(
@@ -193,33 +209,6 @@ class _LoginPageState extends State<CadastroPage> {
                       ),
                     ),
                     const SizedBox(height: 30),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        const Text(
-                          'Ainda não tem uma conta?',
-                          style: TextStyle(
-                            color: ColorStyle.CinzaP,
-                            fontSize: 13.9,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                        const SizedBox(width: 5),
-                        GestureDetector(
-                          onTap: () {
-                            // Implemente a lógica para a ação de "Cadastre-se aqui"
-                          },
-                          child: const Text(
-                            'Cadastre-se aqui',
-                            style: TextStyle(
-                              color: ColorStyle.RoxoP,
-                              fontSize: 13.9,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
                   ],
                 ),
               ],

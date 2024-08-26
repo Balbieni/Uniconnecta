@@ -24,7 +24,7 @@ class _SplashScreenState extends State<SplashScreen> {
       backgroundColor: const Color.fromRGBO(101, 60, 173, 1),
       body: Center(
         child: Image.asset(
-          'lib/assets/uniconnectaRoxo.png',
+          'lib/assets/uniconnectaBranco.png',
           width: 331,
           height: 52,
         ),

@@ -8,7 +8,7 @@ class EncontreSuaUniversidade extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.white, // Define o fundo da tela como branco
+      backgroundColor: Colors.white,
       body: Center(
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 20.0),
@@ -18,7 +18,7 @@ class EncontreSuaUniversidade extends StatelessWidget {
               IndicatorDots(),
               const SizedBox(height: 241),
               Image.asset(
-                'lib/assets/uniconnectaRoxo.png', // Adicione a imagem correspondente aqui
+                'lib/assets/EncontreSuaUniversidade.png',
                 height: 291,
                 width: 330,
               ),

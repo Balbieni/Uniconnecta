@@ -1,6 +1,6 @@
 name: uniconnecta
 description: "A new Flutter project."
-publish_to: 'none' # Prevent accidental publishing
+publish_to: "none"
 
 version: 1.0.0+1
 
@@ -14,7 +14,7 @@ dependencies:
   cupertino_icons: ^1.0.8
   google_sign_in: ^6.2.1
   firebase_auth: ^4.16.0
-  firebase_core: ^2.15.0 # Add this for Firebase initialization
+  firebase_core: ^2.15.0
   firebase_core_web: ^2.10.0
   image_picker: ^0.8.5+3
 
@@ -27,7 +27,7 @@ flutter:
   uses-material-design: true
 
   assets:
-    - lib/assets/ # Make sure this directory exists and contains assets
+    - lib/assets/
 
   # Example for custom fonts:
   # fonts:

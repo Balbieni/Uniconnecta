@@ -19,7 +19,7 @@ class QuerEntrarNaFaculdade extends StatelessWidget {
               IndicatorDots(),
               const SizedBox(height: 241),
               Image.asset(
-                'lib/assets/uniconnectaRoxo.png',
+                'lib/assets/QuerEntrarEmUmaUniversidade.png',
                 height: 291,
                 width: 330,
               ),

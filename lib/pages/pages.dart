@@ -13,5 +13,5 @@ export 'package:uniconnecta/my_app.dart';
 export 'login_page.dart';
 
 // export 'vestibulares.dart';
-//export 'quer_entrar_na_faculdade.dart';
-//export 'melhores_avalidas.dart';
+// export 'quer_entrar_na_faculdade.dart';
+// export 'melhores_avalidas.dart';

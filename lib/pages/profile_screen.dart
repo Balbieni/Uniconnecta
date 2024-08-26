@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:uniconnecta/components/components.dart';
+import 'package:uniconnecta/components/components.dart'; // Certifique-se de que MyButton está nesse arquivo
 import 'pages.dart';
 import 'dart:io';
 
@@ -21,6 +21,15 @@ class _ProfileScreenState extends State<ProfileScreen> {
         _image = File(pickedFile.path);
       });
     }
+  }
+
+  void _navigateToLocationScreen() {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => LocationScreen(),
+      ),
+    );
   }
 
   @override
@@ -69,14 +78,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
             ),
             SizedBox(height: 20),
             TextButton(
-              onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => LocationScreen(),
-                  ),
-                );
-              },
+              onPressed: _navigateToLocationScreen,
               child: Text(
                 'Continue sem foto',
                 style: TextStyle(
@@ -85,27 +87,22 @@ class _ProfileScreenState extends State<ProfileScreen> {
               ),
             ),
             SizedBox(height: 20),
-            ElevatedButton(
-              onPressed: () {
-                // adicionar o fato gamer de só funcionar depois de pegar a foto
-
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => LocationScreen(),
-                  ),
-                );
+            MyButton(
+              buttonProportion: 0.8,
+              marginSize: 16.0,
+              label: 'Continuar',
+              isPrimary: true,
+              onPressedButton: () {
+                if (_image != null) {
+                  _navigateToLocationScreen();
+                } else {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(
+                      content: Text('Por favor, selecione uma foto.'),
+                    ),
+                  );
+                }
               },
-              style: ElevatedButton.styleFrom(
-                backgroundColor:
-                    ColorStyle.RoxoP, // Define a cor de fundo como roxo
-                padding: EdgeInsets.symmetric(horizontal: 50, vertical: 15),
-                textStyle: TextStyle(fontSize: 16),
-              ),
-              child: Text(
-                'Continuar',
-                style: TextStyle(color: Colors.white), // Texto branco
-              ),
             ),
           ],
         ),
