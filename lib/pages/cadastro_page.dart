@@ -13,16 +13,23 @@ class CadastroPage extends StatefulWidget {
 class _CadastroPageState extends State<CadastroPage> {
   final TextEditingController _passwordController = TextEditingController();
   final TextEditingController _emailController = TextEditingController();
+  final TextEditingController _nameController = TextEditingController();
 
-  Future<void> _loginWithEmail() async {
+  Future<void> _createAccount() async {
     try {
       UserCredential userCredential =
-          await FirebaseAuth.instance.signInWithEmailAndPassword(
+          await FirebaseAuth.instance.createUserWithEmailAndPassword(
         email: _emailController.text,
         password: _passwordController.text,
       );
+
+      // Aqui você pode salvar o nome do usuário no perfil do Firebase ou no Firestore
+      await userCredential.user?.updateDisplayName(_nameController.text);
+
+      // Navegar para a próxima tela após o cadastro
       Navigator.pushNamed(context, '/howaccess');
     } catch (e) {
+      // Mostrar um erro para o usuário
       print(e);
     }
   }
@@ -54,8 +61,7 @@ class _CadastroPageState extends State<CadastroPage> {
                 const SizedBox(height: 40),
                 Row(
                   children: [
-                    const BackButtonComponent(
-                        iconSize: 30.0), // Defina o tamanho do ícone
+                    const BackButtonComponent(iconSize: 30.0),
                     const Spacer(),
                   ],
                 ),
@@ -64,7 +70,7 @@ class _CadastroPageState extends State<CadastroPage> {
                   child: Text(
                     'Crie sua conta em alguns instantes',
                     style: TextStyle(
-                      color: Colors.black, // Ajuste para a cor desejada
+                      color: Colors.black,
                       fontSize: 20.0,
                       fontWeight: FontWeight.bold,
                     ),
@@ -81,7 +87,7 @@ class _CadastroPageState extends State<CadastroPage> {
                 ),
                 const SizedBox(height: 20),
                 BoxText(
-                  controller: _emailController,
+                  controller: _nameController,
                   fillColor: const Color.fromARGB(255, 255, 255, 255),
                   hintText: 'Nome Completo',
                   isPassword: false,
@@ -114,10 +120,9 @@ class _CadastroPageState extends State<CadastroPage> {
                   width: MediaQuery.of(context).size.width - 58,
                   height: 58,
                   child: ElevatedButton(
-                    onPressed: _loginWithEmail,
+                    onPressed: _createAccount,
                     style: ElevatedButton.styleFrom(
-                      backgroundColor:
-                          ColorStyle.RoxoP, // Defina o fundo como roxo
+                      backgroundColor: ColorStyle.RoxoP,
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(8.0),
                       ),
@@ -174,9 +179,7 @@ class _CadastroPageState extends State<CadastroPage> {
                       child: OutlinedButton(
                         onPressed: _loginWithGoogle,
                         style: OutlinedButton.styleFrom(
-                          side: const BorderSide(
-                            color: ColorStyle.CinzaC2,
-                          ),
+                          side: const BorderSide(color: ColorStyle.CinzaC2),
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(8.0),
                           ),

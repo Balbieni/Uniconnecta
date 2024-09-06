@@ -9,3 +9,5 @@ export 'university_header.dart';
 export 'back_button.dart';
 export 'Cep.dart';
 export 'location_screen_state.dart';
+export 'average_rating.dart';
+export 'student_review.dart';

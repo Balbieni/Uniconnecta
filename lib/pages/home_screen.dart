@@ -4,6 +4,7 @@ import 'mais_proximos.dart';
 import 'melhores_avalidas.dart';
 import 'package:uniconnecta/components/components.dart';
 import 'pages.dart';
+import 'convest.dart';
 
 class HomeScreen extends StatelessWidget {
   final List<CarouselItem> vestibularesItems = [
@@ -17,7 +18,7 @@ class HomeScreen extends StatelessWidget {
     ),
     CarouselItem(
       imagePath: 'lib/assets/faculdade1.png',
-      title: 'Comvest',
+      title: 'Convest',
       rating: 4.0,
       subtitle: '',
       tag: 'Inscrições abertas',
@@ -189,6 +190,13 @@ class HomeScreen extends StatelessWidget {
                           context,
                           MaterialPageRoute(
                             builder: (context) => Unicamp(),
+                          ),
+                        );
+                      } else if (item.title == 'Convest') {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => Convest(),
                           ),
                         );
                       }

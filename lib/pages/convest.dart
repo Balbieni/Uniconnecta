@@ -3,10 +3,10 @@ import 'package:uniconnecta/components/components.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'pages.dart';
 
-class Unicamp extends StatelessWidget {
+class Convest extends StatelessWidget {
   final ValueNotifier<bool> isFavoritedNotifier = ValueNotifier<bool>(false);
 
-  Unicamp({Key? key}) : super(key: key);
+  Convest({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -42,12 +42,12 @@ class Unicamp extends StatelessWidget {
             const Expanded(
               child: TabBarView(
                 children: [
-                  VestibularesTab(),
-                  SobreCursoTab(), // Pular esse conteúdo ao implementar
-                  NotasDeCorteTab(),
-                  AvaliacoesTab(),
-                  OutrosCursosTab(),
-                  SobreUniversidadeTab(),
+                  InscrevaSeTab(),
+                  EditalTab(),
+                  ConteudosTab(),
+                  ObrasLiterariasTab(),
+                  ProvasAnterioresTab(),
+                  SobreOVestibularTab(),
                 ],
               ),
             ),
@@ -59,8 +59,8 @@ class Unicamp extends StatelessWidget {
   }
 }
 
-class VestibularesTab extends StatelessWidget {
-  const VestibularesTab({Key? key}) : super(key: key);
+class InscrevaSeTab extends StatelessWidget {
+  const InscrevaSeTab({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -86,8 +86,8 @@ class VestibularesTab extends StatelessWidget {
   }
 }
 
-class SobreCursoTab extends StatelessWidget {
-  const SobreCursoTab({Key? key}) : super(key: key);
+class EditalTab extends StatelessWidget {
+  const EditalTab({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -119,8 +119,8 @@ class SobreCursoTab extends StatelessWidget {
   }
 }
 
-class NotasDeCorteTab extends StatelessWidget {
-  const NotasDeCorteTab({Key? key}) : super(key: key);
+class ConteudosTab extends StatelessWidget {
+  const ConteudosTab({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -207,8 +207,8 @@ class NotasDeCorteTab extends StatelessWidget {
   }
 }
 
-class AvaliacoesTab extends StatelessWidget {
-  const AvaliacoesTab({Key? key}) : super(key: key);
+class ObrasLiterariasTab extends StatelessWidget {
+  const ObrasLiterariasTab({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -228,6 +228,7 @@ class AvaliacoesTab extends StatelessWidget {
           rating: 4.0,
           review: 'O curso de Medicina da Unicamp é um dos melhores do país...',
         ),
+        // Adicione mais StudentReview widgets conforme necessário
       ],
     );
   }
@@ -285,8 +286,8 @@ class StudentReview extends StatelessWidget {
   }
 }
 
-class OutrosCursosTab extends StatelessWidget {
-  const OutrosCursosTab({Key? key}) : super(key: key);
+class ProvasAnterioresTab extends StatelessWidget {
+  const ProvasAnterioresTab({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -314,8 +315,8 @@ class OutrosCursosTab extends StatelessWidget {
   }
 }
 
-class SobreUniversidadeTab extends StatelessWidget {
-  const SobreUniversidadeTab({Key? key}) : super(key: key);
+class SobreOVestibularTab extends StatelessWidget {
+  const SobreOVestibularTab({Key? key}) : super(key: key);
 
   void _launchMapsUrl(String query) async {
     final url = 'https://www.google.com/maps/search/?api=1&query=$query';

@@ -7,7 +7,7 @@ import 'package:uniconnecta/pages/quer_entrar_na_faculdade.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
-  runApp(const uniconnecta());
+  runApp(uniconnecta());
 }
 
 class uniconnecta extends StatelessWidget {

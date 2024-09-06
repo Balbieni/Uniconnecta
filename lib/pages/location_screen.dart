@@ -127,7 +127,7 @@ class _LocationScreenState extends State<LocationScreen> {
                   ),
                 ),
                 keyboardType: TextInputType.number,
-                maxLength: 8,
+                maxLength: 9,
                 onChanged: (value) => _onCepChanged(),
               ),
               SizedBox(height: 20),
