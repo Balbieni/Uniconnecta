@@ -1,92 +1,69 @@
 import 'package:flutter/material.dart';
-import 'vestibulares.dart';
-import 'mais_proximos.dart';
-import 'melhores_avalidas.dart';
 import 'package:uniconnecta/components/components.dart';
-import 'pages.dart';
-import 'convest.dart';
+import 'package:uniconnecta/components/custom_carousel.dart';
+import 'package:uniconnecta/pages/convest.dart';
+import 'package:uniconnecta/pages/melhores_avalidas.dart';
+import 'package:uniconnecta/pages/pages.dart';
+import 'package:uniconnecta/pages/vestibulares.dart';
+
+class CarouselItem {
+  final String imagePath;
+  final String title;
+  final double rating;
+  final String subtitle;
+  final String tag;
+  final String distance;
+  final ValueNotifier<bool> isFavorited;
+  final VoidCallback? onTap;
+
+  CarouselItem({
+    required this.imagePath,
+    required this.title,
+    required this.rating,
+    required this.subtitle,
+    required this.tag,
+    required this.distance,
+    ValueNotifier<bool>? isFavorited,
+    this.onTap,
+  }) : isFavorited = isFavorited ?? ValueNotifier<bool>(false);
+}
 
 class HomeScreen extends StatelessWidget {
-  final List<CarouselItem> vestibularesItems = [
-    CarouselItem(
-      imagePath: 'lib/assets/faculdade1.png',
-      title: 'Enem',
-      rating: 4.5,
-      subtitle: '',
-      tag: 'Inscrições abertas',
-      distance: '',
-    ),
-    CarouselItem(
-      imagePath: 'lib/assets/faculdade1.png',
-      title: 'Convest',
-      rating: 4.0,
-      subtitle: '',
-      tag: 'Inscrições abertas',
-      distance: '',
-    ),
-    CarouselItem(
-      imagePath: 'lib/assets/faculdade1.png',
-      title: 'Enem2',
-      rating: 3.5,
-      subtitle: '',
-      tag: 'Inscrições abertas',
-      distance: '',
-    ),
-  ];
-
-  final List<CarouselItem> melhoresAvaliadasItems = [
-    CarouselItem(
-      imagePath: 'lib/assets/faculdade1.png',
-      title: 'Unicamp',
-      rating: 4.9,
-      subtitle: 'Medicina',
-      tag: 'Presencial',
-      distance: '10Km',
-    ),
-    CarouselItem(
-      imagePath: 'lib/assets/faculdade1.png',
-      title: 'Facamp',
-      rating: 4.8,
-      subtitle: 'Facamp',
-      tag: 'Presencial',
-      distance: '30Km',
-    ),
-  ];
-
-  final List<CarouselItem> maisProximosItems = [
-    CarouselItem(
-      imagePath: 'lib/assets/faculdade1.png',
-      title: 'Faculdade 3',
-      rating: 4.9,
-      subtitle: 'Direito',
-      tag: 'Presencial',
-      distance: '10Km',
-    ),
-    CarouselItem(
-      imagePath: 'lib/assets/faculdade1.png',
-      title: 'Anhanguera',
-      rating: 2.3,
-      subtitle: 'Administração',
-      tag: 'EAD',
-      distance: '',
-    ),
-  ];
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
-        title: Text('Olá Vinicius\nSeja bem-vindo(a)'),
         backgroundColor: Colors.white,
         elevation: 0,
-        centerTitle: false,
-        titleTextStyle: TextStyle(
-          color: Colors.black,
-          fontSize: 20,
-          fontWeight: FontWeight.bold,
+        title: Row(
+          children: [
+            CircleAvatar(
+              backgroundImage: AssetImage('lib/assets/profile_image.png'),
+            ),
+            SizedBox(width: 10),
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  'Olá Vinicius',
+                  style: TextStyle(
+                    color: Colors.black,
+                    fontSize: 18,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                Text(
+                  'Seja bem-vindo(a)',
+                  style: TextStyle(
+                    color: Colors.grey,
+                    fontSize: 14,
+                  ),
+                ),
+              ],
+            ),
+          ],
         ),
-        iconTheme: IconThemeData(color: Colors.black),
       ),
       drawer: Drawer(
         child: Container(
@@ -153,66 +130,13 @@ class HomeScreen extends StatelessWidget {
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: ListView(
-          children: <Widget>[
-            SizedBox(height: 20),
-            buildSection(context, 'Vestibulares', () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => Vestibulares()),
-              );
-            }),
-            CustomCarousel(
-              items: vestibularesItems,
-              isVestibulares: true,
-            ),
-            SizedBox(height: 20),
-            buildSection(context, 'Melhores Avaliadas', () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => MelhoresAvaliadasScreen(),
-                ),
-              );
-            }),
-            Builder(
-              builder: (context) => CustomCarousel(
-                items: melhoresAvaliadasItems.map((item) {
-                  return CarouselItem(
-                    imagePath: item.imagePath,
-                    title: item.title,
-                    rating: item.rating,
-                    subtitle: item.subtitle,
-                    tag: item.tag,
-                    distance: item.distance,
-                    onTap: () {
-                      if (item.title == 'Unicamp') {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => Unicamp(),
-                          ),
-                        );
-                      } else if (item.title == 'Convest') {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => Convest(),
-                          ),
-                        );
-                      }
-                    },
-                  );
-                }).toList(),
-              ),
-            ),
-            SizedBox(height: 20),
-            buildSection(context, 'Mais Próximos', () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => MaisProximosScreen()),
-              );
-            }),
-            CustomCarousel(items: maisProximosItems),
+          children: [
+            sectionHeader('Vestibulares', context, 'vestibulares'),
+            buildHorizontalCarousel(context, vestibularesItems(context)),
+            sectionHeader('Melhores Avaliadas', context, 'melhores_avaliadas'),
+            buildHorizontalCarousel(context, melhoresAvaliadasItems(context)),
+            sectionHeader('Mais Próximos', context, 'mais_proximos'),
+            buildHorizontalCarousel(context, maisProximosItems(context)),
           ],
         ),
       ),
@@ -231,22 +155,207 @@ class HomeScreen extends StatelessWidget {
     );
   }
 
-  Widget buildSection(BuildContext context, String title, VoidCallback onTap) {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      children: [
-        Text(
-          title,
-          style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-        ),
-        GestureDetector(
-          onTap: onTap,
-          child: Text(
-            'Ver tudo >',
-            style: TextStyle(fontSize: 16, color: Colors.black),
+  Widget sectionHeader(String title, BuildContext context, String section) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 10.0),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Text(
+            title,
+            style: TextStyle(
+              fontSize: 18,
+              fontWeight: FontWeight.bold,
+              color: Colors.purple,
+            ),
           ),
-        ),
-      ],
+          GestureDetector(
+            onTap: () {
+              if (section == 'vestibulares') {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => Vestibulares(),
+                  ),
+                );
+              } else if (section == 'melhores_avaliadas') {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => MelhoresAvalidas(),
+                  ),
+                );
+              } else if (section == 'mais_proximos') {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => MaisProximosScreen(),
+                  ),
+                );
+              }
+            },
+            child: Text(
+              'Ver tudo',
+              style: TextStyle(
+                fontSize: 14,
+                color: Colors.purple,
+              ),
+            ),
+          ),
+        ],
+      ),
     );
+  }
+
+  Widget buildHorizontalCarousel(
+      BuildContext context, List<CarouselItem> items) {
+    return SizedBox(
+      height: 235,
+      child: ListView.builder(
+        scrollDirection: Axis.horizontal,
+        itemCount: items.length,
+        itemBuilder: (context, index) {
+          return buildCarouselCard(items[index], context);
+        },
+      ),
+    );
+  }
+
+  Widget buildCarouselCard(CarouselItem item, BuildContext context) {
+    return GestureDetector(
+      onTap: item.onTap,
+      child: Container(
+        width: 260,
+        margin: EdgeInsets.only(right: 10),
+        decoration: BoxDecoration(
+          border: Border.all(color: Colors.grey.shade300),
+          borderRadius: BorderRadius.circular(8),
+        ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Image.asset(item.imagePath, height: 80, fit: BoxFit.cover),
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(item.title,
+                      style:
+                          TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
+                  SizedBox(height: 5),
+                  Text(item.subtitle,
+                      style: TextStyle(fontSize: 12, color: Colors.grey)),
+                  SizedBox(height: 10),
+                  Row(
+                    children: [
+                      FavoriteButton(isFavorited: item.isFavorited),
+                      Spacer(),
+                      Text('${item.distance} Km',
+                          style: TextStyle(fontSize: 12, color: Colors.grey)),
+                    ],
+                  ),
+                  SizedBox(height: 10),
+                  ElevatedButton(
+                    onPressed: () {
+                      item.onTap?.call();
+                    },
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.purple,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(20),
+                      ),
+                    ),
+                    child: Text(
+                      item.tag,
+                      style: TextStyle(fontSize: 12),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  List<CarouselItem> vestibularesItems(BuildContext context) {
+    return [
+      CarouselItem(
+        imagePath: 'lib/assets/faculdade1.png',
+        title: 'Convest',
+        rating: 4.5,
+        subtitle: '',
+        tag: 'Inscrições abertas',
+        distance: '',
+        isFavorited: ValueNotifier<bool>(false),
+        onTap: () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => Convest(
+                title: 'Convest',
+                subtitle: 'Inscrições abertas',
+              ),
+            ),
+          );
+        },
+      ),
+      CarouselItem(
+        imagePath: 'lib/assets/faculdade1.png',
+        title: 'Unicamp',
+        rating: 4.0,
+        subtitle: '',
+        tag: 'Inscrições abertas',
+        distance: '',
+        isFavorited: ValueNotifier<bool>(false),
+        onTap: () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => Unicamp(
+                title: 'Unicamp',
+                subtitle: 'Inscrições abertas',
+              ),
+            ),
+          );
+        },
+      ),
+    ];
+  }
+
+  List<CarouselItem> melhoresAvaliadasItems(BuildContext context) {
+    return [
+      CarouselItem(
+        imagePath: 'lib/assets/unicamp.png',
+        title: 'Unicamp',
+        rating: 4.9,
+        subtitle: 'Medicina',
+        tag: 'Presencial',
+        distance: '50Km',
+        isFavorited: ValueNotifier<bool>(false),
+        onTap: () {
+          // Implementar navegação para detalhes da Unicamp
+        },
+      ),
+    ];
+  }
+
+  List<CarouselItem> maisProximosItems(BuildContext context) {
+    return [
+      CarouselItem(
+        imagePath: 'lib/assets/unicamp.png',
+        title: 'Unicamp',
+        rating: 4.5,
+        subtitle: 'Computação',
+        tag: 'Inscrições Abertas',
+        distance: '10Km',
+        isFavorited: ValueNotifier<bool>(false),
+        onTap: () {
+          // Implementar navegação para detalhes de Computação
+        },
+      ),
+    ];
   }
 }

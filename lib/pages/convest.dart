@@ -6,7 +6,11 @@ import 'pages.dart';
 class Convest extends StatelessWidget {
   final ValueNotifier<bool> isFavoritedNotifier = ValueNotifier<bool>(false);
 
-  Convest({Key? key}) : super(key: key);
+  final String title;
+  final String subtitle;
+
+  Convest({Key? key, required this.title, required this.subtitle})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {

@@ -22,21 +22,36 @@ class StudentReview extends StatelessWidget {
           style: TextStyle(
             fontSize: 18,
             fontWeight: FontWeight.bold,
-            color: Colors.purple, // Alinhando com a cor principal
+            color: Colors.purple,
           ),
         ),
         const SizedBox(height: 10),
         ListTile(
+          contentPadding: EdgeInsets.zero,
           title: Text(
             name,
-            style: const TextStyle(fontWeight: FontWeight.bold),
+            style: const TextStyle(
+              fontWeight: FontWeight.bold,
+              fontSize: 16,
+            ),
           ),
           subtitle: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text('Nota: $rating'),
+              Row(
+                children: List.generate(5, (index) {
+                  return Icon(
+                    index < rating ? Icons.star : Icons.star_border,
+                    color: Colors.purple[700],
+                    size: 20,
+                  );
+                }),
+              ),
               const SizedBox(height: 4),
-              Text(review),
+              Text(
+                review,
+                style: const TextStyle(fontSize: 14),
+              ),
             ],
           ),
         ),

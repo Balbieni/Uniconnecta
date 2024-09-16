@@ -46,9 +46,6 @@ class _LocationScreenState extends State<LocationScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-        // ... seu código existente ...
-
-        );
+    return Scaffold();
   }
 }

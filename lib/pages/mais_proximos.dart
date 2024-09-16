@@ -26,6 +26,7 @@ class MaisProximosScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.white,
       appBar: AppBar(
         title: Text("Mais próximos"),
         backgroundColor: const Color.fromARGB(255, 255, 255, 255),

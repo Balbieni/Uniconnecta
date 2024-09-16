@@ -90,7 +90,6 @@ class _LocationScreenState extends State<LocationScreen> {
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
-        title: Text('Localização', style: TextStyle(color: Colors.black)),
         backgroundColor: Colors.white,
         elevation: 0,
         iconTheme: IconThemeData(color: Colors.black),
@@ -108,15 +107,6 @@ class _LocationScreenState extends State<LocationScreen> {
                   fontWeight: FontWeight.bold,
                 ),
                 textAlign: TextAlign.center,
-              ),
-              SizedBox(height: 20),
-              Text(
-                'é para colocar apenas numeros',
-                style: TextStyle(
-                  color: Colors.black,
-                  fontSize: 15,
-                  fontWeight: FontWeight.bold,
-                ),
               ),
               TextField(
                 controller: _cepController,

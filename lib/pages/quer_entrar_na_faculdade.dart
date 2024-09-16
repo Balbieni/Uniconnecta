@@ -17,7 +17,7 @@ class QuerEntrarNaFaculdade extends StatelessWidget {
             children: <Widget>[
               const SizedBox(height: 35.29),
               IndicatorDots(),
-              const SizedBox(height: 241),
+              const SizedBox(height: 30),
               Image.asset(
                 'lib/assets/QuerEntrarEmUmaUniversidade.png',
                 height: 291,

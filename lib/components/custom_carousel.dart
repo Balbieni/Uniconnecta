@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:uniconnecta/components/custom_carousel_arrastapracima.dart';
 
 class CarouselItem {
   final String imagePath;
@@ -10,6 +9,8 @@ class CarouselItem {
   final String distance;
   final VoidCallback? onTap;
 
+  var isFavorited;
+
   CarouselItem({
     required this.imagePath,
     required this.title,
@@ -18,7 +19,32 @@ class CarouselItem {
     required this.tag,
     required this.distance,
     this.onTap,
+    required ValueNotifier<bool> isFavorited,
   });
+}
+
+class FavoriteButton extends StatelessWidget {
+  final ValueNotifier<bool> isFavorited;
+
+  FavoriteButton({required this.isFavorited});
+
+  @override
+  Widget build(BuildContext context) {
+    return ValueListenableBuilder<bool>(
+      valueListenable: isFavorited,
+      builder: (context, value, child) {
+        return IconButton(
+          icon: Icon(
+            value ? Icons.favorite : Icons.favorite_border,
+            color: value ? Colors.purple : Colors.grey,
+          ),
+          onPressed: () {
+            isFavorited.value = !isFavorited.value;
+          },
+        );
+      },
+    );
+  }
 }
 
 class CustomCarousel extends StatelessWidget {
@@ -66,7 +92,9 @@ class CarouselCard extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Image.asset(item.imagePath, height: 50),
-                    FavoriteButton(),
+                    FavoriteButton(
+                      isFavorited: item.isFavorited,
+                    ),
                   ],
                 ),
                 SizedBox(height: 20),

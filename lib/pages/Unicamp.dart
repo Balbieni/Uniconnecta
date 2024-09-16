@@ -1,18 +1,24 @@
 import 'package:flutter/material.dart';
 import 'package:uniconnecta/components/components.dart';
+import 'package:uniconnecta/pages/convest.dart';
 import 'package:url_launcher/url_launcher.dart';
-import 'pages.dart';
+import 'package:uniconnecta/components/exam_cards.dart';
 
 class Unicamp extends StatelessWidget {
   final ValueNotifier<bool> isFavoritedNotifier = ValueNotifier<bool>(false);
 
-  Unicamp({Key? key}) : super(key: key);
+  final String title;
+  final String subtitle;
+
+  Unicamp({Key? key, required this.title, required this.subtitle})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return DefaultTabController(
       length: 6,
       child: Scaffold(
+        backgroundColor: Colors.white,
         body: Column(
           children: [
             UniversityHeader(
@@ -24,26 +30,28 @@ class Unicamp extends StatelessWidget {
               imagePath: 'lib/assets/faculdade1.png',
               isFavorited: isFavoritedNotifier,
             ),
-            const TabBar(
-              isScrollable:
-                  true, // Permite rolar as abas se o texto for muito longo
-              indicatorColor: Colors.purple,
-              labelColor: Colors.purple,
-              unselectedLabelColor: Colors.grey,
-              tabs: [
-                Tab(child: Text('Vestibulares')),
-                Tab(child: Text('Sobre seu curso')),
-                Tab(child: Text('Notas de corte')),
-                Tab(child: Text('Avaliações')),
-                Tab(child: Text('Outros Cursos')),
-                Tab(child: Text('Sobre a universidade')),
-              ],
+            Container(
+              color: Colors.white,
+              child: const TabBar(
+                isScrollable: true,
+                indicatorColor: Colors.purple,
+                labelColor: Colors.purple,
+                unselectedLabelColor: Colors.grey,
+                tabs: [
+                  Tab(text: 'Vestibulares'),
+                  Tab(text: 'Sobre seu curso'),
+                  Tab(text: 'Notas de corte'),
+                  Tab(text: 'Avaliações'),
+                  Tab(text: 'Outros Cursos'),
+                  Tab(text: 'Sobre a universidade'),
+                ],
+              ),
             ),
             const Expanded(
               child: TabBarView(
                 children: [
                   VestibularesTab(),
-                  SobreCursoTab(), // Pular esse conteúdo ao implementar
+                  SobreCursoTab(),
                   NotasDeCorteTab(),
                   AvaliacoesTab(),
                   OutrosCursosTab(),
@@ -106,13 +114,12 @@ class SobreCursoTab extends StatelessWidget {
             style: TextStyle(fontSize: 16),
           ),
           InkWell(
-              child: const Text(
-                'https://www.guiadacarreira.com.br/blog/curso-de-medicina',
-                style: TextStyle(color: Colors.blue, fontSize: 16),
-              ),
-              onTap: () {}
-              // Open the URL in a web browser
-              ),
+            child: const Text(
+              'https://www.guiadacarreira.com.br/blog/curso-de-medicina',
+              style: TextStyle(color: Colors.blue, fontSize: 16),
+            ),
+            onTap: () {}, // Implementar lógica de abrir URL
+          ),
         ],
       ),
     );
@@ -127,24 +134,9 @@ class NotasDeCorteTab extends StatelessWidget {
     return ListView(
       padding: const EdgeInsets.all(16),
       children: [
-        _buildNotaCard(
-          ano: '2023',
-          vagas: 71,
-          notaDeCorte: 726.8,
-          onPressed: () {},
-        ),
-        _buildNotaCard(
-          ano: '2022',
-          vagas: 88,
-          notaDeCorte: 732.2,
-          onPressed: () {},
-        ),
-        _buildNotaCard(
-          ano: '2021',
-          vagas: 71,
-          notaDeCorte: 720.5,
-          onPressed: () {},
-        ),
+        _buildNotaCard(ano: '2023', vagas: 71, notaDeCorte: 726.8),
+        _buildNotaCard(ano: '2022', vagas: 88, notaDeCorte: 732.2),
+        _buildNotaCard(ano: '2021', vagas: 71, notaDeCorte: 720.5),
       ],
     );
   }
@@ -153,7 +145,6 @@ class NotasDeCorteTab extends StatelessWidget {
     required String ano,
     required int vagas,
     required double notaDeCorte,
-    required VoidCallback onPressed,
   }) {
     return Card(
       margin: const EdgeInsets.symmetric(vertical: 8),
@@ -175,23 +166,17 @@ class NotasDeCorteTab extends StatelessWidget {
             const SizedBox(height: 8),
             Text(
               'Vagas: $vagas',
-              style: TextStyle(
-                fontSize: 16,
-                color: Colors.grey[600],
-              ),
+              style: TextStyle(fontSize: 16, color: Colors.grey[600]),
             ),
             Text(
               'Nota de corte: ${notaDeCorte.toStringAsFixed(1)}',
-              style: TextStyle(
-                fontSize: 16,
-                color: Colors.grey[600],
-              ),
+              style: TextStyle(fontSize: 16, color: Colors.grey[600]),
             ),
             const SizedBox(height: 16),
             SizedBox(
               width: double.infinity,
               child: ElevatedButton(
-                onPressed: onPressed,
+                onPressed: () {}, // Lógica de ação
                 style: ElevatedButton.styleFrom(
                   foregroundColor: Colors.white,
                   backgroundColor: Colors.purple,
@@ -253,30 +238,31 @@ class StudentReview extends StatelessWidget {
         borderRadius: BorderRadius.circular(8),
       ),
       child: Padding(
-        padding: const EdgeInsets.all(16.0),
+        padding: const EdgeInsets.all(16),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
               name,
               style: const TextStyle(
-                fontSize: 16,
+                fontSize: 18,
                 fontWeight: FontWeight.bold,
-                color: Colors.purple, // Alinhando com a cor principal
               ),
             ),
-            const SizedBox(height: 5),
-            Text(
-              '⭐ ${rating.toStringAsFixed(1)}',
-              style: const TextStyle(
-                fontSize: 16,
-                color: Colors.grey, // Estilo consistente para subtítulos
+            const SizedBox(height: 8),
+            Row(
+              children: List.generate(
+                5,
+                (index) => Icon(
+                  index < rating ? Icons.star : Icons.star_border,
+                  color: Colors.amber,
+                ),
               ),
             ),
-            const SizedBox(height: 5),
+            const SizedBox(height: 8),
             Text(
               review,
-              style: const TextStyle(fontSize: 16),
+              style: const TextStyle(fontSize: 16, color: Colors.grey),
             ),
           ],
         ),
@@ -292,21 +278,15 @@ class OutrosCursosTab extends StatelessWidget {
   Widget build(BuildContext context) {
     return Center(
       child: Column(
-        children: [
+        children: const [
           Text(
             'Outros cursos serão exibidos aqui.',
-            style: TextStyle(
-              color: ColorStyle.RoxoP,
-              fontSize: 16.0,
-            ),
+            style: TextStyle(fontSize: 16.0, color: Colors.purple),
           ),
-          const SizedBox(height: 20),
-          const Text(
+          SizedBox(height: 20),
+          Text(
             'texto imenso que eu vou colocar',
-            style: TextStyle(
-              fontSize: 14.0,
-              color: Colors.black,
-            ),
+            style: TextStyle(fontSize: 14.0, color: Colors.black),
           ),
         ],
       ),
@@ -316,15 +296,6 @@ class OutrosCursosTab extends StatelessWidget {
 
 class SobreUniversidadeTab extends StatelessWidget {
   const SobreUniversidadeTab({Key? key}) : super(key: key);
-
-  void _launchMapsUrl(String query) async {
-    final url = 'https://www.google.com/maps/search/?api=1&query=$query';
-    if (await canLaunch(url)) {
-      await launch(url);
-    } else {
-      throw 'Could not launch $url';
-    }
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -336,56 +307,29 @@ class SobreUniversidadeTab extends StatelessWidget {
           const Text(
             'Localização',
             style: TextStyle(
-              fontSize: 18.0,
-              fontWeight: FontWeight.bold,
-              color: Colors.purple, // Ajuste para a cor desejada
-            ),
+                fontSize: 18.0,
+                fontWeight: FontWeight.bold,
+                color: Colors.purple),
           ),
           const SizedBox(height: 8.0),
           GestureDetector(
-            onTap: () => _launchMapsUrl('Universidade Estadual de Campinas'),
+            onTap: () {}, // Implementar lógica de abrir mapas
             child: Container(
               decoration: BoxDecoration(
-                border: Border.all(color: Colors.purple), // Borda roxa
+                border: Border.all(color: Colors.purple),
                 borderRadius: BorderRadius.circular(8.0),
               ),
               child: Column(
                 children: [
                   Image.asset(
-                    'assets/university_map.png', // Coloque o caminho correto para o mapa
+                    'assets/university_map.png',
                     fit: BoxFit.cover,
                   ),
-                  Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        const Text(
-                          'Universidade Estadual de Campinas',
-                          style: TextStyle(
-                            fontWeight: FontWeight.bold,
-                            fontSize: 16.0,
-                          ),
-                        ),
-                        const Text(
-                          'Instituição de ensino superior',
-                          style: TextStyle(fontSize: 14.0),
-                        ),
-                        const SizedBox(height: 8.0),
-                        Row(
-                          children: [
-                            const Icon(Icons.star,
-                                color: Colors.purple, size: 16.0),
-                            const Text(' 4.5',
-                                style: TextStyle(fontSize: 14.0)),
-                          ],
-                        ),
-                        const SizedBox(height: 8.0),
-                        const Text(
-                          'Cidade Universitária Zeferino Vaz - Barão Geraldo, Campinas - SP, 130083-970',
-                          style: TextStyle(fontSize: 14.0),
-                        ),
-                      ],
+                  const Padding(
+                    padding: EdgeInsets.all(8.0),
+                    child: Text(
+                      'Universidade Estadual de Campinas\nInstituição de ensino superior',
+                      style: TextStyle(fontSize: 14.0),
                     ),
                   ),
                 ],
@@ -396,84 +340,16 @@ class SobreUniversidadeTab extends StatelessWidget {
           const Text(
             'Sobre a Universidade',
             style: TextStyle(
-              fontSize: 18.0,
-              fontWeight: FontWeight.bold,
-              color: Colors.purple, // Ajuste para a cor desejada
-            ),
+                fontSize: 18.0,
+                fontWeight: FontWeight.bold,
+                color: Colors.purple),
           ),
           const SizedBox(height: 8.0),
           const Text(
-            'A Unicamp responde por 8% da pesquisa acadêmica no Brasil, 12% da pós-graduação nacional e mantém a liderança entre as universidades brasileiras no que diz respeito a patentes e ao número de artigos per capita publicados anualmente em revistas indexadas na base de dados ISI/Web of Science. A Universidade conta com aproximadamente 34 mil alunos matriculados em 66 cursos de graduação e 153 programas de pós-graduação...',
+            'A Unicamp responde por 8% da pesquisa acadêmica no Brasil, 12% da pós-graduação nacional...',
             style: TextStyle(fontSize: 14.0),
           ),
-          const SizedBox(height: 20.0),
         ],
-      ),
-    );
-  }
-}
-
-class ExamCard extends StatelessWidget {
-  final String title;
-  final String description;
-  final VoidCallback onPressedInscrever;
-  final VoidCallback onPressedPagina;
-
-  const ExamCard({
-    Key? key,
-    required this.title,
-    required this.description,
-    required this.onPressedInscrever,
-    required this.onPressedPagina,
-  }) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return Card(
-      margin: const EdgeInsets.symmetric(vertical: 8),
-      child: Padding(
-        padding: const EdgeInsets.all(16),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              title,
-              style: const TextStyle(
-                fontSize: 18,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-            const SizedBox(height: 8),
-            Text(description),
-            const SizedBox(height: 16),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Expanded(
-                  child: ElevatedButton(
-                    onPressed: onPressedInscrever,
-                    style: ElevatedButton.styleFrom(
-                      foregroundColor: Colors.white,
-                      backgroundColor: Colors.purple, // Cor do texto do botão
-                    ),
-                    child: const Text('Inscreva-se'),
-                  ),
-                ),
-                const SizedBox(width: 8),
-                Expanded(
-                  child: ElevatedButton(
-                    onPressed: onPressedPagina,
-                    style: ElevatedButton.styleFrom(
-                      foregroundColor: Colors.white,
-                      backgroundColor: Colors.purple, // Cor do texto do botão
-                    ),
-                    child: const Text('Acessar página'),
-                  ),
-                ),
-              ],
-            ),
-          ],
-        ),
       ),
     );
   }

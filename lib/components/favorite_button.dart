@@ -9,14 +9,14 @@ class FavoriteButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return ValueListenableBuilder<bool>(
       valueListenable: isFavorited,
-      builder: (context, isFavorited, child) {
+      builder: (context, value, child) {
         return IconButton(
           icon: Icon(
-            isFavorited ? Icons.favorite : Icons.favorite_border,
-            color: isFavorited ? Colors.purple : Colors.grey,
+            value ? Icons.favorite : Icons.favorite_border,
+            color: value ? Colors.red : Colors.grey,
           ),
           onPressed: () {
-            this.isFavorited.value = !isFavorited;
+            isFavorited.value = !isFavorited.value;
           },
         );
       },

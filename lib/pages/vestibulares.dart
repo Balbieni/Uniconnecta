@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:uniconnecta/components/custom_carousel_arrastapracima.dart';
 import 'package:uniconnecta/components/nav_bar.dart';
-import 'pages.dart';
 
 class Vestibulares extends StatelessWidget {
   final List<CarouselItem> maisProximosItems = [
@@ -90,6 +89,7 @@ class Vestibulares extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.white,
       appBar: AppBar(
         title: Text("vestibulares"),
         backgroundColor: const Color.fromARGB(255, 255, 255, 255),
@@ -123,7 +123,7 @@ class DetailPage extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: Text(item.title),
-        backgroundColor: Colors.purple[700],
+        backgroundColor: const Color.fromARGB(255, 255, 255, 255),
       ),
       body: Center(
         child: Text('Detalhes sobre ${item.title}'),

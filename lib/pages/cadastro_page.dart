@@ -27,7 +27,10 @@ class _CadastroPageState extends State<CadastroPage> {
       await userCredential.user?.updateDisplayName(_nameController.text);
 
       // Navegar para a próxima tela após o cadastro
-      Navigator.pushNamed(context, '/howaccess');
+      Navigator.push(
+        context,
+        MaterialPageRoute(builder: (context) => ProfileScreen()),
+      );
     } catch (e) {
       // Mostrar um erro para o usuário
       print(e);
