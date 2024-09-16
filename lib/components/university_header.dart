@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 class UniversityHeader extends StatefulWidget {
-  final String universityName;
+  final String universityOrEntranceExamName;
   final String courseName;
   final double rating;
   final String locationType; // Ex: "Presencial"
@@ -9,7 +9,7 @@ class UniversityHeader extends StatefulWidget {
   final String imagePath;
 
   UniversityHeader({
-    required this.universityName,
+    required this.universityOrEntranceExamName,
     required this.courseName,
     required this.rating,
     required this.locationType,
@@ -79,7 +79,8 @@ class _UniversityHeaderState extends State<UniversityHeader> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  widget.universityName, // Usa o nome da universidade fornecido
+                  widget
+                      .universityOrEntranceExamName, // Usa o nome da universidade fornecido
                   style: TextStyle(
                     fontSize: 20,
                     fontWeight: FontWeight.bold,

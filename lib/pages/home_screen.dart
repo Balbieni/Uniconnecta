@@ -287,7 +287,7 @@ class HomeScreen extends StatelessWidget {
         title: 'Convest',
         rating: 4.5,
         subtitle: '',
-        tag: 'Inscrições abertas',
+        tag: '',
         distance: '',
         isFavorited: ValueNotifier<bool>(false),
         onTap: () {
@@ -329,14 +329,22 @@ class HomeScreen extends StatelessWidget {
     return [
       CarouselItem(
         imagePath: 'lib/assets/unicamp.png',
-        title: 'Unicamp',
+        title: 'enem',
         rating: 4.9,
-        subtitle: 'Medicina',
-        tag: 'Presencial',
+        subtitle: '',
+        tag: '',
         distance: '50Km',
         isFavorited: ValueNotifier<bool>(false),
         onTap: () {
-          // Implementar navegação para detalhes da Unicamp
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => Unicamp(
+                title: 'enem',
+                subtitle: 'Inscrições abertas',
+              ),
+            ),
+          );
         },
       ),
     ];

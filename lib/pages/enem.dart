@@ -3,13 +3,13 @@ import 'package:uniconnecta/components/components.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'pages.dart';
 
-class Convest extends StatelessWidget {
+class Enem extends StatelessWidget {
   final ValueNotifier<bool> isFavoritedNotifier = ValueNotifier<bool>(false);
 
   final String title;
   final String subtitle;
 
-  Convest({Key? key, required this.title, required this.subtitle})
+  Enem({Key? key, required this.title, required this.subtitle})
       : super(key: key);
 
   @override
@@ -20,10 +20,10 @@ class Convest extends StatelessWidget {
         body: Column(
           children: [
             UniversityHeader(
-              universityOrEntranceExamName: 'Convest',
-              courseName: '',
+              universityOrEntranceExamName: 'Unicamp',
+              courseName: 'Medicina',
               rating: 4.5,
-              locationType: '',
+              locationType: 'Presencial',
               distance: '50Km',
               imagePath: 'lib/assets/faculdade1.png',
               isFavorited: isFavoritedNotifier,
@@ -72,6 +72,13 @@ class InscrevaSeTab extends StatelessWidget {
       padding: const EdgeInsets.all(16),
       children: [
         ExamCard(
+          title: 'Convest',
+          description:
+              'Período de inscrições será de 27 de maio a 7 de junho. Provas serão aplicadas nos dias 3 e 10 de novembro em todo o Brasil.',
+          onPressedInscrever: () {},
+          onPressedPagina: () {},
+        ),
+        ExamCard(
           title: 'Enem',
           description:
               'Período de inscrições será de 27 de maio a 7 de junho. Provas serão aplicadas nos dias 3 e 10 de novembro em todo o Brasil.',
@@ -104,7 +111,7 @@ class EditalTab extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   const Text(
-                    'Edital Enem 2024',
+                    'Edital Convest 2024',
                     style: TextStyle(
                       fontSize: 18.0,
                       fontWeight: FontWeight.bold,

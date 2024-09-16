@@ -22,10 +22,10 @@ class Unicamp extends StatelessWidget {
         body: Column(
           children: [
             UniversityHeader(
-              universityName: 'Unicamp',
-              courseName: 'Medicina',
+              universityOrEntranceExamName: 'Enem',
+              courseName: '',
               rating: 4.5,
-              locationType: 'Presencial',
+              locationType: '',
               distance: '50Km',
               imagePath: 'lib/assets/faculdade1.png',
               isFavorited: isFavoritedNotifier,
