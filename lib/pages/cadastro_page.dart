@@ -29,7 +29,7 @@ class _CadastroPageState extends State<CadastroPage> {
       // Navegar para a próxima tela após o cadastro
       Navigator.push(
         context,
-        MaterialPageRoute(builder: (context) => ProfileScreen()),
+        MaterialPageRoute(builder: (context) => PhotoScreen()),
       );
     } catch (e) {
       // Mostrar um erro para o usuário

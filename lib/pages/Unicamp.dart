@@ -23,9 +23,9 @@ class Unicamp extends StatelessWidget {
           children: [
             UniversityHeader(
               universityOrEntranceExamName: 'Enem',
-              courseName: '',
+              courseName: 'teste',
               rating: 4.5,
-              locationType: '',
+              locationType: 'teste1',
               distance: '50Km',
               imagePath: 'lib/assets/faculdade1.png',
               isFavorited: isFavoritedNotifier,

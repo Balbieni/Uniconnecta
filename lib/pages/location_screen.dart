@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_core/firebase_core.dart';
-import 'package:uniconnecta/components/components.dart';
 import 'pages.dart';
+import 'package:uniconnecta/components/Cep.dart';
+import 'package:uniconnecta/components/button.dart';
 
 class LocationScreen extends StatefulWidget {
   @override

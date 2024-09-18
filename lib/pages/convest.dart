@@ -17,13 +17,14 @@ class Convest extends StatelessWidget {
     return DefaultTabController(
       length: 6,
       child: Scaffold(
+        backgroundColor: Colors.white,
         body: Column(
           children: [
             UniversityHeader(
               universityOrEntranceExamName: 'Convest',
-              courseName: '',
+              courseName: 'teste',
               rating: 4.5,
-              locationType: '',
+              locationType: 'teste1',
               distance: '50Km',
               imagePath: 'lib/assets/faculdade1.png',
               isFavorited: isFavoritedNotifier,

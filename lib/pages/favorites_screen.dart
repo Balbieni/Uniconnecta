@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:uniconnecta/components/nav_bar.dart';
 
-class ProfileScreen extends StatelessWidget {
+class FavoritesScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(

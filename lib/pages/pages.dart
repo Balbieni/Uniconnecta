@@ -5,7 +5,7 @@ export 'how_access.dart';
 export 'location_screen.dart';
 export 'cadastro_page.dart';
 export 'mais_proximos.dart';
-export 'profile_screen.dart';
+export 'photo_screen.dart';
 export 'splash_screen.dart';
 export 'Unicamp.dart';
 export 'package:uniconnecta/auth_service.dart';

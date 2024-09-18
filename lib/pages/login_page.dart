@@ -24,8 +24,8 @@ class _LoginScreenState extends State<LoginScreen> {
 
       Navigator.push(
         context,
-        MaterialPageRoute(builder: (context) => ProfileScreen()),
-      ); // Navega para a ProfileScreen após login bem-sucedido
+        MaterialPageRoute(builder: (context) => PhotoScreen()),
+      ); // Navega para a PhotoScreen após login bem-sucedido
     } catch (e) {
       print(e);
     }
@@ -37,8 +37,8 @@ class _LoginScreenState extends State<LoginScreen> {
       if (user != null) {
         Navigator.push(
           context,
-          MaterialPageRoute(builder: (context) => ProfileScreen()),
-        ); // Navega para a ProfileScreen após login bem-sucedido
+          MaterialPageRoute(builder: (context) => PhotoScreen()),
+        ); // Navega para a PhotoScreen após login bem-sucedido
       } else {
         print('Login failed');
       }

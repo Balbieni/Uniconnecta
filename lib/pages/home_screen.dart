@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:uniconnecta/components/components.dart';
-import 'package:uniconnecta/components/custom_carousel.dart';
 import 'package:uniconnecta/pages/convest.dart';
+import 'package:uniconnecta/pages/mais_proximos.dart';
 import 'package:uniconnecta/pages/melhores_avalidas.dart';
-import 'package:uniconnecta/pages/pages.dart';
 import 'package:uniconnecta/pages/vestibulares.dart';
+import 'package:uniconnecta/pages/unicamp.dart';
 
 class CarouselItem {
   final String imagePath;
@@ -316,7 +316,7 @@ class HomeScreen extends StatelessWidget {
             MaterialPageRoute(
               builder: (context) => Unicamp(
                 title: 'Unicamp',
-                subtitle: 'Inscrições abertas',
+                subtitle: 'Universidade bem avaliada',
               ),
             ),
           );
@@ -328,24 +328,13 @@ class HomeScreen extends StatelessWidget {
   List<CarouselItem> melhoresAvaliadasItems(BuildContext context) {
     return [
       CarouselItem(
-        imagePath: 'lib/assets/unicamp.png',
-        title: 'enem',
-        rating: 4.9,
-        subtitle: '',
-        tag: '',
-        distance: '50Km',
-        isFavorited: ValueNotifier<bool>(false),
-        onTap: () {
-          Navigator.push(
-            context,
-            MaterialPageRoute(
-              builder: (context) => Unicamp(
-                title: 'enem',
-                subtitle: 'Inscrições abertas',
-              ),
-            ),
-          );
-        },
+        imagePath: 'lib/assets/faculdade2.png',
+        title: 'Faculdade 2',
+        rating: 4.6,
+        subtitle: 'Universidade renomada',
+        tag: 'Ver mais',
+        distance: '15',
+        isFavorited: ValueNotifier<bool>(true),
       ),
     ];
   }
@@ -353,16 +342,13 @@ class HomeScreen extends StatelessWidget {
   List<CarouselItem> maisProximosItems(BuildContext context) {
     return [
       CarouselItem(
-        imagePath: 'lib/assets/unicamp.png',
-        title: 'Unicamp',
-        rating: 4.5,
-        subtitle: 'Computação',
-        tag: 'Inscrições Abertas',
-        distance: '10Km',
+        imagePath: 'lib/assets/faculdade3.png',
+        title: 'Faculdade Mais Próxima 1',
+        rating: 4.0,
+        subtitle: 'Próxima de você',
+        tag: 'Ver mais',
+        distance: '2',
         isFavorited: ValueNotifier<bool>(false),
-        onTap: () {
-          // Implementar navegação para detalhes de Computação
-        },
       ),
     ];
   }
