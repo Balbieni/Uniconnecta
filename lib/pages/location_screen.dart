@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_core/firebase_core.dart';
-import 'pages.dart';
+import 'pages.dart'; // Certifique-se de que esse import está correto
 import 'package:uniconnecta/components/Cep.dart';
 import 'package:uniconnecta/components/button.dart';
 
@@ -16,31 +15,34 @@ class _LocationScreenState extends State<LocationScreen> {
   final _bairroController = TextEditingController();
 
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
+  bool _isFetchingAddress = false; // Controle para evitar múltiplos fetches
 
-  @override
-  void initState() {
-    super.initState();
-    _initializeFirebase();
-  }
+  void _onCepChanged(String value) async {
+    if (value.length == 8 && !_isFetchingAddress) {
+      setState(() {
+        _isFetchingAddress = true; // Sinaliza o início da busca
+      });
 
-  Future<void> _initializeFirebase() async {
-    await Firebase.initializeApp();
-  }
-
-  Future<void> _onCepChanged() async {
-    final cep = _cepController.text;
-    if (cep.length == 8) {
       try {
-        final address = await fetchAddressFromCep(cep);
-        setState(() {
-          _ruaController.text = address['rua'] ?? '';
-          _bairroController.text = address['bairro'] ?? '';
-        });
+        final address = await fetchAddressFromCep(value);
+        if (address != null) {
+          setState(() {
+            _ruaController.text = address['rua'] ?? '';
+            _bairroController.text = address['bairro'] ?? '';
+          });
+        } else {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(content: Text('CEP não encontrado.')),
+          );
+        }
       } catch (e) {
-        print(e); // Imprime o erro no console
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('CEP não encontrado.')),
+          SnackBar(content: Text('Erro ao buscar o endereço.')),
         );
+      } finally {
+        setState(() {
+          _isFetchingAddress = false; // Finaliza a busca
+        });
       }
     }
   }
@@ -51,7 +53,6 @@ class _LocationScreenState extends State<LocationScreen> {
     final bairro = _bairroController.text.trim();
 
     try {
-      // Salva os dados se houver algum dado preenchido
       if (cep.isNotEmpty || rua.isNotEmpty || bairro.isNotEmpty) {
         await _firestore.collection('locations').add({
           'cep': cep,
@@ -65,13 +66,12 @@ class _LocationScreenState extends State<LocationScreen> {
         );
       }
 
-      // Navega para a próxima tela independentemente dos dados preenchidos
-      Navigator.push(
+      // Certifique-se de navegar após o await
+      Navigator.pushReplacement(
         context,
         MaterialPageRoute(builder: (context) => HomeScreen()),
       );
     } catch (e) {
-      print(e); // Imprime o erro no console
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text('Erro ao salvar os dados: $e')),
       );
@@ -118,8 +118,9 @@ class _LocationScreenState extends State<LocationScreen> {
                   ),
                 ),
                 keyboardType: TextInputType.number,
-                maxLength: 9,
-                onChanged: (value) => _onCepChanged(),
+                maxLength: 8, // O CEP tem 8 dígitos
+                onChanged:
+                    _onCepChanged, // Corrigido: passa o valor corretamente
               ),
               SizedBox(height: 20),
               TextField(

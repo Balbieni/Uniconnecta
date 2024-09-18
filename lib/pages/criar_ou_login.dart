@@ -24,7 +24,7 @@ class CriarOuLogin extends StatelessWidget {
                   Navigator.push(
                     context,
                     MaterialPageRoute(
-                      builder: (context) => CadastroPage(),
+                      builder: (context) => HomeScreen(), //colocar CadastroPage
                     ),
                   );
                 },
