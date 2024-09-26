@@ -2,10 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:uniconnecta/components/components.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'pages.dart';
+import 'package:flutter/material.dart';
+import 'package:uniconnecta/pages/home_screen.dart';
+import 'package:uniconnecta/pages/search_page.dart';
+import 'package:uniconnecta/pages/news_screen.dart';
+import 'package:uniconnecta/pages/favorites_screen.dart';
+import 'package:uniconnecta/pages/profile_screen.dart';
 
-class Convest extends StatelessWidget {
-  final ValueNotifier<bool> isFavoritedNotifier = ValueNotifier<bool>(false);
-
+class Convest extends StatefulWidget {
   final String title;
   final String subtitle;
 
@@ -13,52 +17,103 @@ class Convest extends StatelessWidget {
       : super(key: key);
 
   @override
+  _ConvestState createState() => _ConvestState();
+}
+
+class _ConvestState extends State<Convest> {
+  final ValueNotifier<bool> isFavoritedNotifier = ValueNotifier<bool>(false);
+  int _selectedIndex = 0;
+
+  final List<Widget> _pages = [
+    HomeScreen(),
+    SearchPage(),
+    NewsScreen(),
+    FavoritesScreen(),
+    ProfileScreen(),
+  ];
+
+  void _onItemTapped(int index) {
+    setState(() {
+      _selectedIndex = index;
+    });
+  }
+
+  @override
   Widget build(BuildContext context) {
     return DefaultTabController(
       length: 6,
       child: Scaffold(
         backgroundColor: Colors.white,
-        body: Column(
-          children: [
-            UniversityHeader(
-              universityOrEntranceExamName: 'Convest',
-              courseName: 'teste',
-              rating: 4.5,
-              locationType: 'teste1',
-              distance: '50Km',
-              imagePath: 'lib/assets/faculdade1.png',
-              isFavorited: isFavoritedNotifier,
-            ),
-            const TabBar(
-              isScrollable:
-                  true, // Permite rolar as abas se o texto for muito longo
-              indicatorColor: Colors.purple,
-              labelColor: Colors.purple,
-              unselectedLabelColor: Colors.grey,
-              tabs: [
-                Tab(child: Text('Vestibulares')),
-                Tab(child: Text('Sobre seu curso')),
-                Tab(child: Text('Notas de corte')),
-                Tab(child: Text('Avaliações')),
-                Tab(child: Text('Outros Cursos')),
-                Tab(child: Text('Sobre a universidade')),
-              ],
-            ),
-            const Expanded(
-              child: TabBarView(
+        body: _selectedIndex == 0
+            ? Column(
                 children: [
-                  InscrevaSeTab(),
-                  EditalTab(),
-                  ConteudosTab(),
-                  ObrasLiterariasTab(),
-                  ProvasAnterioresTab(),
-                  SobreOVestibularTab(),
+                  UniversityHeader(
+                    universityOrEntranceExamName: 'Convest',
+                    courseName: 'teste',
+                    rating: 4.5,
+                    locationType: 'teste1',
+                    distance: '50Km',
+                    imagePath: 'lib/assets/faculdade1.png',
+                    isFavorited: isFavoritedNotifier,
+                  ),
+                  const TabBar(
+                    isScrollable: true, // Permite rolar as abas
+                    indicatorColor: Colors.purple,
+                    labelColor: Colors.purple,
+                    unselectedLabelColor: Colors.grey,
+                    tabs: [
+                      Tab(child: Text('Vestibulares')),
+                      Tab(child: Text('Sobre seu curso')),
+                      Tab(child: Text('Notas de corte')),
+                      Tab(child: Text('Avaliações')),
+                      Tab(child: Text('Outros Cursos')),
+                      Tab(child: Text('Sobre a universidade')),
+                    ],
+                  ),
+                  const Expanded(
+                    child: TabBarView(
+                      children: [
+                        InscrevaSeTab(),
+                        EditalTab(),
+                        ConteudosTab(),
+                        ObrasLiterariasTab(),
+                        ProvasAnterioresTab(),
+                        SobreOVestibularTab(),
+                      ],
+                    ),
+                  ),
                 ],
-              ),
+              )
+            : _pages[
+                _selectedIndex], // Mostra a página correspondente fora do TabBarView
+        bottomNavigationBar: BottomNavigationBar(
+          items: const [
+            BottomNavigationBarItem(
+              icon: Icon(Icons.home),
+              label: 'Início',
+            ),
+            BottomNavigationBarItem(
+              icon: Icon(Icons.search),
+              label: 'Buscar',
+            ),
+            BottomNavigationBarItem(
+              icon: Icon(Icons.article),
+              label: 'Notícias',
+            ),
+            BottomNavigationBarItem(
+              icon: Icon(Icons.favorite),
+              label: 'Favoritos',
+            ),
+            BottomNavigationBarItem(
+              icon: Icon(Icons.person),
+              label: 'Perfil',
             ),
           ],
+          currentIndex: _selectedIndex,
+          selectedItemColor: Colors.purple,
+          unselectedItemColor: Colors.grey,
+          onTap: _onItemTapped,
         ),
-        bottomNavigationBar: NavBar(),
       ),
     );
   }

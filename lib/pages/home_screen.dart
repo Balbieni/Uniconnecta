@@ -1,10 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:uniconnecta/components/components.dart';
 import 'package:uniconnecta/pages/convest.dart';
 import 'package:uniconnecta/pages/mais_proximos.dart';
 import 'package:uniconnecta/pages/melhores_avalidas.dart';
 import 'package:uniconnecta/pages/vestibulares.dart';
-import 'package:uniconnecta/pages/unicamp.dart';
 import 'package:uniconnecta/pages/enem.dart';
 import 'package:uniconnecta/pages/search_page.dart';
 import 'package:uniconnecta/pages/news_screen.dart';
@@ -59,6 +57,44 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
+      body: _pages[_selectedIndex],
+      bottomNavigationBar: BottomNavigationBar(
+        items: const [
+          BottomNavigationBarItem(
+            icon: Icon(Icons.home),
+            label: 'Início',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.search),
+            label: 'Buscar',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.article),
+            label: 'Notícias',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.favorite),
+            label: 'Favoritos',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.person),
+            label: 'Perfil',
+          ),
+        ],
+        currentIndex: _selectedIndex,
+        selectedItemColor: Colors.purple,
+        unselectedItemColor: Colors.grey,
+        onTap: _onItemTapped,
+      ),
+    );
+  }
+}
+
+// Conteúdo da tela Home com a AppBar incluída
+class HomeScreenContent extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.white,
         elevation: 0,
@@ -153,54 +189,18 @@ class _HomeScreenState extends State<HomeScreen> {
           ),
         ),
       ),
-      body: _pages[
-          _selectedIndex], // Exibe o conteúdo baseado no índice selecionado
-      bottomNavigationBar: BottomNavigationBar(
-        items: const [
-          BottomNavigationBarItem(
-            icon: Icon(Icons.home),
-            label: 'Início',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.search),
-            label: 'Buscar',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.article),
-            label: 'Notícias',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.favorite),
-            label: 'Favoritos',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.person),
-            label: 'Perfil',
-          ),
-        ],
-        currentIndex: _selectedIndex,
-        selectedItemColor: Colors.purple,
-        unselectedItemColor: Colors.grey,
-        onTap: _onItemTapped,
-      ),
-    );
-  }
-}
-
-class HomeScreenContent extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.all(16.0),
-      child: ListView(
-        children: [
-          sectionHeader('Vestibulares', context, 'vestibulares'),
-          buildHorizontalCarousel(context, vestibularesItems(context)),
-          sectionHeader('Melhores Avaliadas', context, 'melhores_avaliadas'),
-          buildHorizontalCarousel(context, melhoresAvaliadasItems(context)),
-          sectionHeader('Mais Próximos', context, 'mais_proximos'),
-          buildHorizontalCarousel(context, maisProximosItems(context)),
-        ],
+      body: Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: ListView(
+          children: [
+            sectionHeader('Vestibulares', context, 'vestibulares'),
+            buildHorizontalCarousel(context, vestibularesItems(context)),
+            sectionHeader('Melhores Avaliadas', context, 'melhores_avaliadas'),
+            buildHorizontalCarousel(context, melhoresAvaliadasItems(context)),
+            sectionHeader('Mais Próximos', context, 'mais_proximos'),
+            buildHorizontalCarousel(context, maisProximosItems(context)),
+          ],
+        ),
       ),
     );
   }
@@ -244,7 +244,7 @@ Widget sectionHeader(String title, BuildContext context, String section) {
               Navigator.push(
                 context,
                 MaterialPageRoute(
-                  builder: (context) => MelhoresAvalidas(),
+                  builder: (context) => MelhoresAvaliadas(),
                 ),
               );
             } else if (section == 'mais_proximos') {
@@ -260,7 +260,7 @@ Widget sectionHeader(String title, BuildContext context, String section) {
             'Ver tudo',
             style: TextStyle(
               fontSize: 14,
-              color: Colors.purple,
+              color: const Color.fromARGB(255, 95, 95, 95),
             ),
           ),
         ),
@@ -307,10 +307,10 @@ Widget buildCarouselCard(CarouselItem item, BuildContext context) {
                 SizedBox(height: 5),
                 Text(item.subtitle,
                     style: TextStyle(fontSize: 12, color: Colors.grey)),
-                SizedBox(height: 10),
+                SizedBox(height: 5),
                 Row(
                   children: [
-                    FavoriteButton(isFavorited: item.isFavorited),
+                    buildRatingStars(item.rating),
                     Spacer(),
                     Text('${item.distance} Km',
                         style: TextStyle(fontSize: 12, color: Colors.grey)),
@@ -328,8 +328,11 @@ Widget buildCarouselCard(CarouselItem item, BuildContext context) {
                     ),
                   ),
                   child: Text(
-                    item.tag,
-                    style: TextStyle(fontSize: 12),
+                    item.tag.isEmpty ? 'Ver mais' : item.tag,
+                    style: TextStyle(
+                      fontSize: 12,
+                      color: Colors.white,
+                    ),
                   ),
                 ),
               ],
@@ -338,6 +341,22 @@ Widget buildCarouselCard(CarouselItem item, BuildContext context) {
         ],
       ),
     ),
+  );
+}
+
+Widget buildRatingStars(double rating) {
+  int fullStars = rating.floor();
+  int halfStars = (rating - fullStars >= 0.5) ? 1 : 0;
+  int emptyStars = 5 - fullStars - halfStars;
+
+  return Row(
+    children: [
+      ...List.generate(fullStars,
+          (index) => Icon(Icons.star, color: Colors.purple, size: 16)),
+      if (halfStars > 0) Icon(Icons.star_half, color: Colors.purple, size: 16),
+      ...List.generate(emptyStars,
+          (index) => Icon(Icons.star_border, color: Colors.purple, size: 16)),
+    ],
   );
 }
 
@@ -389,7 +408,7 @@ List<CarouselItem> vestibularesItems(BuildContext context) {
 List<CarouselItem> melhoresAvaliadasItems(BuildContext context) {
   return [
     CarouselItem(
-      imagePath: 'lib/assets/faculdade2.png',
+      imagePath: 'lib/assets/LogoUnicamp.png',
       title: 'Unicamp',
       rating: 4.6,
       subtitle: 'Universidade renomada',

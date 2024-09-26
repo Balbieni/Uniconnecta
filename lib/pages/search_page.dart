@@ -1,78 +1,113 @@
 import 'package:flutter/material.dart';
 
+void main() {
+  runApp(MyApp());
+}
+
+class MyApp extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      home: SearchPage(),
+      debugShowCheckedModeBanner: false,
+    );
+  }
+}
+
 class SearchPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        automaticallyImplyLeading: false,
+        backgroundColor: Colors.white,
+        elevation: 0,
         title: Row(
           children: [
             CircleAvatar(
               backgroundImage: NetworkImage(
-                  'https://via.placeholder.com/150'), // Imagem do perfil
-            ),
-            SizedBox(width: 10),
-            Expanded(
-              child: TextField(
-                decoration: InputDecoration(
-                  hintText: 'Procure universidades, vestibulares e cursos',
-                  border: InputBorder.none,
-                ),
+                'https://via.placeholder.com/150', // Placeholder image URL
               ),
             ),
-            IconButton(
-              icon: Icon(Icons.filter_list),
-              onPressed: () {},
-            )
+            SizedBox(width: 10),
+            Text(
+              'Procure universidades,\nvestibulares e cursos',
+              style: TextStyle(color: Colors.black87, fontSize: 16),
+            ),
           ],
         ),
+        actions: [
+          IconButton(
+            icon: Icon(Icons.menu, color: Colors.black),
+            onPressed: () {},
+          ),
+        ],
       ),
       body: Column(
         children: [
-          // Filtros
           Padding(
-            padding: const EdgeInsets.all(8.0),
+            padding: const EdgeInsets.all(16.0),
             child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
-                FilterButton(label: 'Presencial'),
-                FilterButton(label: 'Melhor avaliado'),
-                FilterButton(label: 'Mais próximos'),
+                Expanded(
+                  child: TextField(
+                    decoration: InputDecoration(
+                      hintText: 'Buscar...',
+                      prefixIcon: Icon(Icons.search),
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(30.0),
+                        borderSide: BorderSide.none,
+                      ),
+                      filled: true,
+                      fillColor: Colors.grey[200],
+                    ),
+                  ),
+                ),
+                SizedBox(width: 10),
+                Container(
+                  padding: EdgeInsets.all(12),
+                  decoration: BoxDecoration(
+                    color: Colors.purple,
+                    borderRadius: BorderRadius.circular(30),
+                  ),
+                  child: Icon(Icons.filter_list, color: Colors.white),
+                )
               ],
             ),
           ),
-          // Lista de cartões
           Expanded(
-            child: ListView.builder(
-              itemCount: 4, // Quantidade de itens de exemplo
-              itemBuilder: (context, index) {
-                return buildCarouselCard(
-                  CarouselItem(
-                    imagePath: 'assets/unicamp_logo.png', // Exemplo de imagem
-                    title: 'Unicamp',
-                    subtitle: 'Medicina',
-                    isFavorited: false,
-                    distance: 50,
-                    onTap: () {
-                      // Ação ao tocar no cartão
-                    },
-                    tag: 'Presencial',
-                  ),
-                  context,
-                );
-              },
+            child: ListView(
+              padding: EdgeInsets.symmetric(horizontal: 16),
+              children: [
+                buildCategoryCard(
+                  'Universidades',
+                  'https://example.com/Universidades.png', // Image URL
+                ),
+                buildCategoryCard(
+                  'Melhores avaliados',
+                  'https://example.com/MelhoresAvaliadas.png', // Image URL
+                ),
+                buildCategoryCard(
+                  'Vestibulares',
+                  'https://example.com/Vestibulares.png', // Image URL
+                ),
+                buildCategoryCard(
+                  'Favoritos/Notícias',
+                  'https://example.com/FavoritosOuNoticias.png', // Image URL
+                ),
+              ],
             ),
           ),
         ],
       ),
       bottomNavigationBar: BottomNavigationBar(
-        currentIndex: 1, // Página atual "Busca"
-        items: const [
+        type: BottomNavigationBarType.fixed,
+        selectedItemColor: Colors.purple,
+        unselectedItemColor: Colors.grey,
+        currentIndex: 1,
+        items: [
           BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Home'),
           BottomNavigationBarItem(icon: Icon(Icons.search), label: 'Busca'),
-          BottomNavigationBarItem(
-              icon: Icon(Icons.newspaper), label: 'Notícias'),
+          BottomNavigationBarItem(icon: Icon(Icons.article), label: 'Notícias'),
           BottomNavigationBarItem(
               icon: Icon(Icons.favorite), label: 'Favoritos'),
           BottomNavigationBarItem(icon: Icon(Icons.person), label: 'Perfil'),
@@ -81,110 +116,45 @@ class SearchPage extends StatelessWidget {
     );
   }
 
-  Widget buildCarouselCard(CarouselItem item, BuildContext context) {
-    return GestureDetector(
-      onTap: item.onTap,
-      child: Container(
-        margin: EdgeInsets.symmetric(vertical: 8, horizontal: 16),
-        decoration: BoxDecoration(
-          border: Border.all(color: Colors.grey.shade300),
-          borderRadius: BorderRadius.circular(8),
-        ),
-        child: Row(
+  Widget buildCategoryCard(String title, String imageUrl) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 8.0),
+      child: ClipRRect(
+        borderRadius: BorderRadius.circular(16),
+        child: Stack(
+          alignment: Alignment.bottomLeft,
           children: [
-            Image.asset(item.imagePath,
-                height: 80, width: 80, fit: BoxFit.cover),
-            Expanded(
-              child: Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(item.title,
-                        style: TextStyle(
-                            fontSize: 16, fontWeight: FontWeight.bold)),
-                    SizedBox(height: 5),
-                    Text(item.subtitle,
-                        style: TextStyle(fontSize: 12, color: Colors.grey)),
-                    SizedBox(height: 10),
-                    Row(
-                      children: [
-                        ElevatedButton(
-                          onPressed: () {},
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor: Colors.purple,
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(20),
-                            ),
-                          ),
-                          child: Text(
-                            item.tag,
-                            style: TextStyle(fontSize: 12),
-                          ),
-                        ),
-                        Spacer(),
-                        Text('${item.distance} Km',
-                            style: TextStyle(fontSize: 12, color: Colors.grey)),
-                      ],
-                    ),
-                  ],
+            Image.network(
+              imageUrl,
+              height: 150,
+              width: double.infinity,
+              fit: BoxFit.cover,
+            ),
+            Container(
+              height: 150,
+              width: double.infinity,
+              decoration: BoxDecoration(
+                gradient: LinearGradient(
+                  colors: [Colors.black.withOpacity(0.6), Colors.transparent],
+                  begin: Alignment.bottomCenter,
+                  end: Alignment.topCenter,
                 ),
               ),
             ),
-            IconButton(
-              icon: Icon(
-                  item.isFavorited ? Icons.favorite : Icons.favorite_border),
-              onPressed: () {
-                // Toggle favorito
-              },
-            )
+            Padding(
+              padding: const EdgeInsets.all(16.0),
+              child: Text(
+                title,
+                style: TextStyle(
+                  color: Colors.white,
+                  fontSize: 18,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+            ),
           ],
         ),
       ),
-    );
-  }
-}
-
-// Classe para o item do Carousel
-class CarouselItem {
-  final String imagePath;
-  final String title;
-  final String subtitle;
-  final bool isFavorited;
-  final double distance;
-  final VoidCallback? onTap;
-  final String tag;
-
-  CarouselItem({
-    required this.imagePath,
-    required this.title,
-    required this.subtitle,
-    required this.isFavorited,
-    required this.distance,
-    required this.onTap,
-    required this.tag,
-  });
-}
-
-// Botão de filtro personalizado
-class FilterButton extends StatelessWidget {
-  final String label;
-
-  const FilterButton({required this.label});
-
-  @override
-  Widget build(BuildContext context) {
-    return ElevatedButton(
-      onPressed: () {
-        // Lógica do filtro
-      },
-      style: ElevatedButton.styleFrom(
-        backgroundColor: Colors.purple.shade100,
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(20),
-        ),
-      ),
-      child: Text(label),
     );
   }
 }
