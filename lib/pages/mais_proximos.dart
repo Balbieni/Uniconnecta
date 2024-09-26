@@ -6,6 +6,7 @@ import 'package:uniconnecta/pages/search_page.dart';
 import 'package:uniconnecta/pages/news_screen.dart';
 import 'package:uniconnecta/pages/favorites_screen.dart';
 import 'package:uniconnecta/pages/profile_screen.dart';
+import 'package:uniconnecta/components/back_button.dart';
 
 class MaisProximosScreen extends StatefulWidget {
   @override
@@ -53,23 +54,38 @@ class _MaisProximosScreenState extends State<MaisProximosScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
-      appBar: AppBar(
-        title: Text("Mais Próximos"),
-        backgroundColor: Colors.white,
-        leading: IconButton(
-          icon: Icon(Icons.arrow_back, color: Colors.black),
-          onPressed: () {
-            Navigator.of(context).pop();
-          },
-        ),
-      ),
       body: _selectedIndex == 0
-          ? Padding(
-              padding: const EdgeInsets.all(16.0),
-              child: carousel_comp.CustomVerticalCarousel(
-                items: maisProximosItems,
-                isVestibulares: true,
-              ),
+          ? Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Padding(
+                  padding: const EdgeInsets.symmetric(
+                      vertical: 16.0, horizontal: 16.0),
+                  child: Row(
+                    children: [
+                      BackButtonComponent(), // Botão de voltar adicionado
+                      SizedBox(width: 8), // Espaço entre o botão e o texto
+                      Text(
+                        'Mais Próximos',
+                        style: TextStyle(
+                          fontSize: 24,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.black,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                Expanded(
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                    child: carousel_comp.CustomVerticalCarousel(
+                      items: maisProximosItems,
+                      isVestibulares: true,
+                    ),
+                  ),
+                ),
+              ],
             )
           : _pages[_selectedIndex], // Exibe a página correspondente
       bottomNavigationBar: BottomNavigationBar(

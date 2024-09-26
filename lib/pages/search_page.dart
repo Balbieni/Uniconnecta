@@ -1,18 +1,8 @@
 import 'package:flutter/material.dart';
-
-void main() {
-  runApp(MyApp());
-}
-
-class MyApp extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      home: SearchPage(),
-      debugShowCheckedModeBanner: false,
-    );
-  }
-}
+import 'melhores_avalidas.dart';
+import 'mais_proximos.dart';
+import 'vestibulares.dart';
+import 'favorites_screen.dart';
 
 class SearchPage extends StatelessWidget {
   @override
@@ -79,80 +69,83 @@ class SearchPage extends StatelessWidget {
               padding: EdgeInsets.symmetric(horizontal: 16),
               children: [
                 buildCategoryCard(
-                  'Universidades',
+                  context,
+                  'Mais Próximos',
                   'https://example.com/Universidades.png', // Image URL
+                  MaisProximosScreen(),
                 ),
                 buildCategoryCard(
+                  context,
                   'Melhores avaliados',
                   'https://example.com/MelhoresAvaliadas.png', // Image URL
+                  MelhoresAvaliadas(),
                 ),
                 buildCategoryCard(
+                  context,
                   'Vestibulares',
                   'https://example.com/Vestibulares.png', // Image URL
+                  Vestibulares(),
                 ),
                 buildCategoryCard(
+                  context,
                   'Favoritos/Notícias',
                   'https://example.com/FavoritosOuNoticias.png', // Image URL
+                  FavoritesScreen(),
                 ),
               ],
             ),
           ),
         ],
       ),
-      bottomNavigationBar: BottomNavigationBar(
-        type: BottomNavigationBarType.fixed,
-        selectedItemColor: Colors.purple,
-        unselectedItemColor: Colors.grey,
-        currentIndex: 1,
-        items: [
-          BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Home'),
-          BottomNavigationBarItem(icon: Icon(Icons.search), label: 'Busca'),
-          BottomNavigationBarItem(icon: Icon(Icons.article), label: 'Notícias'),
-          BottomNavigationBarItem(
-              icon: Icon(Icons.favorite), label: 'Favoritos'),
-          BottomNavigationBarItem(icon: Icon(Icons.person), label: 'Perfil'),
-        ],
-      ),
     );
   }
 
-  Widget buildCategoryCard(String title, String imageUrl) {
+  Widget buildCategoryCard(
+      BuildContext context, String title, String imageUrl, Widget targetPage) {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 8.0),
-      child: ClipRRect(
-        borderRadius: BorderRadius.circular(16),
-        child: Stack(
-          alignment: Alignment.bottomLeft,
-          children: [
-            Image.network(
-              imageUrl,
-              height: 150,
-              width: double.infinity,
-              fit: BoxFit.cover,
-            ),
-            Container(
-              height: 150,
-              width: double.infinity,
-              decoration: BoxDecoration(
-                gradient: LinearGradient(
-                  colors: [Colors.black.withOpacity(0.6), Colors.transparent],
-                  begin: Alignment.bottomCenter,
-                  end: Alignment.topCenter,
+      child: InkWell(
+        onTap: () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) => targetPage),
+          );
+        },
+        child: ClipRRect(
+          borderRadius: BorderRadius.circular(16),
+          child: Stack(
+            alignment: Alignment.bottomLeft,
+            children: [
+              Image.network(
+                imageUrl,
+                height: 150,
+                width: double.infinity,
+                fit: BoxFit.cover,
+              ),
+              Container(
+                height: 150,
+                width: double.infinity,
+                decoration: BoxDecoration(
+                  gradient: LinearGradient(
+                    colors: [Colors.black.withOpacity(0.6), Colors.transparent],
+                    begin: Alignment.bottomCenter,
+                    end: Alignment.topCenter,
+                  ),
                 ),
               ),
-            ),
-            Padding(
-              padding: const EdgeInsets.all(16.0),
-              child: Text(
-                title,
-                style: TextStyle(
-                  color: Colors.white,
-                  fontSize: 18,
-                  fontWeight: FontWeight.bold,
+              Padding(
+                padding: const EdgeInsets.all(16.0),
+                child: Text(
+                  title,
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 18,
+                    fontWeight: FontWeight.bold,
+                  ),
                 ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );

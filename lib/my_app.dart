@@ -19,6 +19,13 @@ class uniconnecta extends StatelessWidget {
       title: 'Flutter Demo',
       theme: ThemeData(
         primarySwatch: Colors.blue,
+        scaffoldBackgroundColor: Colors.white,
+        bottomAppBarTheme: const BottomAppBarTheme(color: Colors.white),
+        colorScheme:
+            ColorScheme.fromSwatch(primarySwatch: Colors.purple).copyWith(
+          secondary: Colors.white,
+          surface: Colors.white,
+        ),
       ),
       initialRoute: '/',
       routes: {
