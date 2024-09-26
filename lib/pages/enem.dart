@@ -2,10 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:uniconnecta/components/components.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'pages.dart';
+import 'package:uniconnecta/pages/home_screen.dart';
+import 'package:uniconnecta/pages/search_page.dart';
+import 'package:uniconnecta/pages/news_screen.dart';
+import 'package:uniconnecta/pages/favorites_screen.dart';
+import 'package:uniconnecta/pages/profile_screen.dart';
 
-class Enem extends StatelessWidget {
-  final ValueNotifier<bool> isFavoritedNotifier = ValueNotifier<bool>(false);
-
+class Enem extends StatefulWidget {
   final String title;
   final String subtitle;
 
@@ -13,51 +16,102 @@ class Enem extends StatelessWidget {
       : super(key: key);
 
   @override
+  _EnemState createState() => _EnemState();
+}
+
+class _EnemState extends State<Enem> {
+  final ValueNotifier<bool> isFavoritedNotifier = ValueNotifier<bool>(false);
+  int _selectedIndex = 0;
+
+  final List<Widget> _pages = [
+    HomeScreen(),
+    SearchPage(),
+    NewsScreen(), // Adicionando também a NewsScreen
+    FavoritesScreen(),
+    ProfileScreen(),
+  ];
+
+  void _onItemTapped(int index) {
+    setState(() {
+      _selectedIndex = index;
+    });
+  }
+
+  @override
   Widget build(BuildContext context) {
     return DefaultTabController(
       length: 6,
       child: Scaffold(
-        body: Column(
-          children: [
-            UniversityHeader(
-              universityOrEntranceExamName: 'Unicamp',
-              courseName: 'Medicina',
-              rating: 4.5,
-              locationType: 'Presencial',
-              distance: '50Km',
-              imagePath: 'lib/assets/faculdade1.png',
-              isFavorited: isFavoritedNotifier,
-            ),
-            const TabBar(
-              isScrollable:
-                  true, // Permite rolar as abas se o texto for muito longo
-              indicatorColor: Colors.purple,
-              labelColor: Colors.purple,
-              unselectedLabelColor: Colors.grey,
-              tabs: [
-                Tab(child: Text('Vestibulares')),
-                Tab(child: Text('Sobre seu curso')),
-                Tab(child: Text('Notas de corte')),
-                Tab(child: Text('Avaliações')),
-                Tab(child: Text('Outros Cursos')),
-                Tab(child: Text('Sobre a universidade')),
-              ],
-            ),
-            const Expanded(
-              child: TabBarView(
+        body: _selectedIndex == 0
+            ? Column(
                 children: [
-                  InscrevaSeTab(),
-                  EditalTab(),
-                  ConteudosTab(),
-                  ObrasLiterariasTab(),
-                  ProvasAnterioresTab(),
-                  SobreOVestibularTab(),
+                  UniversityHeader(
+                    universityOrEntranceExamName: 'Unicamp',
+                    courseName: 'Medicina',
+                    rating: 4.5,
+                    locationType: 'Presencial',
+                    distance: '50Km',
+                    imagePath: 'lib/assets/faculdade1.png',
+                    isFavorited: isFavoritedNotifier,
+                  ),
+                  const TabBar(
+                    isScrollable: true,
+                    indicatorColor: Colors.purple,
+                    labelColor: Colors.purple,
+                    unselectedLabelColor: Colors.grey,
+                    tabs: [
+                      Tab(child: Text('Vestibulares')),
+                      Tab(child: Text('Sobre seu curso')),
+                      Tab(child: Text('Notas de corte')),
+                      Tab(child: Text('Avaliações')),
+                      Tab(child: Text('Outros Cursos')),
+                      Tab(child: Text('Sobre a universidade')),
+                    ],
+                  ),
+                  const Expanded(
+                    child: TabBarView(
+                      children: [
+                        InscrevaSeTab(),
+                        EditalTab(),
+                        ConteudosTab(),
+                        ObrasLiterariasTab(),
+                        ProvasAnterioresTab(),
+                        SobreOVestibularTab(),
+                      ],
+                    ),
+                  ),
                 ],
-              ),
+              )
+            : _pages[
+                _selectedIndex], // Mostra a página selecionada fora da TabView
+        bottomNavigationBar: BottomNavigationBar(
+          items: const [
+            BottomNavigationBarItem(
+              icon: Icon(Icons.home),
+              label: 'Início',
+            ),
+            BottomNavigationBarItem(
+              icon: Icon(Icons.search),
+              label: 'Buscar',
+            ),
+            BottomNavigationBarItem(
+              icon: Icon(Icons.article),
+              label: 'Notícias',
+            ),
+            BottomNavigationBarItem(
+              icon: Icon(Icons.favorite),
+              label: 'Favoritos',
+            ),
+            BottomNavigationBarItem(
+              icon: Icon(Icons.person),
+              label: 'Perfil',
             ),
           ],
+          currentIndex: _selectedIndex,
+          selectedItemColor: Colors.purple,
+          unselectedItemColor: Colors.grey,
+          onTap: _onItemTapped,
         ),
-        bottomNavigationBar: NavBar(),
       ),
     );
   }
@@ -68,24 +122,82 @@ class InscrevaSeTab extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ListView(
+    return SingleChildScrollView(
       padding: const EdgeInsets.all(16),
-      children: [
-        ExamCard(
-          title: 'Convest',
-          description:
-              'Período de inscrições será de 27 de maio a 7 de junho. Provas serão aplicadas nos dias 3 e 10 de novembro em todo o Brasil.',
-          onPressedInscrever: () {},
-          onPressedPagina: () {},
+      child: Column(
+        children: [
+          _buildExamCard(
+            title: 'Enem',
+            description:
+                'Período de inscrições será de 27 de maio a 7 de junho. Provas serão aplicadas nos dias 3 e 10 de novembro em todo o Brasil.',
+            onPressedInscrever: () {
+              // Ação ao clicar no link Inscrever-se
+            },
+            onPressedPagina: () {
+              // Ação ao clicar no link Página
+            },
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildExamCard({
+    required String title,
+    required String description,
+    required VoidCallback onPressedInscrever,
+    required VoidCallback onPressedPagina,
+  }) {
+    return Card(
+      margin: const EdgeInsets.symmetric(vertical: 8),
+      child: Padding(
+        padding: const EdgeInsets.all(16),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              title,
+              style: const TextStyle(
+                fontSize: 18,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+            const SizedBox(height: 8),
+            Text(
+              description,
+              style: const TextStyle(fontSize: 14),
+            ),
+            const SizedBox(height: 16),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                GestureDetector(
+                  onTap: onPressedInscrever,
+                  child: const Text(
+                    'Inscrever-se',
+                    style: TextStyle(
+                      fontSize: 16,
+                      color: Colors.blue,
+                      decoration: TextDecoration.underline,
+                    ),
+                  ),
+                ),
+                GestureDetector(
+                  onTap: onPressedPagina,
+                  child: const Text(
+                    'Página',
+                    style: TextStyle(
+                      fontSize: 16,
+                      color: Colors.blue,
+                      decoration: TextDecoration.underline,
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ],
         ),
-        ExamCard(
-          title: 'Enem',
-          description:
-              'Período de inscrições será de 27 de maio a 7 de junho. Provas serão aplicadas nos dias 3 e 10 de novembro em todo o Brasil.',
-          onPressedInscrever: () {},
-          onPressedPagina: () {},
-        ),
-      ],
+      ),
     );
   }
 }
@@ -100,7 +212,7 @@ class EditalTab extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          // Card para download do edital
+          // Card para download do edital ENEM
           Card(
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(8),
@@ -111,7 +223,7 @@ class EditalTab extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   const Text(
-                    'Edital Convest 2024',
+                    'Edital ENEM 2024',
                     style: TextStyle(
                       fontSize: 18.0,
                       fontWeight: FontWeight.bold,
@@ -122,14 +234,14 @@ class EditalTab extends StatelessWidget {
                     width: double.infinity,
                     child: ElevatedButton(
                       onPressed: () {
-                        // Ação de download do edital
+                        // Ação de download do edital do ENEM
                       },
                       style: ElevatedButton.styleFrom(
                         padding: const EdgeInsets.symmetric(vertical: 12),
-                        backgroundColor: Colors.purple,
+                        backgroundColor: Colors.purple, // Cor tema do ENEM
                       ),
                       child: const Text(
-                        'Baixar',
+                        'Baixar Edital',
                         style: TextStyle(fontSize: 16, color: Colors.white),
                       ),
                     ),
@@ -142,11 +254,11 @@ class EditalTab extends StatelessWidget {
 
           // Seção de Edital Simplificado
           const Text(
-            'Edital simplificado',
+            'Edital simplificado do ENEM',
             style: TextStyle(
               fontSize: 18.0,
               fontWeight: FontWeight.bold,
-              color: Colors.purple,
+              color: Colors.purple, // Cor tema do ENEM
             ),
           ),
           const SizedBox(height: 16),
@@ -157,9 +269,10 @@ class EditalTab extends StatelessWidget {
             style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
           ),
           const SizedBox(height: 8),
-          _buildListItem('Data de realização do exame.'),
-          _buildListItem('Locais de prova.'),
-          _buildListItem('Horário de abertura e fechamento dos portões.'),
+          _buildListItem('Datas das provas do ENEM: 3 e 10 de novembro.'),
+          _buildListItem(
+              'Locais de prova disponíveis no cartão de confirmação.'),
+          _buildListItem('Horários de abertura e fechamento dos portões.'),
 
           const SizedBox(height: 16),
           const Text(
@@ -167,10 +280,10 @@ class EditalTab extends StatelessWidget {
             style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
           ),
           const SizedBox(height: 8),
-          _buildListItem('Documentação necessária.'),
-          _buildListItem('Prazo de inscrição.'),
-          _buildListItem('Procedimentos para inscrição online ou presencial.'),
-          _buildListItem('Taxa de inscrição e possíveis isenções.'),
+          _buildListItem('Documentação necessária para inscrição.'),
+          _buildListItem('Prazo de inscrição: de 27 de maio a 7 de junho.'),
+          _buildListItem('Procedimentos para inscrição online.'),
+          _buildListItem('Taxa de inscrição e possíveis isenções para o ENEM.'),
 
           const SizedBox(height: 16),
           const Text(
@@ -178,11 +291,10 @@ class EditalTab extends StatelessWidget {
             style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
           ),
           const SizedBox(height: 8),
-          _buildListItem('Provas (datas, horários, disciplinas).'),
           _buildListItem(
-              'Formatos das provas (objetivas, dissertativas, redação).'),
-          _buildListItem('Critérios de correção e avaliação.'),
-          _buildListItem('Possíveis etapas eliminatórias.'),
+              'Provas (linguagens, matemática, ciências da natureza, redação).'),
+          _buildListItem('Formatos das provas (objetivas e redação).'),
+          _buildListItem('Critérios de correção e avaliação no ENEM.'),
 
           const SizedBox(height: 16),
           const Text(
@@ -190,12 +302,12 @@ class EditalTab extends StatelessWidget {
             style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
           ),
           const SizedBox(height: 8),
-          _buildListItem('Matérias abordadas em cada disciplina.'),
-          _buildListItem('Bibliografia recomendada.'),
+          _buildListItem('Matérias abordadas em cada área de conhecimento.'),
+          _buildListItem('Bibliografia sugerida para o ENEM.'),
 
           const SizedBox(height: 16),
           const Text(
-            'Política de Cotas e Ações Afirmativas (se aplicável):',
+            'Política de Cotas e Ações Afirmativas:',
             style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
           ),
           const SizedBox(height: 8),
@@ -208,7 +320,8 @@ class EditalTab extends StatelessWidget {
             style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
           ),
           const SizedBox(height: 8),
-          _buildListItem('Data prevista para divulgação dos resultados.'),
+          _buildListItem(
+              'Data prevista para divulgação dos resultados do ENEM.'),
           _buildListItem(
               'Formas de acesso aos resultados (online, presencial).'),
 
@@ -219,8 +332,8 @@ class EditalTab extends StatelessWidget {
           ),
           const SizedBox(height: 8),
           _buildListItem('Documentação necessária para matrícula.'),
-          _buildListItem('Prazo para realização da matrícula.'),
-          _buildListItem('Procedimentos para matrícula presencial ou online.'),
+          _buildListItem('Prazo para realização da matrícula após o ENEM.'),
+          _buildListItem('Procedimentos para matrícula online.'),
 
           const SizedBox(height: 16),
           const Text(
@@ -228,9 +341,11 @@ class EditalTab extends StatelessWidget {
             style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
           ),
           const SizedBox(height: 8),
-          _buildListItem('Informações adicionais importantes.'),
-          _buildListItem('Recomendações aos candidatos.'),
-          _buildListItem('Canais de contato para esclarecimento de dúvidas.'),
+          _buildListItem(
+              'Informações adicionais importantes para os candidatos.'),
+          _buildListItem(
+              'Recomendações e orientações para o dia da prova do ENEM.'),
+          _buildListItem('Canais de contato para dúvidas sobre o ENEM.'),
         ],
       ),
     );
@@ -266,149 +381,87 @@ class ConteudosTab extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          // Card para download do edital
           const Text(
-            'O que estudar para a Convest?',
+            'O que estudar para o ENEM?',
             style: TextStyle(
               fontSize: 18.0,
               fontWeight: FontWeight.bold,
-              color: Colors.purple,
+              color: Colors.purple, // Cor temática do ENEM
             ),
           ),
           const SizedBox(height: 20),
-          // Seção de introdução
-          _buildSectionTitle('A estrutura da prova da Unicamp'),
-          _buildParagraph(
-              'Para iniciar os estudos, é preciso ter em mente que o vestibular da Unicamp avalia a capacidade do candidato de fazer conexões entre as matérias, a chamada interdisciplinaridade.'),
-          _buildParagraph(
-              'Uma dica importante para encarar desafios como esse é pensar macro e fazer ligações entre as informações de várias matérias sobre um mesmo assunto.'),
 
-          // Exemplo interdisciplinaridade
+          // Introdução
+          _buildSectionTitle('Estrutura da prova do ENEM'),
           _buildParagraph(
-              'Por exemplo, a questão da violência no Brasil pode ser pensada de forma histórica, sociológica e até matemática. Se você pensar de forma abrangente o assunto, terá mais chances de ir bem.'),
+              'O ENEM é composto por quatro áreas de conhecimento: Ciências da Natureza, Ciências Humanas, Linguagens e Matemática. Além disso, há a redação, que exige a produção de um texto dissertativo-argumentativo.'),
+          _buildParagraph(
+              'A prova valoriza a capacidade de interpretação, resolução de problemas práticos e aplicação do conhecimento em situações do dia a dia.'),
 
           const SizedBox(height: 20),
 
-          // Seção de disciplinas
-          _buildSectionTitle('As disciplinas do vestibular da Unicamp'),
+          // Seção de Ciências da Natureza
+          _buildSectionTitle('Ciências da Natureza'),
           _buildParagraph(
-              'O vestibular da Unicamp aborda temas de conhecimentos gerais que são estudados no Ensino Médio. Você deverá estar preparado para lidar com questões de matemática, português, física, biologia, química, geografia, história, filosofia e sociologia.'),
+              'Nesta área, são abordados temas de biologia, química e física, com questões que integram essas disciplinas para avaliar a compreensão dos fenômenos naturais e suas aplicações.'),
+          _buildBulletList([
+            'Física: Leis de Newton, eletricidade, óptica e termodinâmica.',
+            'Química: Tabela periódica, reações químicas, equilíbrio químico e eletroquímica.',
+            'Biologia: Ecologia, genética, evolução e biotecnologia.'
+          ]),
 
-          _buildParagraph('Vamos ver algumas dicas de cada disciplina!'),
+          const SizedBox(height: 20),
+
+          // Seção de Ciências Humanas
+          _buildSectionTitle('Ciências Humanas'),
+          _buildParagraph(
+              'A área de Ciências Humanas engloba história, geografia, filosofia e sociologia. O enfoque é a interpretação de documentos, mapas e textos relacionados a aspectos sociais e políticos.'),
+          _buildBulletList([
+            'História: Brasil Colônia, ditadura militar, revoluções e conflitos mundiais.',
+            'Geografia: Meio ambiente, urbanização, globalização e geopolítica.',
+            'Filosofia: Ética, democracia e teorias sociais.',
+            'Sociologia: Estratificação social, movimentos sociais e cidadania.'
+          ]),
+
+          const SizedBox(height: 20),
+
+          // Seção de Linguagens
+          _buildSectionTitle('Linguagens'),
+          _buildParagraph(
+              'Esta área avalia a capacidade de interpretação de textos, incluindo análise de obras literárias, gêneros textuais e questões relacionadas à gramática.'),
+          _buildBulletList([
+            'Interpretação de textos verbais e não-verbais.',
+            'Conceitos gramaticais como sintaxe e morfologia.',
+            'Gêneros discursivos e variações linguísticas.',
+            'Literatura: Obras clássicas e contemporâneas da literatura brasileira.'
+          ]),
 
           const SizedBox(height: 20),
 
           // Seção de Matemática
           _buildSectionTitle('Matemática'),
           _buildParagraph(
-              'Na prova de matemática você precisa mostrar que é capaz de identificar um conhecimento crítico e integrado da disciplina. Deve estar atento às leituras dos enunciados, elaborar cálculos, usar corretamente os conceitos e as unidades matemáticas.'),
-          _buildParagraph(
-              'A prova exige que o candidato saiba resolver problemas matemáticos relacionados ao dia-a-dia. Para isso, as questões cobram conhecimentos em:'),
+              'A prova de Matemática no ENEM exige raciocínio lógico e resolução de problemas práticos do cotidiano, com foco em áreas como álgebra, geometria e estatística.'),
           _buildBulletList([
-            'Conjuntos numéricos (números reais, naturais e sequências numéricas)',
-            'Funções e gráficos (função linear, inversa, equações, etc.)',
-            'Probabilidade (princípios de contagem, binômio de Newton)',
-            'Geometria plana e espacial (congruências, quadriláteros notáveis)',
-            'Trigonometria (medida de ângulos, lei dos senos e cossenos)',
-            'Logaritmos e exponenciais (potências, função logarítmica)'
-          ]),
-
-          const SizedBox(height: 20),
-
-          // Seção de Português
-          _buildSectionTitle('Português'),
-          _buildParagraph(
-              'Na prova de português e literatura, você precisa interpretar textos, formular hipóteses e estabelecer relações, analisar estruturas linguísticas e estar atento às regras gramaticais.'),
-          _buildParagraph(
-              'O aluno deve estudar assuntos como gêneros discursivos, variações linguísticas, sintaxe e morfologia da língua portuguesa.'),
-          _buildParagraph(
-              'Nas questões de literatura, espera-se que o candidato tenha domínio de interpretação textual e conhecimento da cultura expressa nos livros indicados no edital.'),
-
-          const SizedBox(height: 20),
-
-          // Seção de Física
-          _buildSectionTitle('Física'),
-          _buildParagraph(
-              'Para ter um bom resultado na prova de física, o candidato precisa demonstrar sua capacidade de raciocínio matemático e conhecimento dos conceitos básicos de física.'),
-          _buildBulletList([
-            'Fundamentos da física',
-            'Mecânica (leis de Newton, força de atrito)',
-            'Calorimetria e termodinâmica',
-            'Óptica e ondas (espelhos, lentes, ondas sonoras)',
-            'Eletricidade e magnetismo (forças eletromagnéticas)',
-            'Noções de física moderna (átomos, partículas elementares)'
-          ]),
-
-          const SizedBox(height: 20),
-
-          // Seção de Biologia
-          _buildSectionTitle('Biologia'),
-          _buildParagraph(
-              'O exame de biologia exige conhecimento do conteúdo ensinado no Ensino Médio. É preciso atenção para interpretar os enunciados, gráficos e imagens das questões.'),
-          _buildBulletList([
-            'Bases moleculares (componentes bioquímicos das células)',
-            'Hereditariedade (código genético, manipulação do DNA)',
-            'Origem e evolução da vida',
-            'Saúde humana e meio ambiente',
-            'Diversidade e função biológica'
-          ]),
-
-          const SizedBox(height: 20),
-
-          // Seção de Química
-          _buildSectionTitle('Química'),
-          _buildParagraph(
-              'Em química, o estudante deve demonstrar sua capacidade de observar e descrever fenômenos químicos, conhecer informações sobre transformações e desenvolvimento científico.'),
-          _buildBulletList([
-            'Materiais (massas atômicas, fórmulas)',
-            'Gases (leis de Boyle, misturas gasosas)',
-            'Líquidos e sólidos (modelo iônico, covalente)',
-            'Eletroquímica (oxidação, eletrólise)',
-            'Química de compostos orgânicos'
-          ]),
-
-          const SizedBox(height: 20),
-
-          // Seção de Geografia, História, Sociologia e Filosofia
-          _buildSectionTitle('Geografia, história, sociologia e filosofia'),
-          _buildParagraph(
-              'A prova da Unicamp aborda temas dessas disciplinas integrados a questões de história e geografia, exigindo uma visão global da realidade e interpretação de gráficos, mapas e tabelas.'),
-          _buildBulletList([
-            'Fusos horários, projeção cartográfica',
-            'Questão ambiental no Brasil',
-            'Geopolítica, globalização, economia regional',
-            'História do Brasil e do mundo contemporâneo',
-            'Períodos históricos como antiguidade, idade média, modernidade'
+            'Números e operações (frações, porcentagens, potências).',
+            'Álgebra: Funções, equações e inequações.',
+            'Geometria: Áreas, volumes e trigonometria.',
+            'Probabilidade e estatística: Gráficos, tabelas e análise de dados.'
           ]),
 
           const SizedBox(height: 20),
 
           // Seção de Redação
-          _buildSectionTitle('Unicamp: redação'),
+          _buildSectionTitle('Redação'),
           _buildParagraph(
-              'A segunda fase do vestibular inclui uma redação, que visa conhecer as habilidades discursivas dos candidatos. A avaliação considera pertinência ao tema, qualidade de leitura e aplicação correta das regras gramaticais.'),
-
-          const SizedBox(height: 20),
-
-          // Seção de Livros da Unicamp
-          _buildSectionTitle('Livros da Unicamp'),
-          _buildParagraph(
-              'A prova de literatura exige a leitura de livros indicados no edital. Os gêneros variam entre poesia, teatro, conto e romance. Aqui estão os livros indicados:'),
-          _buildBulletList([
-            '“Sonetos”, de Luís de Camões',
-            '“Poemas Negros”, de Jorge de Lima',
-            '“A teus pés”, de Ana Cristina Cesar',
-            '“O Bem-amado”, de Dias Gomes',
-            '“Coração, Cabeça e Estômago”, de Camilo Castelo Branco',
-            '“História do Cerco de Lisboa”, de José Saramago'
-          ]),
+              'A redação do ENEM avalia a capacidade de organizar e expor ideias de forma clara, além de propor intervenções para resolver o problema discutido. O texto deve ser dissertativo-argumentativo e seguir as normas gramaticais.'),
 
           const SizedBox(height: 20),
 
           // Seção sobre isenção da taxa de inscrição
           _buildSectionTitle('Como solicitar a isenção da taxa de inscrição?'),
           _buildParagraph(
-              'Para solicitar a isenção, o candidato deve atender aos requisitos da Unicamp. A isenção é oferecida para alunos de baixa renda, funcionários da Unicamp e candidatos de licenciatura noturna.'),
+              'Para solicitar a isenção da taxa de inscrição do ENEM, o candidato deve atender aos requisitos como estar inscrito no CadÚnico ou ter concluído o Ensino Médio em escola pública.'),
         ],
       ),
     );
@@ -421,7 +474,7 @@ class ConteudosTab extends StatelessWidget {
       style: const TextStyle(
         fontSize: 18,
         fontWeight: FontWeight.bold,
-        color: Colors.purple,
+        color: Colors.purple, // Cor temática do ENEM
       ),
     );
   }
@@ -477,52 +530,50 @@ class ObrasLiterariasTab extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           const Text(
-            'Obras literárias',
+            'Obras literárias cobradas no ENEM',
             style: TextStyle(
               fontSize: 20,
               fontWeight: FontWeight.bold,
-              color: Colors.purple,
+              color: Colors.purple, // Cor temática do ENEM
             ),
           ),
           const SizedBox(height: 16),
           const Text(
-            'Livros da Unicamp\n'
-            'Como vimos nos tópicos anteriores, a prova de literatura da Unicamp exige a leitura de alguns livros pré-selecionados e informados no edital. '
-            'Os gêneros textuais desses livros podem ser diferentes, como poesia, teatro, conto, romance, etc.\n',
+            'O ENEM avalia, entre outros conhecimentos, a capacidade de interpretação de obras literárias e de relacioná-las com aspectos culturais, sociais e históricos. '
+            'Não há uma lista oficial de livros obrigatórios para o ENEM, como em alguns vestibulares, mas é importante ter conhecimento de obras clássicas e contemporâneas da literatura brasileira e suas contribuições para a formação da identidade cultural do país.\n',
             style: TextStyle(fontSize: 16),
             textAlign: TextAlign.justify,
           ),
           const Text(
-            'Os livros e contos escolhidos para o vestibular da Unicamp são:',
+            'Aqui estão algumas obras clássicas que frequentemente aparecem em questões do ENEM:',
             style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
           ),
           const SizedBox(height: 16),
           _buildBulletList([
-            '“Sonetos”, de Luís de Camões',
-            '“Poemas Negros”, de Jorge de Lima',
-            '“A teus pés”, de Ana Cristina Cesar',
-            '“O Bem-amado”, de Dias Gomes',
-            '“Coração, Cabeça e Estômago”, de Camilo Castelo Branco',
-            '“Caminhos Cruzados”, de Érico Veríssimo',
-            '“História do Cerco de Lisboa”, de José Saramago',
-            '“Quarto de Despejo”, de Carolina Maria de Jesus',
-            '“Sermões”, do Padre Antônio Vieira',
-            '“O Espelho”, de Machado de Assis',
-            '“Amor”, do livro Laços de Família, de Clarice Lispector',
-            '“A Hora e a Vez de Augusto Matraga”, do livro Sagarana, de Guimarães Rosa',
+            '“O Cortiço”, de Aluísio Azevedo',
+            '“Memórias Póstumas de Brás Cubas”, de Machado de Assis',
+            '“Vidas Secas”, de Graciliano Ramos',
+            '“Capitães da Areia”, de Jorge Amado',
+            '“Iracema”, de José de Alencar',
+            '“A Moreninha”, de Joaquim Manuel de Macedo',
+            '“Macunaíma”, de Mário de Andrade',
+            '“Senhora”, de José de Alencar',
+            '“A Hora da Estrela”, de Clarice Lispector',
+            '“Dom Casmurro”, de Machado de Assis',
+            '“O Auto da Compadecida”, de Ariano Suassuna',
           ]),
           const SizedBox(height: 20),
           const Text(
-            'Confira a matéria original em:',
+            'Saiba mais sobre a importância da literatura no ENEM em:',
             style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
           ),
           const SizedBox(height: 8),
           GestureDetector(
             onTap: () => _launchURL(
-              'https://blog.stoodi.com.br/blog/vestibular/unicamp/#::text=Como%20já%20vimos,%20o%20vestibular,%20história,%20filosofia%20e%20sociologia.',
+              'https://www.todamateria.com.br/livros-enem/',
             ),
             child: const Text(
-              'https://blog.stoodi.com.br/blog/vestibular/unicamp/',
+              'https://www.todamateria.com.br/livros-enem/',
               style: TextStyle(
                 color: Colors.blue,
                 decoration: TextDecoration.underline,
@@ -582,51 +633,71 @@ class ProvasTab extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           const Text(
-            'Provas',
+            'Provas do ENEM',
             style: TextStyle(
               fontSize: 20,
               fontWeight: FontWeight.bold,
-              color: Colors.purple,
+              color: Colors.purple, // Cor temática do ENEM
             ),
           ),
           const SizedBox(height: 16),
+
+          // Seção das provas de Ciências da Natureza
           _buildSection(
-            title: 'Primeira fase',
+            title: 'Ciências da Natureza e suas Tecnologias',
             links: [
-              LinkItem(text: 'Provas O e Z', url: '#'),
-              LinkItem(text: 'Provas R e Y', url: '#'),
-              LinkItem(text: 'Provas S e X', url: '#'),
-              LinkItem(text: 'Provas T e W', url: '#'),
+              LinkItem(text: 'Prova de 2023', url: '#'),
+              LinkItem(text: 'Prova de 2022', url: '#'),
+              LinkItem(text: 'Prova de 2021', url: '#'),
+              LinkItem(text: 'Prova de 2020', url: '#'),
             ],
           ),
           const SizedBox(height: 16),
+
+          // Seção das provas de Matemática
           _buildSection(
-            title: 'Segunda fase',
+            title: 'Matemática e suas Tecnologias',
             links: [
-              LinkItem(
-                  text: 'Prova da área de Ciências Exatas / Tecnológicos',
-                  url: '#'),
-              LinkItem(
-                  text: 'Prova da área de Ciências Biológicas / Saúde',
-                  url: '#'),
-              LinkItem(
-                  text: 'Prova da área de Ciências Humanas / Artes', url: '#'),
-              LinkItem(
-                  text:
-                      'Prova de Redação, Língua Portuguesa e de Literaturas de Língua Portuguesa, Interdisciplinares com Língua Inglesa e Interdisciplinares de Ciências da Natureza',
-                  url: '#'),
+              LinkItem(text: 'Prova de 2023', url: '#'),
+              LinkItem(text: 'Prova de 2022', url: '#'),
+              LinkItem(text: 'Prova de 2021', url: '#'),
+              LinkItem(text: 'Prova de 2020', url: '#'),
             ],
           ),
           const SizedBox(height: 16),
+
+          // Seção das provas de Linguagens
           _buildSection(
-            title: 'Habilidades específicas',
+            title: 'Linguagens, Códigos e suas Tecnologias',
             links: [
-              LinkItem(text: 'Arquitetura e Urbanismo – parte 1', url: '#'),
-              LinkItem(
-                  text: 'Arquitetura e Urbanismo – partes 2 e 3', url: '#'),
-              LinkItem(text: 'Artes Cênicas', url: '#'),
-              LinkItem(text: 'Artes Visuais – História da arte', url: '#'),
-              LinkItem(text: 'Artes Visuais – Expressão plástica', url: '#'),
+              LinkItem(text: 'Prova de 2023', url: '#'),
+              LinkItem(text: 'Prova de 2022', url: '#'),
+              LinkItem(text: 'Prova de 2021', url: '#'),
+              LinkItem(text: 'Prova de 2020', url: '#'),
+            ],
+          ),
+          const SizedBox(height: 16),
+
+          // Seção das provas de Ciências Humanas
+          _buildSection(
+            title: 'Ciências Humanas e suas Tecnologias',
+            links: [
+              LinkItem(text: 'Prova de 2023', url: '#'),
+              LinkItem(text: 'Prova de 2022', url: '#'),
+              LinkItem(text: 'Prova de 2021', url: '#'),
+              LinkItem(text: 'Prova de 2020', url: '#'),
+            ],
+          ),
+          const SizedBox(height: 16),
+
+          // Seção da Redação
+          _buildSection(
+            title: 'Redação',
+            links: [
+              LinkItem(text: 'Tema da Redação de 2023', url: '#'),
+              LinkItem(text: 'Tema da Redação de 2022', url: '#'),
+              LinkItem(text: 'Tema da Redação de 2021', url: '#'),
+              LinkItem(text: 'Tema da Redação de 2020', url: '#'),
             ],
           ),
         ],
@@ -649,7 +720,7 @@ class ProvasTab extends StatelessWidget {
               style: const TextStyle(
                 fontSize: 18,
                 fontWeight: FontWeight.bold,
-                color: Colors.purple,
+                color: Colors.purple, // Cor temática do ENEM
               ),
             ),
             const SizedBox(height: 8),
@@ -704,21 +775,25 @@ class ProvasAnterioresTab extends StatelessWidget {
   Widget build(BuildContext context) {
     return Center(
       child: Column(
+        mainAxisAlignment: MainAxisAlignment.center, // Centralizar o conteúdo
         children: [
-          Text(
-            'Outros cursos serão exibidos aqui.',
+          const Text(
+            'Provas anteriores do ENEM serão exibidas aqui.',
             style: TextStyle(
-              color: ColorStyle.RoxoP,
+              color: Colors.purple, // Cor temática do ENEM
               fontSize: 16.0,
+              fontWeight: FontWeight.bold, // Destacar o texto principal
             ),
           ),
           const SizedBox(height: 20),
           const Text(
-            'texto imenso que eu vou colocar',
+            'Você poderá acessar as provas e gabaritos dos últimos anos do ENEM para praticar e se familiarizar com o formato da avaliação. '
+            'As provas incluem questões de Ciências da Natureza, Ciências Humanas, Matemática, Linguagens e Redação. Confira a lista completa em breve.',
             style: TextStyle(
               fontSize: 14.0,
-              color: Colors.black,
+              color: Colors.black, // Cor de contraste para o texto descritivo
             ),
+            textAlign: TextAlign.center, // Centralizar o texto
           ),
         ],
       ),
@@ -737,100 +812,56 @@ class SobreOVestibularTab extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           const Text(
-            'Conheça a Equipe Comvest',
+            'Sobre o ENEM',
             style: TextStyle(
               fontSize: 20,
               fontWeight: FontWeight.bold,
-              color: Colors.purple,
+              color: Colors.purple, // Cor temática do ENEM
             ),
           ),
           const SizedBox(height: 16),
           _buildSection(
-              'Coordenadoria Executiva dos Vestibulares e de Programas Educacionais',
-              [
-                'Diretor: José Alves de Freitas Neto',
-                'Diretora Adjunta: Ana Maria Fonseca de Almeida',
-                'Coordenadora Acadêmica: Márcia Rodrigues de Souza Mendonça',
-                'Coordenador de Logística: Kleber Roberto Pirota',
-                'Coordenador de Pesquisa: Rafael Pimentel Maia',
-              ]),
+            'O que é o ENEM?',
+            [
+              'O Exame Nacional do Ensino Médio (ENEM) é uma avaliação criada pelo Ministério da Educação (MEC) e aplicada pelo Instituto Nacional de Estudos e Pesquisas Educacionais Anísio Teixeira (INEP).',
+              'O exame é utilizado para medir o desempenho dos estudantes ao final da educação básica e serve como porta de entrada para diversas universidades públicas e privadas do Brasil, além de possibilitar o acesso a programas como o Sisu, Prouni e Fies.',
+            ],
+          ),
           const SizedBox(height: 16),
-          _buildSection('Câmara Deliberativa do Vestibular', [
-            'Presidente: Ivan Felizardo Contrera Toro',
-            'Diretor da Comvest: José Alves de Freitas Neto',
-          ]),
+          _buildSection(
+            'Estrutura do ENEM',
+            [
+              'O ENEM é composto por quatro áreas de conhecimento e uma redação, aplicada em dois dias de provas.',
+              'As áreas de conhecimento são:',
+              '- Ciências da Natureza e suas Tecnologias (Química, Física e Biologia)',
+              '- Ciências Humanas e suas Tecnologias (História, Geografia, Filosofia e Sociologia)',
+              '- Linguagens, Códigos e suas Tecnologias (Língua Portuguesa, Literatura, Língua Estrangeira, Artes, Educação Física e Tecnologias da Informação e Comunicação)',
+              '- Matemática e suas Tecnologias (Matemática)',
+              'Além disso, a redação exige a produção de um texto dissertativo-argumentativo.',
+            ],
+          ),
           const SizedBox(height: 16),
           _buildLink(
-              'Veja aqui o calendário de reuniões da Câmara Deliberativa 2024',
-              '#'),
+            'Acesse aqui o edital do ENEM 2024',
+            '#',
+          ),
           const SizedBox(height: 16),
-          _buildSection('Representantes de Cursos', [
-            'Administração: Luiz Eduardo Gaio',
-            'Administração Pública: André Luiz Sica de Campos',
-            'Arquitetura e Urbanismo: Sidney Piochi Bernardini',
-            'Artes Cênicas: Wanderley Martins',
-            'Artes Visuais: Edson do Prado Pfützenreuter',
-            'Ciência da Computação: Rafael Crivellari Saliba Schouery',
-            'Ciências Biológicas: Aline Mara dos Santos',
-            'Ciências Econômicas: Antonio Carlos Diegues Júnior',
-            'Ciências do Esporte: Eliana de Toledo Ishibashi',
-            'Ciências Sociais: Christiano Key Tambascia',
-            'Comunicação Social – Midialogia: Noel dos Santos Carvalho',
-            'Dança: Daniela Gatti',
-            'Educação Física: Laurita Marconi Schiavon',
-            'Enfermagem: Débora de Souza Santos',
-            'Engenharia Agrícola: Rafael Augustus de Oliveira',
-            'Engenharia Civil: Paulo Albuquerque',
-            'Engenharia de Alimentos: Luiz Henrique Fasolin',
-            'Engenharia de Computação: Lucas Francisco Wanner',
-            'Engenharia de Controle e Automação: Rogério Gonçalves dos Santos',
-            'Engenharia de Manufatura: Ricardo Floriano',
-            'Engenharia de Produção: Paulo Sérgio de Arruda Ignácio',
-            'Engenharia Elétrica: Daniel Dotta',
-            'Engenharia Física: Felippe Alexandre Silva Barbosa',
-            'Engenharia Mecânica: Caio Rufino',
-            'Engenharia Química: Lucimara Gaziola de La Torre',
-            'Estatística: Guilherme Vieira Nunes Ludwig',
-            'Estudos Literários: Mário Luiz Frungillo',
-            'Faculdade de Ciências Aplicadas: Sandra Francisca Bezerra Gemma',
-            'Faculdade de Tecnologia: Felippe Benavente Canteras',
-            'Farmácia: Paulo Cesar Pires Rosa',
-            'Filosofia: Taisa Helena Pascale Palhares',
-            'Física: Sandro Guedes de Oliveira',
-            'Fonoaudiologia: Thiago Oliveira da Motta Sampaio',
-            'Geografia: Aline Pascoalino',
-            'Geologia: Wagner da Silva Amaral',
-            'História: Rui Luis Rodrigues',
-            'Letras: Karin Camolesi Vivanco',
-            'Licenciaturas: André Luiz Correia Gonçalves de Oliveira',
-            'Linguística: Ana Cláudia Fernandes Ferreira',
-            'Matemática: Gabriel Ponce',
-            'Matemática Aplicada e Computacional: Roberto Andreani',
-            'Medicina: Simone Appenzeller',
-            'Música: Carlos Fernando Fiorini',
-            'Nutrição: Rosangela Maria Neves Bezerra',
-            'Odontologia: Carolina Steiner Oliveira Alarcon',
-            'Pedagogia: Lilian Cristine Ribeiro Nascimento',
-            'Química: Raphael Nagao de Sousa',
-          ]),
+          _buildSection(
+            'Instituições que utilizam o ENEM',
+            [
+              'O ENEM é utilizado por universidades públicas e privadas em todo o país como parte do processo seletivo para ingresso nos cursos de graduação.',
+              'Os principais programas de acesso que utilizam a nota do ENEM são:',
+              '- Sistema de Seleção Unificada (Sisu)',
+              '- Programa Universidade para Todos (Prouni)',
+              '- Fundo de Financiamento Estudantil (Fies)',
+              '- Universidades fora do Brasil também utilizam o ENEM como parte do processo seletivo.',
+            ],
+          ),
           const SizedBox(height: 16),
-          _buildLink('TABELA EM PDF', '#'),
-          const SizedBox(height: 16),
-          _buildSection('Representantes do Ensino Secundário', [
-            'Colégio Técnico de Campinas: Célia Regina Duarte',
-            'Colégio Técnico de Limeira: Wellington de Oliveira',
-          ]),
-          const SizedBox(height: 16),
-          _buildSection('Representantes da Comvest', [
-            'Ana Maria Fonseca de Almeida',
-            'Kleber Roberto Pirota',
-            'Márcia Mendonça',
-            'Rafael Pimentel Maia',
-          ]),
-          const SizedBox(height: 16),
-          _buildSection('Representante da Reitoria', [
-            'Elinton Adami Chaim',
-          ]),
+          _buildLink(
+            'Veja aqui as universidades que aceitam o ENEM',
+            '#',
+          ),
         ],
       ),
     );
@@ -851,7 +882,7 @@ class SobreOVestibularTab extends StatelessWidget {
               style: const TextStyle(
                 fontSize: 18,
                 fontWeight: FontWeight.bold,
-                color: Colors.purple,
+                color: Colors.purple, // Cor temática do ENEM
               ),
             ),
             const SizedBox(height: 8),
@@ -920,30 +951,34 @@ class ExamCard extends StatelessWidget {
               ),
             ),
             const SizedBox(height: 8),
-            Text(description),
+            Text(
+              description,
+              style: const TextStyle(fontSize: 14),
+            ),
             const SizedBox(height: 16),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Expanded(
-                  child: ElevatedButton(
-                    onPressed: onPressedInscrever,
-                    style: ElevatedButton.styleFrom(
-                      foregroundColor: Colors.white,
-                      backgroundColor: Colors.purple, // Cor do texto do botão
+                GestureDetector(
+                  onTap: onPressedInscrever,
+                  child: const Text(
+                    'Inscrever-se',
+                    style: TextStyle(
+                      fontSize: 16,
+                      color: Colors.blue,
+                      decoration: TextDecoration.underline,
                     ),
-                    child: const Text('Inscreva-se'),
                   ),
                 ),
-                const SizedBox(width: 8),
-                Expanded(
-                  child: ElevatedButton(
-                    onPressed: onPressedPagina,
-                    style: ElevatedButton.styleFrom(
-                      foregroundColor: Colors.white,
-                      backgroundColor: Colors.purple, // Cor do texto do botão
+                GestureDetector(
+                  onTap: onPressedPagina,
+                  child: const Text(
+                    'Página',
+                    style: TextStyle(
+                      fontSize: 16,
+                      color: Colors.blue,
+                      decoration: TextDecoration.underline,
                     ),
-                    child: const Text('Acessar página'),
                   ),
                 ),
               ],
