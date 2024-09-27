@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'filtro.dart'; // Importação da tela de filtro
 
 // Classe para o item do Carousel
 class CarouselItem {
@@ -46,84 +47,116 @@ class FilterButton extends StatelessWidget {
   }
 }
 
-class SearchPageResearch extends StatelessWidget {
+class SearchPageResearch extends StatefulWidget {
+  @override
+  _SearchPageResearchState createState() => _SearchPageResearchState();
+}
+
+class _SearchPageResearchState extends State<SearchPageResearch> {
+  int _selectedIndex =
+      1; // Indica que a tela de busca está ativa na barra inferior
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        automaticallyImplyLeading: false,
-        title: Row(
-          children: [
-            CircleAvatar(
-              backgroundImage: NetworkImage(
-                  'https://via.placeholder.com/150'), // Imagem do perfil
-            ),
-            SizedBox(width: 10),
-            Expanded(
-              child: TextField(
-                decoration: InputDecoration(
-                  hintText: 'Procure universidades, vestibulares e cursos',
-                  border: InputBorder.none,
-                ),
-              ),
-            ),
-            IconButton(
-              icon: Icon(Icons.filter_list),
-              onPressed: () {},
-            )
-          ],
-        ),
-      ),
-      body: Column(
-        children: [
-          // Filtros
-          Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+      backgroundColor: Colors.white,
+      body: _selectedIndex == 1
+          ? Column(
               children: [
-                FilterButton(label: 'Presencial'),
-                FilterButton(label: 'Melhor avaliado'),
-                FilterButton(label: 'Mais próximos'),
-              ],
-            ),
-          ),
-          // Lista de cartões
-          Expanded(
-            child: ListView.builder(
-              itemCount: 4, // Quantidade de itens de exemplo
-              itemBuilder: (context, index) {
-                // Criando itens de exemplo para o CarouselItem
-                CarouselItem item = CarouselItem(
-                  imagePath: 'lib/assets/LogoUnicamp.png',
-                  title: 'Unicamp',
-                  subtitle: 'Medicina',
-                  isFavorited: ValueNotifier<bool>(false),
-                  distance: 50,
-                  rating: 4.5,
-                  onTap: () {
-                    // Ação ao tocar no cartão
-                  },
-                  tag: 'Presencial',
-                );
+                // Cabeçalho personalizado com botão de retorno
+                Padding(
+                  padding: const EdgeInsets.symmetric(
+                      horizontal: 16.0, vertical: 16.0),
+                  child: Row(
+                    children: [
+                      IconButton(
+                        icon: Icon(Icons.arrow_back, color: Colors.black),
+                        onPressed: () {
+                          Navigator.pop(context); // Volta para a tela anterior
+                        },
+                      ),
+                      SizedBox(width: 10),
+                      CircleAvatar(
+                        backgroundImage: NetworkImage(
+                          'https://via.placeholder.com/150', // Imagem do perfil
+                        ),
+                      ),
+                      SizedBox(width: 10),
+                      Expanded(
+                        child: TextField(
+                          decoration: InputDecoration(
+                            hintText:
+                                'Procure universidades, vestibulares e cursos',
+                            border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(8),
+                              borderSide: BorderSide.none,
+                            ),
+                            filled: true,
+                            fillColor: Colors.grey.shade200,
+                            prefixIcon: Icon(Icons.search),
+                          ),
+                        ),
+                      ),
+                      SizedBox(width: 10),
+                      IconButton(
+                        icon: Icon(Icons.filter_list, color: Colors.purple),
+                        onPressed: () {
+                          // Ação ao clicar no botão de filtro
+                        },
+                      ),
+                    ],
+                  ),
+                ),
+                SizedBox(height: 8), // Espaço entre cabeçalho e filtros
+                // Filtros
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: [
+                      FilterButton(label: 'Presencial'),
+                      FilterButton(label: 'Melhor avaliado'),
+                      FilterButton(label: 'Mais próximos'),
+                    ],
+                  ),
+                ),
+                SizedBox(height: 16), // Espaço entre filtros e lista de cartões
+                // Lista de cartões
+                Expanded(
+                  child: ListView.builder(
+                    itemCount: 4, // Quantidade de itens de exemplo
+                    itemBuilder: (context, index) {
+                      // Criando itens de exemplo para o CarouselItem
+                      CarouselItem item = CarouselItem(
+                        imagePath: 'lib/assets/LogoUnicamp.png',
+                        title: 'Unicamp',
+                        subtitle: 'Medicina',
+                        isFavorited: ValueNotifier<bool>(false),
+                        distance: 50,
+                        rating: 4.5,
+                        onTap: () {
+                          // Ação ao tocar no cartão
+                        },
+                        tag: 'Presencial',
+                      );
 
-                // Usando a função buildCarouselCard já existente
-                return buildCarouselCard(item, context);
-              },
-            ),
-          ),
-        ],
-      ),
+                      // Usando a função buildCarouselCard já existente
+                      return buildCarouselCard(item, context);
+                    },
+                  ),
+                ),
+              ],
+            )
+          : Container(),
     );
   }
 }
 
-// Função existente para construir o cartão do Carousel
+// Função para construir o cartão do Carousel
 Widget buildCarouselCard(CarouselItem item, BuildContext context) {
   return GestureDetector(
     onTap: item.onTap,
     child: Container(
-      width: 260,
       margin: EdgeInsets.symmetric(vertical: 8, horizontal: 16),
       decoration: BoxDecoration(
         border: Border.all(color: Colors.grey.shade300),

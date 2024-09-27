@@ -2,7 +2,9 @@ import 'package:flutter/material.dart';
 import 'melhores_avalidas.dart';
 import 'mais_proximos.dart';
 import 'vestibulares.dart';
-import 'favorites_screen.dart';
+import 'favorites_screen.dart' as fav; // Usando prefixo para evitar conflito
+import 'filtro.dart'; // Importação da tela de filtro
+import 'search_page_research.dart'; // Importação da tela de pesquisa
 
 class SearchPage extends StatelessWidget {
   @override
@@ -25,12 +27,6 @@ class SearchPage extends StatelessWidget {
             ),
           ],
         ),
-        actions: [
-          IconButton(
-            icon: Icon(Icons.menu, color: Colors.black),
-            onPressed: () {},
-          ),
-        ],
       ),
       body: Column(
         children: [
@@ -50,16 +46,33 @@ class SearchPage extends StatelessWidget {
                       filled: true,
                       fillColor: Colors.grey[200],
                     ),
+                    onTap: () {
+                      // Navega para a tela de pesquisa ao clicar na barra de pesquisa
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => SearchPageResearch()),
+                      );
+                    },
                   ),
                 ),
                 SizedBox(width: 10),
-                Container(
-                  padding: EdgeInsets.all(12),
-                  decoration: BoxDecoration(
-                    color: Colors.purple,
-                    borderRadius: BorderRadius.circular(30),
+                GestureDetector(
+                  onTap: () {
+                    // Navega para a tela de filtro ao clicar no ícone de filtro
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => FiltroPage()),
+                    );
+                  },
+                  child: Container(
+                    padding: EdgeInsets.all(12),
+                    decoration: BoxDecoration(
+                      color: Colors.purple,
+                      borderRadius: BorderRadius.circular(30),
+                    ),
+                    child: Icon(Icons.filter_list, color: Colors.white),
                   ),
-                  child: Icon(Icons.filter_list, color: Colors.white),
                 )
               ],
             ),
@@ -71,26 +84,26 @@ class SearchPage extends StatelessWidget {
                 buildCategoryCard(
                   context,
                   'Mais Próximos',
-                  'https://example.com/Universidades.png', // Image URL
+                  'lib/assets/Universidades.png', // Image URL
                   MaisProximosScreen(),
                 ),
                 buildCategoryCard(
                   context,
                   'Melhores avaliados',
-                  'https://example.com/MelhoresAvaliadas.png', // Image URL
+                  'lib/assets/MelhoresAvaliadas.png', // Image URL
                   MelhoresAvaliadas(),
                 ),
                 buildCategoryCard(
                   context,
                   'Vestibulares',
-                  'https://example.com/Vestibulares.png', // Image URL
+                  'lib/assets/Vestibulares.png', // Image URL
                   Vestibulares(),
                 ),
                 buildCategoryCard(
                   context,
                   'Favoritos/Notícias',
-                  'https://example.com/FavoritosOuNoticias.png', // Image URL
-                  FavoritesScreen(),
+                  'lib/assets/FavoritosOuNoticias.png', // Image URL
+                  fav.FavoritesScreen(), // Usando o prefixo para evitar conflito
                 ),
               ],
             ),
@@ -121,6 +134,31 @@ class SearchPage extends StatelessWidget {
                 height: 150,
                 width: double.infinity,
                 fit: BoxFit.cover,
+                errorBuilder: (context, error, stackTrace) {
+                  // This handles the image load error and shows a placeholder
+                  return Container(
+                    height: 150,
+                    color: Colors.grey[300],
+                    child: Center(
+                      child: Icon(
+                        Icons.broken_image,
+                        color: Colors.grey[700],
+                        size: 50,
+                      ),
+                    ),
+                  );
+                },
+                loadingBuilder: (context, child, loadingProgress) {
+                  if (loadingProgress == null) return child;
+                  return Center(
+                    child: CircularProgressIndicator(
+                      value: loadingProgress.expectedTotalBytes != null
+                          ? loadingProgress.cumulativeBytesLoaded /
+                              loadingProgress.expectedTotalBytes!
+                          : null,
+                    ),
+                  );
+                },
               ),
               Container(
                 height: 150,
