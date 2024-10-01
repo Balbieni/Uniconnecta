@@ -3,14 +3,14 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:uniconnecta/components/components.dart';
 import 'pages.dart';
 
-class CadastroPage extends StatefulWidget {
-  const CadastroPage({Key? key}) : super(key: key);
+class register_page extends StatefulWidget {
+  const register_page({Key? key}) : super(key: key);
 
   @override
-  State<CadastroPage> createState() => _CadastroPageState();
+  State<register_page> createState() => _CadastroPageState();
 }
 
-class _CadastroPageState extends State<CadastroPage> {
+class _CadastroPageState extends State<register_page> {
   final TextEditingController _passwordController = TextEditingController();
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _nameController = TextEditingController();

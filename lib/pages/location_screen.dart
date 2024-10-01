@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'pages.dart'; // Certifique-se de que esse import está correto
-import 'package:uniconnecta/components/Cep.dart';
+import 'package:uniconnecta/components/cep.dart';
 import 'package:uniconnecta/components/button.dart';
 
 class LocationScreen extends StatefulWidget {

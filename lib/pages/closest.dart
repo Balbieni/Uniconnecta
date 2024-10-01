@@ -1,23 +1,23 @@
 import 'package:flutter/material.dart';
 import 'package:uniconnecta/components/custom_carousel_arrastapracima.dart'
     as carousel_comp;
-import 'package:uniconnecta/pages/home_screen.dart';
+import 'package:uniconnecta/pages/home_screen.dart' as home_page;
 import 'package:uniconnecta/pages/search_page.dart';
 import 'package:uniconnecta/pages/news_screen.dart';
 import 'package:uniconnecta/pages/favorites_screen.dart';
 import 'package:uniconnecta/pages/profile_screen.dart';
 import 'package:uniconnecta/components/back_button.dart';
 
-class MelhoresAvaliadas extends StatefulWidget {
+class closest extends StatefulWidget {
   @override
-  _MelhoresAvaliadasState createState() => _MelhoresAvaliadasState();
+  _closestState createState() => _closestState();
 }
 
-class _MelhoresAvaliadasState extends State<MelhoresAvaliadas> {
+class _closestState extends State<closest> {
   int _selectedIndex = 0;
 
   final List<Widget> _pages = [
-    HomeScreen(),
+    home_page.HomeScreen(),
     SearchPage(),
     NewsScreen(),
     FavoritesScreen(),
@@ -41,7 +41,7 @@ class _MelhoresAvaliadasState extends State<MelhoresAvaliadas> {
       tag: 'Presencial',
       distance: '30Km',
     ),
-    // Outros itens continuam...
+    // Adicione mais itens conforme necessário...
   ];
 
   void _onItemTapped(int index) {
@@ -66,7 +66,7 @@ class _MelhoresAvaliadasState extends State<MelhoresAvaliadas> {
                       BackButtonComponent(), // Botão de voltar adicionado
                       SizedBox(width: 8), // Espaço entre o botão e o texto
                       Text(
-                        'Melhores Avaliadas',
+                        'Mais Próximos',
                         style: TextStyle(
                           fontSize: 24,
                           fontWeight: FontWeight.bold,
@@ -128,6 +128,10 @@ class DetailPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        title: Text(item.title),
+        backgroundColor: Colors.purple[700],
+      ),
       body: Center(
         child: Text('Detalhes sobre ${item.title}'),
       ),

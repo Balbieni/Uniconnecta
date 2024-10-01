@@ -8,12 +8,12 @@ import 'package:uniconnecta/pages/favorites_screen.dart';
 import 'package:uniconnecta/pages/profile_screen.dart';
 import 'package:uniconnecta/components/back_button.dart';
 
-class MaisProximosScreen extends StatefulWidget {
+class entrance_exams extends StatefulWidget {
   @override
-  _MaisProximosScreenState createState() => _MaisProximosScreenState();
+  _entrance_examsState createState() => _entrance_examsState();
 }
 
-class _MaisProximosScreenState extends State<MaisProximosScreen> {
+class _entrance_examsState extends State<entrance_exams> {
   int _selectedIndex = 0;
 
   final List<Widget> _pages = [
@@ -33,15 +33,6 @@ class _MaisProximosScreenState extends State<MaisProximosScreen> {
       tag: 'Presencial',
       distance: '10Km',
     ),
-    carousel_comp.CarouselItem(
-      imagePath: 'lib/assets/faculdade1.png',
-      title: 'Facamp',
-      rating: 4.8,
-      subtitle: 'Facamp',
-      tag: 'Presencial',
-      distance: '30Km',
-    ),
-    // Adicione mais itens conforme necessário...
   ];
 
   void _onItemTapped(int index) {
@@ -66,7 +57,7 @@ class _MaisProximosScreenState extends State<MaisProximosScreen> {
                       BackButtonComponent(), // Botão de voltar adicionado
                       SizedBox(width: 8), // Espaço entre o botão e o texto
                       Text(
-                        'Mais Próximos',
+                        'Vestibulares',
                         style: TextStyle(
                           fontSize: 24,
                           fontWeight: FontWeight.bold,
@@ -130,7 +121,7 @@ class DetailPage extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: Text(item.title),
-        backgroundColor: Colors.purple[700],
+        backgroundColor: Colors.white,
       ),
       body: Center(
         child: Text('Detalhes sobre ${item.title}'),

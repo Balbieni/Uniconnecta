@@ -1,23 +1,23 @@
 import 'package:flutter/material.dart';
 import 'package:uniconnecta/components/custom_carousel_arrastapracima.dart'
     as carousel_comp;
-import 'package:uniconnecta/pages/home_screen.dart' as home_page;
+import 'package:uniconnecta/pages/home_screen.dart';
 import 'package:uniconnecta/pages/search_page.dart';
 import 'package:uniconnecta/pages/news_screen.dart';
 import 'package:uniconnecta/pages/favorites_screen.dart';
 import 'package:uniconnecta/pages/profile_screen.dart';
 import 'package:uniconnecta/components/back_button.dart';
 
-class Vestibulares extends StatefulWidget {
+class best_rated extends StatefulWidget {
   @override
-  _VestibularesState createState() => _VestibularesState();
+  _best_rated_State createState() => _best_rated_State();
 }
 
-class _VestibularesState extends State<Vestibulares> {
+class _best_rated_State extends State<best_rated> {
   int _selectedIndex = 0;
 
   final List<Widget> _pages = [
-    home_page.HomeScreen(),
+    HomeScreen(),
     SearchPage(),
     NewsScreen(),
     FavoritesScreen(),
@@ -33,6 +33,15 @@ class _VestibularesState extends State<Vestibulares> {
       tag: 'Presencial',
       distance: '10Km',
     ),
+    carousel_comp.CarouselItem(
+      imagePath: 'lib/assets/faculdade1.png',
+      title: 'Facamp',
+      rating: 4.8,
+      subtitle: 'Facamp',
+      tag: 'Presencial',
+      distance: '30Km',
+    ),
+    // Outros itens continuam...
   ];
 
   void _onItemTapped(int index) {
@@ -57,7 +66,7 @@ class _VestibularesState extends State<Vestibulares> {
                       BackButtonComponent(), // Botão de voltar adicionado
                       SizedBox(width: 8), // Espaço entre o botão e o texto
                       Text(
-                        'Vestibulares',
+                        'Melhores Avaliadas',
                         style: TextStyle(
                           fontSize: 24,
                           fontWeight: FontWeight.bold,
@@ -119,10 +128,6 @@ class DetailPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text(item.title),
-        backgroundColor: Colors.white,
-      ),
       body: Center(
         child: Text('Detalhes sobre ${item.title}'),
       ),

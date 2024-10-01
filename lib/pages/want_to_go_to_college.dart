@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:uniconnecta/components/components.dart';
+import 'package:uniconnecta/pages/stay_updated.dart';
 import 'pages.dart';
 
-class SeMantenhaAtualizado extends StatelessWidget {
-  const SeMantenhaAtualizado({Key? key}) : super(key: key);
+class want_to_go_to_college extends StatelessWidget {
+  const want_to_go_to_college({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -16,17 +17,17 @@ class SeMantenhaAtualizado extends StatelessWidget {
             children: <Widget>[
               const SizedBox(height: 35.29),
               IndicatorDots(),
-              const SizedBox(height: 241),
+              const SizedBox(height: 30),
               Image.asset(
-                'lib/assets/SeMantenhaAtualizado.png',
+                'lib/assets/QuerEntrarEmUmaUniversidade.png',
                 height: 291,
                 width: 330,
               ),
-              const SizedBox(height: 30),
+              const SizedBox(height: 28),
               const Align(
                 alignment: Alignment.centerLeft,
                 child: Text(
-                  'Se mantenha atualizado',
+                  'Quer entrar em uma universidade?',
                   style: TextStyle(
                     fontSize: 34,
                     fontWeight: FontWeight.bold,
@@ -34,11 +35,10 @@ class SeMantenhaAtualizado extends StatelessWidget {
                   textAlign: TextAlign.left,
                 ),
               ),
-              const SizedBox(height: 20),
               const Align(
                 alignment: Alignment.centerLeft,
                 child: Text(
-                  'Receba datas de vestibulares próximos, e notícias da atualidade',
+                  'Aqui você tem informações relevantes sobre vestibulares, universidades e seu curso dos sonhos',
                   style: TextStyle(
                     fontSize: 24,
                   ),
@@ -54,7 +54,7 @@ class SeMantenhaAtualizado extends StatelessWidget {
                       Navigator.push(
                         context,
                         MaterialPageRoute(
-                          builder: (context) => CriarOuLogin(),
+                          builder: (context) => create_account_or_log_in(),
                         ),
                       );
                     },
@@ -69,20 +69,20 @@ class SeMantenhaAtualizado extends StatelessWidget {
                   ),
                   ElevatedButton(
                     onPressed: () {
-                      // Navegar para a tela "encontre_sua_universidade"
                       Navigator.push(
                         context,
                         MaterialPageRoute(
-                          builder: (context) => EncontreSuaUniversidade(),
+                          builder: (context) => SeMantenhaAtualizado(),
                         ),
                       );
                     },
                     style: ElevatedButton.styleFrom(
                       backgroundColor: ColorStyle.RoxoP,
                       shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(8.0),
+                        borderRadius:
+                            BorderRadius.circular(8.0), // Bordas arredondadas
                       ),
-                      minimumSize: const Size(70, 70),
+                      minimumSize: const Size(70, 70), // Botão quadrado
                       padding: const EdgeInsets.all(14),
                     ),
                     child: const Icon(
@@ -92,7 +92,7 @@ class SeMantenhaAtualizado extends StatelessWidget {
                   ),
                 ],
               ),
-              const SizedBox(height: 30),
+              const SizedBox(height: 30), // Espaçamento na parte inferior
             ],
           ),
         ),
@@ -109,8 +109,8 @@ class IndicatorDots extends StatelessWidget {
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
       children: <Widget>[
-        DotIndicator(isActive: false),
         DotIndicator(isActive: true),
+        DotIndicator(isActive: false),
         DotIndicator(isActive: false),
       ],
     );
@@ -133,7 +133,9 @@ class DotIndicator extends StatelessWidget {
       height: isActive ? 10.0 : 8.0,
       decoration: BoxDecoration(
         shape: BoxShape.circle,
-        color: isActive ? ColorStyle.RoxoP : ColorStyle.RoxoC4,
+        color: isActive
+            ? ColorStyle.RoxoP
+            : ColorStyle.RoxoC4, // Utiliza as cores do ColorStyle
       ),
     );
   }

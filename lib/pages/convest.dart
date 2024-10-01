@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:uniconnecta/components/components.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'pages.dart';
-import 'package:flutter/material.dart';
 import 'package:uniconnecta/pages/home_screen.dart';
 import 'package:uniconnecta/pages/search_page.dart';
 import 'package:uniconnecta/pages/news_screen.dart';

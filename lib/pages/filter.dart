@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 
-class FiltroPage extends StatefulWidget {
+class filter extends StatefulWidget {
   @override
-  _FiltroPageState createState() => _FiltroPageState();
+  _filterState createState() => _filterState();
 }
 
-class _FiltroPageState extends State<FiltroPage> {
+class _filterState extends State<filter> {
   // Controle do filtro ativo
   String activeFilter = 'Universidade';
   String selectedUniversidadeOption =

@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'filtro.dart'; // Importação da tela de filtro
+import 'filter.dart'; // Importação da tela de filtro
 
 // Classe para o item do Carousel
 class CarouselItem {
@@ -34,7 +34,11 @@ class FilterButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return ElevatedButton(
       onPressed: () {
-        // Lógica do filtro
+        // Navega para a tela de filtro
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => filter()),
+        );
       },
       style: ElevatedButton.styleFrom(
         backgroundColor: Colors.purple.shade100,
@@ -55,6 +59,59 @@ class SearchPageResearch extends StatefulWidget {
 class _SearchPageResearchState extends State<SearchPageResearch> {
   int _selectedIndex =
       1; // Indica que a tela de busca está ativa na barra inferior
+  TextEditingController _searchController = TextEditingController();
+  List<CarouselItem> _items = [];
+  List<CarouselItem> _filteredItems = [];
+
+  @override
+  void initState() {
+    super.initState();
+    // Exemplo de itens
+    _items = [
+      CarouselItem(
+        imagePath: 'lib/assets/LogoUnicamp.png',
+        title: 'Unicamp',
+        subtitle: 'Medicina',
+        isFavorited: ValueNotifier<bool>(false),
+        distance: 50,
+        rating: 4.5,
+        onTap: () {},
+        tag: 'Presencial',
+      ),
+      CarouselItem(
+        imagePath: 'lib/assets/LogoUnicamp.png',
+        title: 'USP',
+        subtitle: 'Engenharia',
+        isFavorited: ValueNotifier<bool>(false),
+        distance: 30,
+        rating: 4.8,
+        onTap: () {},
+        tag: 'Presencial',
+      ),
+      CarouselItem(
+        imagePath: 'lib/assets/LogoUnicamp.png',
+        title: 'UFMG',
+        subtitle: 'Direito',
+        isFavorited: ValueNotifier<bool>(false),
+        distance: 70,
+        rating: 4.2,
+        onTap: () {},
+        tag: 'Presencial',
+      ),
+    ];
+    _filteredItems = List.from(_items);
+    _searchController.addListener(_filterItems);
+  }
+
+  void _filterItems() {
+    setState(() {
+      String query = _searchController.text.toLowerCase();
+      _filteredItems = _items.where((item) {
+        return item.title.toLowerCase().contains(query) ||
+            item.subtitle.toLowerCase().contains(query);
+      }).toList();
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -78,12 +135,13 @@ class _SearchPageResearchState extends State<SearchPageResearch> {
                       SizedBox(width: 10),
                       CircleAvatar(
                         backgroundImage: NetworkImage(
-                          'https://via.placeholder.com/150', // Imagem do perfil
+                          'lib/assets/profile_image.png', // Imagem do perfil
                         ),
                       ),
                       SizedBox(width: 10),
                       Expanded(
                         child: TextField(
+                          controller: _searchController,
                           decoration: InputDecoration(
                             hintText:
                                 'Procure universidades, vestibulares e cursos',
@@ -101,47 +159,23 @@ class _SearchPageResearchState extends State<SearchPageResearch> {
                       IconButton(
                         icon: Icon(Icons.filter_list, color: Colors.purple),
                         onPressed: () {
-                          // Ação ao clicar no botão de filtro
+                          // Navega para a tela de filtro
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(builder: (context) => filter()),
+                          );
                         },
                       ),
                     ],
                   ),
                 ),
-                SizedBox(height: 8), // Espaço entre cabeçalho e filtros
-                // Filtros
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 8.0),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    children: [
-                      FilterButton(label: 'Presencial'),
-                      FilterButton(label: 'Melhor avaliado'),
-                      FilterButton(label: 'Mais próximos'),
-                    ],
-                  ),
-                ),
-                SizedBox(height: 16), // Espaço entre filtros e lista de cartões
-                // Lista de cartões
+                SizedBox(height: 24), // Espaço entre filtros e lista de cartões
+                // Lista de cartões filtrada
                 Expanded(
                   child: ListView.builder(
-                    itemCount: 4, // Quantidade de itens de exemplo
+                    itemCount: _filteredItems.length,
                     itemBuilder: (context, index) {
-                      // Criando itens de exemplo para o CarouselItem
-                      CarouselItem item = CarouselItem(
-                        imagePath: 'lib/assets/LogoUnicamp.png',
-                        title: 'Unicamp',
-                        subtitle: 'Medicina',
-                        isFavorited: ValueNotifier<bool>(false),
-                        distance: 50,
-                        rating: 4.5,
-                        onTap: () {
-                          // Ação ao tocar no cartão
-                        },
-                        tag: 'Presencial',
-                      );
-
-                      // Usando a função buildCarouselCard já existente
-                      return buildCarouselCard(item, context);
+                      return buildCarouselCard(_filteredItems[index], context);
                     },
                   ),
                 ),
@@ -152,7 +186,6 @@ class _SearchPageResearchState extends State<SearchPageResearch> {
   }
 }
 
-// Função para construir o cartão do Carousel
 Widget buildCarouselCard(CarouselItem item, BuildContext context) {
   return GestureDetector(
     onTap: item.onTap,
@@ -190,7 +223,10 @@ Widget buildCarouselCard(CarouselItem item, BuildContext context) {
                         ),
                         child: Text(
                           item.tag,
-                          style: TextStyle(fontSize: 12),
+                          style: TextStyle(
+                            fontSize: 12,
+                            color: const Color.fromARGB(255, 255, 255, 255),
+                          ),
                         ),
                       ),
                       Spacer(),
@@ -206,8 +242,10 @@ Widget buildCarouselCard(CarouselItem item, BuildContext context) {
             valueListenable: item.isFavorited,
             builder: (context, isFavorited, _) {
               return IconButton(
-                icon:
-                    Icon(isFavorited ? Icons.favorite : Icons.favorite_border),
+                icon: Icon(
+                  isFavorited ? Icons.favorite : Icons.favorite_border,
+                  color: isFavorited ? Colors.purple : Colors.black,
+                ),
                 onPressed: () {
                   item.isFavorited.value = !isFavorited;
                 },

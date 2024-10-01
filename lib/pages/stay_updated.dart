@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:uniconnecta/components/components.dart';
 import 'pages.dart';
+import 'find_your_university.dart';
 
-class EncontreSuaUniversidade extends StatelessWidget {
-  const EncontreSuaUniversidade({Key? key}) : super(key: key);
+class SeMantenhaAtualizado extends StatelessWidget {
+  const SeMantenhaAtualizado({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -18,7 +19,7 @@ class EncontreSuaUniversidade extends StatelessWidget {
               IndicatorDots(),
               const SizedBox(height: 241),
               Image.asset(
-                'lib/assets/EncontreSuaUniversidade.png',
+                'lib/assets/SeMantenhaAtualizado.png',
                 height: 291,
                 width: 330,
               ),
@@ -26,7 +27,7 @@ class EncontreSuaUniversidade extends StatelessWidget {
               const Align(
                 alignment: Alignment.centerLeft,
                 child: Text(
-                  'Encontre sua universidade',
+                  'Se mantenha atualizado',
                   style: TextStyle(
                     fontSize: 34,
                     fontWeight: FontWeight.bold,
@@ -38,27 +39,58 @@ class EncontreSuaUniversidade extends StatelessWidget {
               const Align(
                 alignment: Alignment.centerLeft,
                 child: Text(
-                  'Ache a melhor universidade para você',
+                  'Receba datas de vestibulares próximos, e notícias da atualidade',
                   style: TextStyle(
                     fontSize: 24,
                   ),
                   textAlign: TextAlign.left,
                 ),
               ),
-              const Spacer(), // Mantenha um Spacer para empurrar os botões para baixo
-              MyButton(
-                buttonProportion: 0.5,
-                marginSize: 24.0,
-                label: 'Vamos lá!',
-                isPrimary: true,
-                onPressedButton: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => CriarOuLogin(),
+              const Spacer(),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: <Widget>[
+                  TextButton(
+                    onPressed: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => want_to_go_to_college(),
+                        ),
+                      );
+                    },
+                    child: const Text(
+                      'Pular',
+                      style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        color: ColorStyle.RoxoP,
+                        fontSize: 22,
+                      ),
                     ),
-                  );
-                },
+                  ),
+                  ElevatedButton(
+                    onPressed: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => find_your_university(),
+                        ),
+                      );
+                    },
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: ColorStyle.RoxoP,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(8.0),
+                      ),
+                      minimumSize: const Size(70, 70),
+                      padding: const EdgeInsets.all(14),
+                    ),
+                    child: const Icon(
+                      Icons.arrow_forward,
+                      color: Colors.white,
+                    ),
+                  ),
+                ],
               ),
               const SizedBox(height: 30),
             ],
@@ -78,8 +110,8 @@ class IndicatorDots extends StatelessWidget {
       mainAxisAlignment: MainAxisAlignment.center,
       children: <Widget>[
         DotIndicator(isActive: false),
-        DotIndicator(isActive: false),
         DotIndicator(isActive: true),
+        DotIndicator(isActive: false),
       ],
     );
   }

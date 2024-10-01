@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:uniconnecta/components/components.dart';
 import 'package:uniconnecta/pages/convest.dart';
-import 'package:url_launcher/url_launcher.dart';
-import 'package:uniconnecta/components/exam_cards.dart';
 
 class Unicamp extends StatelessWidget {
   final ValueNotifier<bool> isFavoritedNotifier = ValueNotifier<bool>(false);

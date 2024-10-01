@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:uniconnecta/pages/convest.dart';
-import 'package:uniconnecta/pages/mais_proximos.dart';
-import 'package:uniconnecta/pages/melhores_avalidas.dart';
-import 'package:uniconnecta/pages/vestibulares.dart';
+import 'package:uniconnecta/pages/closest.dart';
+import 'package:uniconnecta/pages/best_rated.dart';
+import 'package:uniconnecta/pages/entrance_exams.dart';
 import 'package:uniconnecta/pages/enem.dart';
 import 'package:uniconnecta/pages/search_page.dart';
 import 'package:uniconnecta/pages/news_screen.dart';
@@ -144,7 +144,7 @@ class HomeScreenContent extends StatelessWidget {
                   style: TextStyle(color: Colors.black),
                 ),
                 currentAccountPicture: CircleAvatar(
-                  backgroundImage: AssetImage('lib/assets/faculdade1.png'),
+                  backgroundImage: AssetImage('lib/assets/profile_image.png'),
                 ),
                 decoration: BoxDecoration(
                   color: Colors.white,
@@ -238,21 +238,21 @@ Widget sectionHeader(String title, BuildContext context, String section) {
               Navigator.push(
                 context,
                 MaterialPageRoute(
-                  builder: (context) => Vestibulares(),
+                  builder: (context) => entrance_exams(),
                 ),
               );
             } else if (section == 'melhores_avaliadas') {
               Navigator.push(
                 context,
                 MaterialPageRoute(
-                  builder: (context) => MelhoresAvaliadas(),
+                  builder: (context) => best_rated(),
                 ),
               );
             } else if (section == 'mais_proximos') {
               Navigator.push(
                 context,
                 MaterialPageRoute(
-                  builder: (context) => MaisProximosScreen(),
+                  builder: (context) => closest(),
                 ),
               );
             }

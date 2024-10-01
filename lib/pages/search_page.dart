@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
-import 'melhores_avalidas.dart';
-import 'mais_proximos.dart';
-import 'vestibulares.dart';
+import 'best_rated.dart';
+import 'closest.dart';
+import 'entrance_exams.dart';
 import 'favorites_screen.dart' as fav; // Usando prefixo para evitar conflito
-import 'filtro.dart'; // Importação da tela de filtro
+import 'filter.dart'; // Importação da tela de filtro
 import 'search_page_research.dart'; // Importação da tela de pesquisa
 
 class SearchPage extends StatelessWidget {
@@ -17,7 +17,7 @@ class SearchPage extends StatelessWidget {
           children: [
             CircleAvatar(
               backgroundImage: NetworkImage(
-                'https://via.placeholder.com/150', // Placeholder image URL
+                'lib/assets/profile_image.png', // Placeholder image URL
               ),
             ),
             SizedBox(width: 10),
@@ -62,7 +62,7 @@ class SearchPage extends StatelessWidget {
                     // Navega para a tela de filtro ao clicar no ícone de filtro
                     Navigator.push(
                       context,
-                      MaterialPageRoute(builder: (context) => FiltroPage()),
+                      MaterialPageRoute(builder: (context) => filter()),
                     );
                   },
                   child: Container(
@@ -85,19 +85,19 @@ class SearchPage extends StatelessWidget {
                   context,
                   'Mais Próximos',
                   'lib/assets/Universidades.png', // Image URL
-                  MaisProximosScreen(),
+                  closest(),
                 ),
                 buildCategoryCard(
                   context,
                   'Melhores avaliados',
                   'lib/assets/MelhoresAvaliadas.png', // Image URL
-                  MelhoresAvaliadas(),
+                  best_rated(),
                 ),
                 buildCategoryCard(
                   context,
                   'Vestibulares',
                   'lib/assets/Vestibulares.png', // Image URL
-                  Vestibulares(),
+                  entrance_exams(),
                 ),
                 buildCategoryCard(
                   context,

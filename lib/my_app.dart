@@ -1,8 +1,7 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
-import 'package:uniconnecta/components/components.dart';
 import 'package:uniconnecta/pages/pages.dart';
-import 'package:uniconnecta/pages/quer_entrar_na_faculdade.dart';
+import 'package:uniconnecta/pages/want_to_go_to_college.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -31,7 +30,7 @@ class uniconnecta extends StatelessWidget {
       routes: {
         '/': (context) => const SplashScreen(),
         'QuerEntrarNaFaculdade': (context) =>
-            const QuerEntrarNaFaculdade(), // Use o nome correto do widget
+            const want_to_go_to_college(), // Use o nome correto do widget
       },
     );
   }

@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'pages.dart';
 
-class CriarOuLogin extends StatelessWidget {
-  const CriarOuLogin({Key? key}) : super(key: key);
+class create_account_or_log_in extends StatelessWidget {
+  const create_account_or_log_in({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {

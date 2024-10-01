@@ -1,7 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:uniconnecta/components/components.dart';
-import 'pages.dart';
-import 'quer_entrar_na_faculdade.dart';
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({Key? key}) : super(key: key);

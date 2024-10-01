@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:uniconnecta/components/components.dart';
-import 'pages.dart';
 
 class HowAccess extends StatefulWidget {
   const HowAccess({Key? key}) : super(key: key);

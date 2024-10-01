@@ -1,10 +1,10 @@
-export 'criar_ou_login.dart';
-export 'encontre_sua_universidade.dart';
+export 'create_account_or_log_in.dart';
+export 'want_to_go_to_college.dart';
 export 'home_screen.dart';
 export 'how_access.dart';
 export 'location_screen.dart';
-export 'cadastro_page.dart';
-export 'mais_proximos.dart';
+export 'register_page.dart';
+export 'closest.dart';
 export 'photo_screen.dart';
 export 'splash_screen.dart';
 export 'Unicamp.dart';
