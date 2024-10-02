@@ -26,7 +26,7 @@ class _closestState extends State<closest> {
 
   final List<carousel_comp.CarouselItem> maisProximosItems = [
     carousel_comp.CarouselItem(
-      imagePath: 'lib/assets/LogoUnicamp.png',
+      imagePath: 'lib/assets/unicamp_logo.png',
       title: 'Unicamp',
       rating: 4.9,
       subtitle: 'Medicina',
@@ -34,7 +34,7 @@ class _closestState extends State<closest> {
       distance: '10Km',
     ),
     carousel_comp.CarouselItem(
-      imagePath: 'lib/assets/faculdade1.png',
+      imagePath: 'lib/assets/faculty.png',
       title: 'Facamp',
       rating: 4.8,
       subtitle: 'Facamp',

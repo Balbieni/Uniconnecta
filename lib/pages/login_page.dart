@@ -81,7 +81,7 @@ class _LoginScreenState extends State<LoginScreen> {
                   ),
                   const SizedBox(height: 30),
                   Image.asset(
-                    'lib/assets/uniconnectaRoxo.png',
+                    'lib/assets/uniconnecta_roxo.png',
                     width: 331,
                     height: 52,
                   ),
@@ -199,7 +199,7 @@ class _LoginScreenState extends State<LoginScreen> {
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
                           Image.asset(
-                            'lib/assets/Google.png',
+                            'lib/assets/google.png',
                             width: 32,
                             height: 32,
                           ),

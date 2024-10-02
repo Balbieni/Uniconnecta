@@ -69,7 +69,7 @@ class _SearchPageResearchState extends State<SearchPageResearch> {
     // Exemplo de itens
     _items = [
       CarouselItem(
-        imagePath: 'lib/assets/LogoUnicamp.png',
+        imagePath: 'lib/assets/unicamp_logo.png',
         title: 'Unicamp',
         subtitle: 'Medicina',
         isFavorited: ValueNotifier<bool>(false),
@@ -79,7 +79,7 @@ class _SearchPageResearchState extends State<SearchPageResearch> {
         tag: 'Presencial',
       ),
       CarouselItem(
-        imagePath: 'lib/assets/LogoUnicamp.png',
+        imagePath: 'lib/assets/unicamp_logo.png',
         title: 'USP',
         subtitle: 'Engenharia',
         isFavorited: ValueNotifier<bool>(false),
@@ -89,7 +89,7 @@ class _SearchPageResearchState extends State<SearchPageResearch> {
         tag: 'Presencial',
       ),
       CarouselItem(
-        imagePath: 'lib/assets/LogoUnicamp.png',
+        imagePath: 'lib/assets/unicamp_logo.png',
         title: 'UFMG',
         subtitle: 'Direito',
         isFavorited: ValueNotifier<bool>(false),

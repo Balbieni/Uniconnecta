@@ -1,4 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'dart:io';
+import 'package:image_picker/image_picker.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 
 class ProfileScreen extends StatelessWidget {
   @override
@@ -101,8 +106,6 @@ class ProfileScreen extends StatelessWidget {
   }
 }
 
-// Telas Placeholder para cada funcionalidade
-
 class EditProfileScreen extends StatefulWidget {
   @override
   _EditProfileScreenState createState() => _EditProfileScreenState();
@@ -110,8 +113,102 @@ class EditProfileScreen extends StatefulWidget {
 
 class _EditProfileScreenState extends State<EditProfileScreen> {
   final _formKey = GlobalKey<FormState>();
-  String _name = "Vinicius Moraes";
-  String _email = "vinicius.moraes@gmail.com";
+  final FirebaseAuth _auth = FirebaseAuth.instance;
+  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
+  final ImagePicker _picker = ImagePicker(); // Instância do ImagePicker
+  File? _selectedImage; // Arquivo de imagem selecionada
+
+  String _name = "";
+  String _email = "";
+  String _password = "";
+  bool _toObscure = true;
+
+  Future<void> _updateUserProfile() async {
+    if (_formKey.currentState!.validate()) {
+      _formKey.currentState!.save();
+
+      try {
+        User? user = _auth.currentUser;
+
+        if (user != null) {
+          DocumentReference userDocRef =
+              _firestore.collection('users').doc(user.uid);
+
+          DocumentSnapshot docSnapshot = await userDocRef.get();
+
+          if (docSnapshot.exists) {
+            await user.updateEmail(_email);
+            await user.updatePassword(_password);
+            await userDocRef.update({
+              'name': _name,
+              'email': _email,
+            });
+
+            if (_selectedImage != null) {
+              // Upload da imagem no Firebase Storage (opcional)
+              String imageUrl =
+                  await _uploadProfileImage(user.uid, _selectedImage!);
+              await userDocRef.update({
+                'profileImage':
+                    imageUrl, // Atualiza a URL da imagem no Firestore
+              });
+            }
+
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(content: Text('Dados atualizados com sucesso!')),
+            );
+          } else {
+            await userDocRef.set({
+              'name': _name,
+              'email': _email,
+              'createdAt': FieldValue.serverTimestamp(),
+            });
+
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(content: Text('Dados salvos com sucesso!')),
+            );
+          }
+        }
+      } catch (e) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Erro ao atualizar dados: $e')),
+        );
+      }
+    }
+  }
+
+  Future<String> _uploadProfileImage(String userId, File image) async {
+    try {
+      // Referência para o local onde a imagem será salva no Firebase Storage
+      Reference storageRef =
+          FirebaseStorage.instance.ref().child('profile_images/$userId.jpg');
+
+      // Faz o upload da imagem
+      UploadTask uploadTask = storageRef.putFile(image);
+
+      // Aguarda a conclusão do upload
+      TaskSnapshot snapshot = await uploadTask.whenComplete(() {});
+
+      // Pega a URL pública da imagem
+      String downloadUrl = await snapshot.ref.getDownloadURL();
+      return downloadUrl;
+    } catch (e) {
+      throw Exception('Erro ao fazer upload da imagem: $e');
+    }
+  }
+
+  Future<void> _pickImage() async {
+    final XFile? pickedFile = await _picker.pickImage(
+      source: ImageSource.gallery, // Você pode trocar por ImageSource.camera
+      imageQuality: 50, // Qualidade da imagem (0-100)
+    );
+
+    if (pickedFile != null) {
+      setState(() {
+        _selectedImage = File(pickedFile.path);
+      });
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -136,29 +233,42 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
               Center(
                 child: Column(
                   children: [
-                    CircleAvatar(
-                      radius: 50,
-                      backgroundImage: NetworkImage(
-                        'https://randomuser.me/api/portraits/men/41.jpg',
-                      ),
-                    ),
-                    TextButton(
-                      onPressed: () {
-                        // Função para mudar a foto de perfil
-                      },
-                      child: Text(
-                        'Alterar foto de perfil',
-                        style: TextStyle(color: Colors.purple),
-                      ),
+                    Stack(
+                      children: [
+                        CircleAvatar(
+                          radius: 50,
+                          backgroundImage: _selectedImage != null
+                              ? FileImage(_selectedImage!) as ImageProvider
+                              : NetworkImage('lib/assets/profile_image.png'),
+                        ),
+                        Positioned(
+                          bottom: 0,
+                          right: 0,
+                          child: GestureDetector(
+                            onTap:
+                                _pickImage, // Chama a função de selecionar imagem
+                            child: CircleAvatar(
+                              backgroundColor: Colors.purple,
+                              radius: 18,
+                              child: Icon(
+                                Icons.camera_alt_outlined,
+                                color: Colors.white,
+                                size: 18,
+                              ),
+                            ),
+                          ),
+                        ),
+                      ],
                     ),
                   ],
                 ),
               ),
-              SizedBox(height: 16),
+              SizedBox(height: 32),
               TextFormField(
                 initialValue: _name,
                 decoration: InputDecoration(
-                  labelText: 'Nome',
+                  labelText: 'Nome completo',
+                  labelStyle: TextStyle(color: Colors.purple),
                   border: OutlineInputBorder(),
                 ),
                 validator: (value) {
@@ -176,6 +286,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                 initialValue: _email,
                 decoration: InputDecoration(
                   labelText: 'Email',
+                  labelStyle: TextStyle(color: Colors.purple),
                   border: OutlineInputBorder(),
                 ),
                 validator: (value) {
@@ -190,24 +301,52 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                   _email = value!;
                 },
               ),
+              SizedBox(height: 16),
+              TextFormField(
+                obscureText: _toObscure,
+                initialValue: _password,
+                decoration: InputDecoration(
+                  labelText: 'Senha',
+                  labelStyle: TextStyle(color: Colors.purple),
+                  border: OutlineInputBorder(),
+                  suffixIcon: IconButton(
+                    icon: _toObscure
+                        ? Icon(Icons.visibility_off_outlined)
+                        : Icon(Icons.visibility_outlined),
+                    onPressed: () {
+                      setState(() {
+                        _toObscure = !_toObscure;
+                      });
+                    },
+                  ),
+                ),
+                validator: (value) {
+                  if (value == null || value.isEmpty) {
+                    return 'Por favor, insira a senha';
+                  } else if (value.length < 6) {
+                    return 'A senha deve ter pelo menos 6 caracteres';
+                  }
+                  return null;
+                },
+                onSaved: (value) {
+                  _password = value!;
+                },
+              ),
               SizedBox(height: 32),
               ElevatedButton(
                 style: ElevatedButton.styleFrom(
                   backgroundColor: Colors.purple,
                   padding: EdgeInsets.symmetric(vertical: 16),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(8),
+                  ),
                 ),
                 onPressed: () {
-                  if (_formKey.currentState!.validate()) {
-                    _formKey.currentState!.save();
-                    // Função para salvar os dados do usuário
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      SnackBar(content: Text('Dados atualizados com sucesso!')),
-                    );
-                  }
+                  _updateUserProfile();
                 },
                 child: Text(
                   'Salvar',
-                  style: TextStyle(fontSize: 18),
+                  style: TextStyle(fontSize: 18, color: Colors.white),
                 ),
               ),
             ],

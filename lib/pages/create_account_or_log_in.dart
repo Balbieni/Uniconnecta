@@ -15,7 +15,7 @@ class create_account_or_log_in extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Image.asset(
-                'lib/assets/uniconnectaRoxo.png',
+                'lib/assets/uniconnecta_roxo.png',
                 height: 80,
               ),
               const SizedBox(height: 40),

@@ -62,21 +62,21 @@ class NewsScreen extends StatelessWidget {
             'date': '20/05/2024',
             'description': 'Descrição da notícia 1 da aba Recentes...',
             'url': 'https://example.com/noticia1',
-            'image': 'lib/assets/LogoUnicamp.png'
+            'image': 'lib/assets/unicamp_logo.png'
           },
           {
             'title': 'Notícia 2 - Recentes',
             'date': '21/05/2024',
             'description': 'Descrição da notícia 2 da aba Recentes...',
             'url': 'https://example.com/noticia2',
-            'image': 'lib/assets/LogoUnicamp.png'
+            'image': 'lib/assets/unicamp_logo.png'
           },
           {
             'title': 'Notícia 3 - Recentes',
             'date': '22/05/2024',
             'description': 'Descrição da notícia 3 da aba Recentes...',
             'url': 'https://example.com/noticia3',
-            'image': 'lib/assets/LogoUnicamp.png'
+            'image': 'lib/assets/unicamp_logo.png'
           },
         ];
         break;
@@ -88,21 +88,21 @@ class NewsScreen extends StatelessWidget {
             'date': '23/05/2024',
             'description': 'Descrição da notícia 1 da aba Vestibulares...',
             'url': 'https://example.com/noticia4',
-            'image': 'lib/assets/LogoUnicamp.png'
+            'image': 'lib/assets/unicamp_logo.png'
           },
           {
             'title': 'Notícia 2 - Vestibulares',
             'date': '24/05/2024',
             'description': 'Descrição da notícia 2 da aba Vestibulares...',
             'url': 'https://example.com/noticia5',
-            'image': 'lib/assets/LogoUnicamp.png'
+            'image': 'lib/assets/unicamp_logo.png'
           },
           {
             'title': 'Notícia 3 - Vestibulares',
             'date': '25/05/2024',
             'description': 'Descrição da notícia 3 da aba Vestibulares...',
             'url': 'https://example.com/noticia6',
-            'image': 'lib/assets/LogoUnicamp.png'
+            'image': 'lib/assets/unicamp_logo.png'
           },
         ];
         break;
@@ -114,21 +114,21 @@ class NewsScreen extends StatelessWidget {
             'date': '26/05/2024',
             'description': 'Descrição da notícia 1 da aba Atualidades...',
             'url': 'https://example.com/noticia7',
-            'image': 'lib/assets/LogoUnicamp.png'
+            'image': 'lib/assets/unicamp_logo.png'
           },
           {
             'title': 'Notícia 2 - Atualidades',
             'date': '27/05/2024',
             'description': 'Descrição da notícia 2 da aba Atualidades...',
             'url': 'https://example.com/noticia8',
-            'image': 'lib/assets/LogoUnicamp.png'
+            'image': 'lib/assets/unicamp_logo.png'
           },
           {
             'title': 'Notícia 3 - Atualidades',
             'date': '28/05/2024',
             'description': 'Descrição da notícia 3 da aba Atualidades...',
             'url': 'https://example.com/noticia9',
-            'image': 'lib/assets/LogoUnicamp.png'
+            'image': 'lib/assets/unicamp_logo.png'
           },
         ];
         break;
@@ -141,7 +141,7 @@ class NewsScreen extends StatelessWidget {
             'description':
                 'Descrição da notícia 1 da aba Relacionados aos favoritos...',
             'url': 'https://example.com/noticia10',
-            'image': 'lib/assets/LogoUnicamp.png'
+            'image': 'lib/assets/unicamp_logo.png'
           },
           {
             'title': 'Notícia 2 - Relacionados aos favoritos',
@@ -149,7 +149,7 @@ class NewsScreen extends StatelessWidget {
             'description':
                 'Descrição da notícia 2 da aba Relacionados aos favoritos...',
             'url': 'https://example.com/noticia11',
-            'image': 'lib/assets/LogoUnicamp.png'
+            'image': 'lib/assets/unicamp_logo.png'
           },
           {
             'title': 'Notícia 3 - Relacionados aos favoritos',
@@ -157,7 +157,7 @@ class NewsScreen extends StatelessWidget {
             'description':
                 'Descrição da notícia 3 da aba Relacionados aos favoritos...',
             'url': 'https://example.com/noticia12',
-            'image': 'lib/assets/LogoUnicamp.png'
+            'image': 'lib/assets/unicamp_logo.png'
           },
         ];
         break;

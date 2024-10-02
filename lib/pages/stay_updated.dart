@@ -19,7 +19,7 @@ class SeMantenhaAtualizado extends StatelessWidget {
               IndicatorDots(),
               const SizedBox(height: 241),
               Image.asset(
-                'lib/assets/SeMantenhaAtualizado.png',
+                'lib/assets/keep_updated.png',
                 height: 291,
                 width: 330,
               ),

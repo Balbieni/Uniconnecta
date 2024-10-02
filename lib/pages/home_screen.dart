@@ -364,7 +364,7 @@ Widget buildRatingStars(double rating) {
 List<CarouselItem> vestibularesItems(BuildContext context) {
   return [
     CarouselItem(
-      imagePath: 'lib/assets/faculdade1.png',
+      imagePath: 'lib/assets/faculty.png',
       title: 'Convest',
       rating: 4.5,
       subtitle: '',
@@ -384,7 +384,7 @@ List<CarouselItem> vestibularesItems(BuildContext context) {
       },
     ),
     CarouselItem(
-      imagePath: 'lib/assets/faculdade1.png',
+      imagePath: 'lib/assets/faculty.png',
       title: 'enem',
       rating: 4.0,
       subtitle: '',
@@ -409,7 +409,7 @@ List<CarouselItem> vestibularesItems(BuildContext context) {
 List<CarouselItem> melhoresAvaliadasItems(BuildContext context) {
   return [
     CarouselItem(
-      imagePath: 'lib/assets/LogoUnicamp.png',
+      imagePath: 'lib/assets/unicamp_logo.png',
       title: 'Unicamp',
       rating: 4.6,
       subtitle: 'Universidade renomada',
@@ -434,7 +434,7 @@ List<CarouselItem> melhoresAvaliadasItems(BuildContext context) {
 List<CarouselItem> maisProximosItems(BuildContext context) {
   return [
     CarouselItem(
-      imagePath: 'lib/assets/faculdade3.png',
+      imagePath: 'lib/assets/faculty.png',
       title: 'Faculdade Mais Próxima 1',
       rating: 4.0,
       subtitle: 'Próxima de você',

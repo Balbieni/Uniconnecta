@@ -55,7 +55,7 @@ class _PhotoScreenState extends State<PhotoScreen> {
                   radius: 180,
                   backgroundImage: _image != null
                       ? FileImage(_image!)
-                      : AssetImage('assets/default_avatar.png')
+                      : AssetImage('lib/assets/profile_image.png')
                           as ImageProvider,
                 ),
                 Positioned(

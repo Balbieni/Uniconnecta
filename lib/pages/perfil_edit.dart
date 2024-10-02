@@ -36,7 +36,7 @@ class _perfil_editState extends State<perfil_edit> {
                     CircleAvatar(
                       radius: 50,
                       backgroundImage: NetworkImage(
-                        'https://randomuser.me/api/portraits/men/41.jpg',
+                        'lib/assets/profile_image.png',
                       ),
                     ),
                     TextButton(

@@ -84,25 +84,25 @@ class SearchPage extends StatelessWidget {
                 buildCategoryCard(
                   context,
                   'Mais Próximos',
-                  'lib/assets/Universidades.png', // Image URL
+                  'lib/assets/universities.png', // Image URL
                   closest(),
                 ),
                 buildCategoryCard(
                   context,
                   'Melhores avaliados',
-                  'lib/assets/MelhoresAvaliadas.png', // Image URL
+                  'lib/assets/best_rated.png', // Image URL
                   best_rated(),
                 ),
                 buildCategoryCard(
                   context,
                   'Vestibulares',
-                  'lib/assets/Vestibulares.png', // Image URL
+                  'lib/assets/entrance_exams.png', // Image URL
                   entrance_exams(),
                 ),
                 buildCategoryCard(
                   context,
                   'Favoritos/Notícias',
-                  'lib/assets/FavoritosOuNoticias.png', // Image URL
+                  'lib/assets/favorites_or_news.png', // Image URL
                   fav.FavoritesScreen(), // Usando o prefixo para evitar conflito
                 ),
               ],

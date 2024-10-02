@@ -25,7 +25,7 @@ class Unicamp extends StatelessWidget {
               rating: 4.5,
               locationType: 'teste1',
               distance: '50Km',
-              imagePath: 'lib/assets/faculdade1.png',
+              imagePath: 'lib/assets/faculty.png',
               isFavorited: isFavoritedNotifier,
             ),
             Container(

@@ -19,7 +19,7 @@ class want_to_go_to_college extends StatelessWidget {
               IndicatorDots(),
               const SizedBox(height: 30),
               Image.asset(
-                'lib/assets/QuerEntrarEmUmaUniversidade.png',
+                'lib/assets/want_to_go_to_university.png',
                 height: 291,
                 width: 330,
               ),

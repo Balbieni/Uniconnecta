@@ -191,7 +191,7 @@ class _CadastroPageState extends State<register_page> {
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
                             Image.asset(
-                              'lib/assets/Google.png',
+                              'lib/assets/google.png',
                               width: 32,
                               height: 32,
                               errorBuilder: (context, error, stackTrace) {

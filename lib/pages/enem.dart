@@ -51,7 +51,7 @@ class _EnemState extends State<Enem> {
                     rating: 4.5,
                     locationType: 'Presencial',
                     distance: '50Km',
-                    imagePath: 'lib/assets/faculdade1.png',
+                    imagePath: 'lib/assets/faculty.png',
                     isFavorited: isFavoritedNotifier,
                   ),
                   const TabBar(

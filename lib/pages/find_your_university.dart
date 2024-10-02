@@ -18,7 +18,7 @@ class find_your_university extends StatelessWidget {
               IndicatorDots(),
               const SizedBox(height: 241),
               Image.asset(
-                'lib/assets/EncontreSuaUniversidade.png',
+                'lib/assets/find_your_university.png',
                 height: 291,
                 width: 330,
               ),

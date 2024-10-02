@@ -12,29 +12,3 @@ void main() async {
   );
   runApp(uniconnecta());
 }
-
-class MyApp extends StatelessWidget {
-  const MyApp({Key? key}) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      title: 'Meu App',
-      theme: ThemeData(
-        scaffoldBackgroundColor: Colors.white,
-        primarySwatch: Colors.purple,
-        bottomAppBarTheme: const BottomAppBarTheme(color: Colors.white),
-        colorScheme:
-            ColorScheme.fromSwatch(primarySwatch: Colors.purple).copyWith(
-          secondary: Colors.white,
-          surface: Colors.white,
-        ),
-      ),
-      initialRoute: '/',
-      routes: {
-        '/': (context) => const SplashScreen(),
-      },
-    );
-  }
-}

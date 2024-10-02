@@ -26,7 +26,7 @@ class _entrance_examsState extends State<entrance_exams> {
 
   final List<carousel_comp.CarouselItem> maisProximosItems = [
     carousel_comp.CarouselItem(
-      imagePath: 'lib/assets/LogoUnicamp.png',
+      imagePath: 'lib/assets/unicamp_logo.png',
       title: 'Unicamp',
       rating: 4.9,
       subtitle: 'Medicina',

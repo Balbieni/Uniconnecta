@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'want_to_go_to_college.dart';
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({Key? key}) : super(key: key);
@@ -11,7 +12,7 @@ class _SplashScreenState extends State<SplashScreen> {
   void initState() {
     super.initState();
     Future.delayed(const Duration(seconds: 3)).then((_) {
-      Navigator.pushReplacementNamed(context, 'QuerEntrarNaFaculdade');
+      Navigator.pushReplacementNamed(context, 'want_to_go_to_college');
     });
   }
 
@@ -21,7 +22,7 @@ class _SplashScreenState extends State<SplashScreen> {
       backgroundColor: const Color.fromRGBO(101, 60, 173, 1),
       body: Center(
         child: Image.asset(
-          'lib/assets/uniconnectaBranco.png',
+          'lib/assets/uniconnecta_white.png',
           width: 331,
           height: 52,
         ),

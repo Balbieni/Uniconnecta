@@ -9,7 +9,7 @@ class FavoritesScreen extends StatelessWidget {
         avaliacao: 4.5,
         distancia: "50Km",
         modalidade: "Presencial",
-        logoUrl: "lib/assets/LogoUnicamp.png"),
+        logoUrl: "lib/assets/unicamp_logo.png"),
     // Outras universidades podem ser adicionadas aqui
   ];
 
@@ -19,7 +19,7 @@ class FavoritesScreen extends StatelessWidget {
       'date': '20/05/2024',
       'description': 'Descrição da notícia 1 da aba Recentes...',
       'url': 'https://example.com/noticia1',
-      'image': 'lib/assets/LogoUnicamp.png',
+      'image': 'lib/assets/unicamp_logo.png',
     },
     // Outras notícias podem ser adicionadas aqui
   ];
@@ -31,7 +31,7 @@ class FavoritesScreen extends StatelessWidget {
         avaliacao: 4.5,
         distancia: "50Km",
         modalidade: "Presencial",
-        logoUrl: "lib/assets/LogoUnicamp.png"),
+        logoUrl: "lib/assets/unicamp_logo.png"),
     // Outros vestibulares podem ser adicionados aqui
   ];
 

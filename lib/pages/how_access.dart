@@ -19,7 +19,7 @@ class _HowAccessState extends State<HowAccess> {
           Padding(
             padding: const EdgeInsets.all(24.0),
             child: Image.asset(
-              'lib/assets/uniconnectaRoxo.png',
+              'lib/assets/uniconnecta_roxo.png',
               width: MediaQuery.of(context).size.width,
               height: 339,
             ),
