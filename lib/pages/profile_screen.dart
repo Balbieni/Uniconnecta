@@ -4,6 +4,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'dart:io';
 import 'package:image_picker/image_picker.dart';
 import 'package:firebase_storage/firebase_storage.dart';
+import 'package:intl/intl.dart';
 
 class ProfileScreen extends StatelessWidget {
   @override
@@ -363,21 +364,205 @@ class NotificationProfileScreen extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: Text('Notificações'),
+        backgroundColor: Colors.white,
+        leading: IconButton(
+          icon: Icon(Icons.arrow_back, color: Colors.purple),
+          onPressed: () {
+            Navigator.of(context).pop();
+          },
+        ),
       ),
-      body: Center(child: Text('Tela de Notificações')),
+      body: StreamBuilder<QuerySnapshot>(
+        stream: FirebaseFirestore.instance
+            .collection('notifications')
+            .orderBy('timestamp', descending: true)
+            .snapshots(),
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return Center(child: CircularProgressIndicator());
+          }
+
+          if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
+            return Center(child: Text('Nenhuma notificação disponível.'));
+          }
+
+          final notifications = snapshot.data!.docs;
+
+          return ListView.builder(
+            itemCount: notifications.length,
+            itemBuilder: (context, index) {
+              final notification = notifications[index];
+
+              // Verifica o tipo do campo timestamp
+              final timestamp = notification['timestamp'];
+              DateTime? date;
+
+              if (timestamp is Timestamp) {
+                date = timestamp.toDate(); // Se for Timestamp do Firestore
+              } else if (timestamp is String) {
+                date = DateTime.tryParse(timestamp); // Se for uma String
+              }
+
+              final timeAgo =
+                  date != null ? _formatTimeAgo(date) : 'Desconhecido';
+
+              return Padding(
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                child: Container(
+                  decoration: BoxDecoration(
+                    color: Colors.grey[200],
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                  child: ListTile(
+                    title: Text(notification['message']),
+                    trailing: Text(
+                      timeAgo,
+                      style: TextStyle(color: Colors.purple),
+                    ),
+                  ),
+                ),
+              );
+            },
+          );
+        },
+      ),
     );
+  }
+
+  // Função para calcular o tempo passado desde a criação da notificação
+  String _formatTimeAgo(DateTime date) {
+    final now = DateTime.now();
+    final difference = now.difference(date);
+
+    if (difference.inHours < 24) {
+      return '${difference.inHours}h';
+    } else if (difference.inDays < 7) {
+      return '${difference.inDays}d';
+    } else {
+      // Formatação da data completa se a notificação for mais antiga que 7 dias
+      return DateFormat('dd/MM/yyyy').format(date);
+    }
   }
 }
 
-class ChangePasswordScreen extends StatelessWidget {
+class ChangePasswordScreen extends StatefulWidget {
+  @override
+  _ChangePasswordScreenState createState() => _ChangePasswordScreenState();
+}
+
+class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
+  final _newPasswordController = TextEditingController();
+  final _confirmPasswordController = TextEditingController();
+  bool _obscureNewPassword = true;
+  bool _obscureConfirmPassword = true;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Alterar Senha'),
+        title: const Text('Alterar Senha'),
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back),
+          onPressed: () {
+            Navigator.pop(context); // Volta para a tela anterior
+          },
+        ),
       ),
-      body: Center(child: Text('Tela de Alterar Senha')),
+      body: Padding(
+        padding: const EdgeInsets.all(20.0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            TextFormField(
+              controller: _newPasswordController,
+              obscureText: _obscureNewPassword,
+              decoration: InputDecoration(
+                labelText: 'Nova senha',
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(10.0),
+                ),
+                suffixIcon: IconButton(
+                  icon: Icon(
+                    _obscureNewPassword
+                        ? Icons.visibility_off
+                        : Icons.visibility,
+                  ),
+                  onPressed: () {
+                    setState(() {
+                      _obscureNewPassword = !_obscureNewPassword;
+                    });
+                  },
+                ),
+              ),
+            ),
+            const SizedBox(height: 20),
+            TextFormField(
+              controller: _confirmPasswordController,
+              obscureText: _obscureConfirmPassword,
+              decoration: InputDecoration(
+                labelText: 'Confirmar nova senha',
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(10.0),
+                ),
+                suffixIcon: IconButton(
+                  icon: Icon(
+                    _obscureConfirmPassword
+                        ? Icons.visibility_off
+                        : Icons.visibility,
+                  ),
+                  onPressed: () {
+                    setState(() {
+                      _obscureConfirmPassword = !_obscureConfirmPassword;
+                    });
+                  },
+                ),
+              ),
+            ),
+            const SizedBox(height: 30),
+            ElevatedButton(
+              onPressed: _changePassword,
+              child: const Text('Alterar senha'),
+              style: ElevatedButton.styleFrom(
+                backgroundColor: Colors.purple, // Cor de fundo do botão
+                foregroundColor:
+                    Colors.white, // Cor do texto definida para branco
+                padding: const EdgeInsets.symmetric(vertical: 15),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(10),
+                ),
+              ),
+            ),
+          ],
+        ),
+      ),
     );
+  }
+
+  void _changePassword() {
+    String newPassword = _newPasswordController.text;
+    String confirmPassword = _confirmPasswordController.text;
+
+    if (newPassword.isEmpty || confirmPassword.isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Por favor, preencha todos os campos.')),
+      );
+      return;
+    }
+
+    if (newPassword != confirmPassword) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('As senhas não coincidem.')),
+      );
+      return;
+    }
+
+    // Lógica para alterar a senha aqui (ex: integração com Firebase)
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(content: Text('Senha alterada com sucesso!')),
+    );
+
+    // Após o sucesso, você pode redirecionar o usuário ou limpar os campos.
   }
 }
 
@@ -386,9 +571,51 @@ class LogOutOfAccountScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Sair da Conta'),
+        title: const Text('Sair da Conta'),
       ),
-      body: Center(child: Text('Tela de Sair da Conta')),
+      body: Padding(
+        padding: const EdgeInsets.all(20.0),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            const Text(
+              'Você tem certeza que deseja sair da sua conta?',
+              style: TextStyle(fontSize: 18),
+              textAlign: TextAlign.center,
+            ),
+            const SizedBox(height: 30),
+            ElevatedButton(
+              onPressed: () => _logOut(context),
+              child: const Text('Sair da Conta'),
+              style: ElevatedButton.styleFrom(
+                backgroundColor: Colors.purple,
+                foregroundColor:
+                    Colors.white, // Cor do texto definida para branco
+                padding:
+                    const EdgeInsets.symmetric(vertical: 15, horizontal: 50),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(10),
+                ),
+              ),
+            ),
+          ],
+        ),
+      ),
     );
+  }
+
+  Future<void> _logOut(BuildContext context) async {
+    try {
+      await FirebaseAuth.instance.signOut(); // Desconecta o usuário
+
+      // Redireciona para a SplashScreen e remove todas as telas anteriores
+      Navigator.pushNamedAndRemoveUntil(
+          context, '/', (Route<dynamic> route) => false);
+    } catch (e) {
+      // Mostra uma mensagem de erro caso o logout falhe
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Erro ao sair da conta: $e')),
+      );
+    }
   }
 }

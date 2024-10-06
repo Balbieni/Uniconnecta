@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:uniconnecta/components/components.dart';
 import 'pages.dart';
+import 'package:uniconnecta/auth_service.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({Key? key}) : super(key: key);
@@ -25,9 +26,25 @@ class _LoginScreenState extends State<LoginScreen> {
       Navigator.push(
         context,
         MaterialPageRoute(builder: (context) => PhotoScreen()),
-      ); // Navega para a PhotoScreen após login bem-sucedido
+      );
+    } on FirebaseAuthException catch (e) {
+      String errorMessage;
+      switch (e.code) {
+        case 'invalid-email':
+          errorMessage = 'O endereço de email está mal formatado.';
+          break;
+        case 'user-not-found':
+          errorMessage = 'Nenhum usuário encontrado com este email.';
+          break;
+        case 'wrong-password':
+          errorMessage = 'Senha incorreta. Tente novamente.';
+          break;
+        default:
+          errorMessage = 'Ocorreu um erro. Por favor, tente novamente.';
+      }
+      _showErrorDialog('Erro no login com email', errorMessage);
     } catch (e) {
-      print(e);
+      _showErrorDialog('Erro no login', e.toString());
     }
   }
 
@@ -37,26 +54,60 @@ class _LoginScreenState extends State<LoginScreen> {
       if (user != null) {
         Navigator.push(
           context,
-          MaterialPageRoute(builder: (context) => PhotoScreen()),
-        ); // Navega para a PhotoScreen após login bem-sucedido
+          MaterialPageRoute(builder: (context) => HomeScreen()),
+        );
       } else {
-        print('Login failed');
+        _showErrorDialog(
+            'Falha no login', 'Não foi possível realizar o login com Google.');
       }
     } catch (e) {
-      print(e);
+      _showErrorDialog('Erro no login com Google', e.toString());
     }
   }
 
   void _resetPassword() {
-    // Adicione aqui o código para redefinir a senha
     if (_emailController.text.isNotEmpty) {
       FirebaseAuth.instance
           .sendPasswordResetEmail(email: _emailController.text)
-          .then((value) => print("Email de redefinição de senha enviado"))
-          .catchError((error) => print("Erro: $error"));
+          .then((value) => _showInfoDialog(
+              'Redefinição de senha', 'Email de redefinição de senha enviado.'))
+          .catchError((error) => _showErrorDialog(
+              'Erro', 'Erro ao enviar email de redefinição: $error'));
     } else {
-      print("Por favor, insira seu email");
+      _showErrorDialog('Erro', 'Por favor, insira seu email.');
     }
+  }
+
+  void _showErrorDialog(String title, String message) {
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: Text(title),
+        content: Text(message),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.of(context).pop(),
+            child: const Text('Ok'),
+          ),
+        ],
+      ),
+    );
+  }
+
+  void _showInfoDialog(String title, String message) {
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: Text(title),
+        content: Text(message),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.of(context).pop(),
+            child: const Text('Ok'),
+          ),
+        ],
+      ),
+    );
   }
 
   @override
@@ -65,192 +116,141 @@ class _LoginScreenState extends State<LoginScreen> {
       backgroundColor: Colors.white,
       body: SingleChildScrollView(
         child: Container(
-          color: const Color.fromRGBO(255, 255, 255, 1),
-          child: Center(
-            child: Padding(
-              padding: const EdgeInsets.all(30.0),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
+          padding: const EdgeInsets.all(30.0),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Row(
                 children: [
-                  Row(
-                    children: [
-                      const BackButtonComponent(
-                          iconSize: 30.0), // Defina o tamanho do ícone
-                      const Spacer(),
-                    ],
-                  ),
-                  const SizedBox(height: 30),
-                  Image.asset(
-                    'lib/assets/uniconnecta_roxo.png',
-                    width: 331,
-                    height: 52,
-                  ),
-                  const SizedBox(height: 40),
-                  const Text(
-                    'Conecte-se',
+                  const BackButtonComponent(iconSize: 30.0),
+                  const Spacer(),
+                ],
+              ),
+              const SizedBox(height: 30),
+              Image.asset('lib/assets/uniconnecta_roxo.png',
+                  width: 331, height: 52),
+              const SizedBox(height: 40),
+              const Text('Conecte-se',
+                  style: TextStyle(color: ColorStyle.RoxoP, fontSize: 20.0)),
+              const SizedBox(height: 20),
+              BoxText(
+                controller: _emailController,
+                fillColor: const Color.fromARGB(255, 255, 255, 255),
+                hintText: 'Email',
+                isPassword: false,
+                textColor: ColorStyle.CinzaE2,
+                textStyle:
+                    const TextStyle(fontSize: 16.0, fontFamily: 'Quicksand'),
+              ),
+              const SizedBox(height: 20),
+              BoxText(
+                controller: _passwordController,
+                fillColor: const Color.fromARGB(255, 255, 255, 255),
+                hintText: 'Senha',
+                isPassword: true,
+                textColor: ColorStyle.CinzaE2,
+                textStyle:
+                    const TextStyle(fontSize: 16.0, fontFamily: 'Quicksand'),
+              ),
+              Align(
+                alignment: Alignment.centerLeft,
+                child: TextButton(
+                  onPressed: _resetPassword,
+                  child: const Text(
+                    'Esqueci minha senha',
                     style: TextStyle(
-                      color: ColorStyle.RoxoP,
-                      fontSize: 20.0,
-                    ),
+                        color: ColorStyle.RoxoP, fontWeight: FontWeight.bold),
                   ),
-                  const SizedBox(height: 20),
-                  BoxText(
-                    controller: _emailController,
-                    fillColor: const Color.fromARGB(255, 255, 255, 255),
-                    hintText: 'Email',
-                    isPassword: false,
-                    textColor: ColorStyle.CinzaE2,
-                    textStyle: const TextStyle(
-                        fontSize: 16.0, fontFamily: 'Quicksand'),
+                ),
+              ),
+              const SizedBox(height: 30),
+              SizedBox(
+                width: MediaQuery.of(context).size.width - 58,
+                height: 58,
+                child: ElevatedButton(
+                  onPressed: _loginWithEmail,
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: ColorStyle.RoxoP,
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(8.0)),
                   ),
-                  const SizedBox(height: 20),
-                  BoxText(
-                    controller: _passwordController,
-                    fillColor: const Color.fromARGB(255, 255, 255, 255),
-                    hintText: 'Senha',
-                    isPassword: true,
-                    textColor: ColorStyle.CinzaE2,
-                    textStyle: const TextStyle(
-                        fontSize: 16.0, fontFamily: 'Quicksand'),
+                  child: const Text('Login',
+                      style: TextStyle(
+                          color: Colors.white, fontWeight: FontWeight.bold)),
+                ),
+              ),
+              const SizedBox(height: 20),
+              const Row(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  Expanded(
+                    child: Divider(color: ColorStyle.CinzaC2, thickness: 1),
                   ),
-                  Align(
-                    alignment: Alignment.centerLeft,
-                    child: TextButton(
-                      onPressed: _resetPassword,
-                      child: const Text(
-                        'Esqueci minha senha',
-                        style: TextStyle(
-                          color: ColorStyle.RoxoP,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                    ),
-                  ),
-                  const SizedBox(height: 30),
-                  SizedBox(
-                    width: MediaQuery.of(context).size.width - 58,
-                    height: 58,
-                    child: ElevatedButton(
-                      onPressed: _loginWithEmail,
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: ColorStyle.RoxoP,
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(8.0),
-                        ),
-                      ),
-                      child: const Text(
-                        'Login',
-                        style: TextStyle(
-                          color: Colors.white,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                    ),
-                  ),
-                  const SizedBox(height: 20),
-                  const Row(
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      Expanded(
-                        child: Divider(
-                          color: ColorStyle.CinzaC2,
-                          thickness: 1,
-                          height: 20,
-                          indent: 1,
-                          endIndent: 5,
-                        ),
-                      ),
-                      SizedBox(width: 5),
-                      Text(
-                        'ou',
-                        style: TextStyle(
+                  SizedBox(width: 5),
+                  Text('ou',
+                      style: TextStyle(
                           color: ColorStyle.CinzaE1,
                           fontSize: 13.9,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                      SizedBox(width: 5),
-                      Expanded(
-                        child: Divider(
-                          color: ColorStyle.CinzaC2,
-                          thickness: 1,
-                          height: 20,
-                          indent: 5,
-                          endIndent: 1,
-                        ),
-                      ),
-                    ],
-                  ),
-                  const SizedBox(height: 10),
-                  SizedBox(
-                    width: MediaQuery.of(context).size.width - 58,
-                    height: 58,
-                    child: OutlinedButton(
-                      onPressed: _loginWithGoogle,
-                      style: OutlinedButton.styleFrom(
-                        side: const BorderSide(
-                          color: ColorStyle.CinzaC2,
-                        ),
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(8.0),
-                        ),
-                      ),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Image.asset(
-                            'lib/assets/google.png',
-                            width: 32,
-                            height: 32,
-                          ),
-                          const SizedBox(width: 10),
-                          const Text(
-                            'Continuar com Google',
-                            style: TextStyle(
-                              color: ColorStyle.CinzaP,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
-                  const SizedBox(height: 30),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      const Text(
-                        'Não tem uma conta?',
-                        style: TextStyle(
-                          color: ColorStyle.CinzaP,
-                          fontSize: 13.9,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                      const SizedBox(width: 5),
-                      GestureDetector(
-                        onTap: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => const register_page(),
-                            ),
-                          );
-                        },
-                        child: const Text(
-                          'Cadastre-se.',
-                          style: TextStyle(
-                            color: ColorStyle.RoxoP,
-                            fontSize: 13.9,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                      ),
-                    ],
+                          fontWeight: FontWeight.bold)),
+                  SizedBox(width: 5),
+                  Expanded(
+                    child: Divider(color: ColorStyle.CinzaC2, thickness: 1),
                   ),
                 ],
               ),
-            ),
+              const SizedBox(height: 10),
+              SizedBox(
+                width: MediaQuery.of(context).size.width - 58,
+                height: 58,
+                child: OutlinedButton(
+                  onPressed: _loginWithGoogle,
+                  style: OutlinedButton.styleFrom(
+                    side: const BorderSide(color: ColorStyle.CinzaC2),
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(8.0)),
+                  ),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Image.asset('lib/assets/google.png',
+                          width: 32, height: 32),
+                      const SizedBox(width: 10),
+                      const Text('Continuar com Google',
+                          style: TextStyle(
+                              color: ColorStyle.CinzaP,
+                              fontWeight: FontWeight.bold)),
+                    ],
+                  ),
+                ),
+              ),
+              const SizedBox(height: 30),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  const Text('Não tem uma conta?',
+                      style: TextStyle(
+                          color: ColorStyle.CinzaP,
+                          fontSize: 13.9,
+                          fontWeight: FontWeight.bold)),
+                  const SizedBox(width: 5),
+                  GestureDetector(
+                    onTap: () {
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => const register_page()));
+                    },
+                    child: const Text(
+                      'Cadastre-se.',
+                      style: TextStyle(
+                          color: ColorStyle.RoxoP,
+                          fontSize: 13.9,
+                          fontWeight: FontWeight.bold),
+                    ),
+                  ),
+                ],
+              ),
+            ],
           ),
         ),
       ),

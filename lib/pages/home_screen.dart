@@ -4,6 +4,7 @@ import 'package:uniconnecta/pages/closest.dart';
 import 'package:uniconnecta/pages/best_rated.dart';
 import 'package:uniconnecta/pages/entrance_exams.dart';
 import 'package:uniconnecta/pages/enem.dart';
+import 'package:uniconnecta/pages/pages.dart';
 import 'package:uniconnecta/pages/search_page.dart';
 import 'package:uniconnecta/pages/news_screen.dart';
 import 'package:uniconnecta/pages/favorites_screen.dart';
@@ -364,7 +365,7 @@ Widget buildRatingStars(double rating) {
 List<CarouselItem> vestibularesItems(BuildContext context) {
   return [
     CarouselItem(
-      imagePath: 'lib/assets/faculty.png',
+      imagePath: 'lib/assets/convest_logo.png',
       title: 'Convest',
       rating: 4.5,
       subtitle: '',
@@ -384,7 +385,7 @@ List<CarouselItem> vestibularesItems(BuildContext context) {
       },
     ),
     CarouselItem(
-      imagePath: 'lib/assets/faculty.png',
+      imagePath: 'lib/assets/enem.png',
       title: 'enem',
       rating: 4.0,
       subtitle: '',
@@ -420,8 +421,8 @@ List<CarouselItem> melhoresAvaliadasItems(BuildContext context) {
         Navigator.push(
           context,
           MaterialPageRoute(
-            builder: (context) => Enem(
-              title: 'enem',
+            builder: (context) => Unicamp(
+              title: 'Unicamp',
               subtitle: 'Inscrições abertas',
             ),
           ),

@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'want_to_go_to_college.dart';
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({Key? key}) : super(key: key);

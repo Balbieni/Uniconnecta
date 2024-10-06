@@ -17,24 +17,60 @@ class _CadastroPageState extends State<register_page> {
 
   Future<void> _createAccount() async {
     try {
+      // Cria o usuário no Firebase com email e senha
       UserCredential userCredential =
           await FirebaseAuth.instance.createUserWithEmailAndPassword(
         email: _emailController.text,
         password: _passwordController.text,
       );
 
-      // Aqui você pode salvar o nome do usuário no perfil do Firebase ou no Firestore
+      // Atualiza o nome do usuário após a criação
       await userCredential.user?.updateDisplayName(_nameController.text);
 
-      // Navegar para a próxima tela após o cadastro
+      // Navega para a próxima tela após o cadastro bem-sucedido
       Navigator.push(
         context,
         MaterialPageRoute(builder: (context) => PhotoScreen()),
       );
+    } on FirebaseAuthException catch (e) {
+      String errorMessage;
+      switch (e.code) {
+        case 'email-already-in-use':
+          errorMessage = 'Este email já está em uso. Tente outro email.';
+          break;
+        case 'invalid-email':
+          errorMessage = 'O endereço de email está mal formatado.';
+          break;
+        case 'weak-password':
+          errorMessage = 'A senha é muito fraca. Use uma senha mais forte.';
+          break;
+        default:
+          errorMessage = 'Ocorreu um erro durante o cadastro. Tente novamente.';
+      }
+      _showErrorDialog('Erro no cadastro', errorMessage);
     } catch (e) {
-      // Mostrar um erro para o usuário
-      print(e);
+      _showErrorDialog('Erro no cadastro', e.toString());
     }
+  }
+
+  void _showErrorDialog(String title, String message) {
+    showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          title: Text(title),
+          content: Text(message),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              child: const Text('Ok'),
+            ),
+          ],
+        );
+      },
+    );
   }
 
   Future<void> _loginWithGoogle() async {

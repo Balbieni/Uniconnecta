@@ -24,7 +24,8 @@ class create_account_or_log_in extends StatelessWidget {
                   Navigator.push(
                     context,
                     MaterialPageRoute(
-                      builder: (context) => HomeScreen(), //colocar CadastroPage
+                      builder: (context) =>
+                          HomeScreen(), //colocar register_page HomeScreen
                     ),
                   );
                 },
