@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:geolocator/geolocator.dart';
 import 'package:uniconnecta/pages/convest.dart';
 import 'package:uniconnecta/pages/closest.dart';
 import 'package:uniconnecta/pages/best_rated.dart';
@@ -9,6 +10,7 @@ import 'package:uniconnecta/pages/search_page.dart';
 import 'package:uniconnecta/pages/news_screen.dart';
 import 'package:uniconnecta/pages/favorites_screen.dart';
 import 'package:uniconnecta/pages/profile_screen.dart';
+import 'profile_screen.dart';
 
 class CarouselItem {
   final String imagePath;
@@ -92,8 +94,74 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 }
 
-// Conteúdo da tela Home com a AppBar incluída
-class HomeScreenContent extends StatelessWidget {
+class HomeScreenContent extends StatefulWidget {
+  @override
+  _HomeScreenContentState createState() => _HomeScreenContentState();
+}
+
+class _HomeScreenContentState extends State<HomeScreenContent> {
+  Position? _currentPosition;
+
+  @override
+  void initState() {
+    super.initState();
+    _getCurrentLocation();
+  }
+
+  // Função para obter a localização atual
+  Future<void> _getCurrentLocation() async {
+    bool serviceEnabled;
+    LocationPermission permission;
+
+    // Verifica se o serviço de localização está ativado
+    serviceEnabled = await Geolocator.isLocationServiceEnabled();
+    if (!serviceEnabled) {
+      // Serviço de localização desativado, você pode exibir uma mensagem ao usuário
+      return;
+    }
+
+    // Verifica permissões de localização
+    permission = await Geolocator.checkPermission();
+    if (permission == LocationPermission.denied) {
+      permission = await Geolocator.requestPermission();
+      if (permission == LocationPermission.denied) {
+        // Permissão negada, você pode exibir uma mensagem ao usuário
+        return;
+      }
+    }
+
+    if (permission == LocationPermission.deniedForever) {
+      // Permissão negada permanentemente
+      return;
+    }
+
+    // Obtém a posição atual
+    Position position = await Geolocator.getCurrentPosition(
+        desiredAccuracy: LocationAccuracy.high);
+
+    setState(() {
+      _currentPosition = position;
+    });
+  }
+
+  // Função para calcular a distância
+  String _calculateDistance(
+      double destinationLatitude, double destinationLongitude) {
+    if (_currentPosition == null) {
+      return "Calculando...";
+    }
+
+    double distanceInMeters = Geolocator.distanceBetween(
+      _currentPosition!.latitude,
+      _currentPosition!.longitude,
+      destinationLatitude,
+      destinationLongitude,
+    );
+
+    double distanceInKm = distanceInMeters / 1000;
+    return distanceInKm.toStringAsFixed(2);
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -155,37 +223,74 @@ class HomeScreenContent extends StatelessWidget {
                 context,
                 icon: Icons.school,
                 title: 'Universidades',
-                onTap: () => Navigator.pop(context),
+                onTap: () {
+                  Navigator.pop(context); // Fecha o Drawer
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => closest()),
+                  );
+                },
               ),
               buildDrawerItem(
                 context,
                 icon: Icons.edit,
                 title: 'Vestibulares',
-                onTap: () => Navigator.pop(context),
+                onTap: () {
+                  Navigator.pop(context); // Fecha o Drawer
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => entrance_exams()),
+                  );
+                },
               ),
               buildDrawerItem(
                 context,
                 icon: Icons.article,
                 title: 'Notícias',
-                onTap: () => Navigator.pop(context),
+                onTap: () {
+                  Navigator.pop(context); // Fecha o Drawer
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => NewsScreen()),
+                  );
+                },
               ),
               buildDrawerItem(
                 context,
                 icon: Icons.favorite,
                 title: 'Favoritos',
-                onTap: () => Navigator.pop(context),
+                onTap: () {
+                  Navigator.pop(context); // Fecha o Drawer
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => FavoritesScreen()),
+                  );
+                },
               ),
               buildDrawerItem(
                 context,
                 icon: Icons.person,
                 title: 'Minha conta',
-                onTap: () => Navigator.pop(context),
+                onTap: () {
+                  Navigator.pop(context); // Fecha o Drawer
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => ProfileScreen()),
+                  );
+                },
               ),
               buildDrawerItem(
                 context,
                 icon: Icons.exit_to_app,
                 title: 'Sair da conta',
-                onTap: () => Navigator.pop(context),
+                onTap: () {
+                  Navigator.pop(context); // Fecha o Drawer
+                  Navigator.pushReplacement(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => LogOutOfAccountScreen()),
+                  );
+                },
               ),
             ],
           ),
@@ -205,6 +310,104 @@ class HomeScreenContent extends StatelessWidget {
         ),
       ),
     );
+  }
+
+  // Items de vestibulares
+  List<CarouselItem> vestibularesItems(BuildContext context) {
+    return [
+      CarouselItem(
+        imagePath: 'lib/assets/convest_logo.png',
+        title: 'Convest',
+        rating: 4.5,
+        subtitle: '',
+        tag: '',
+        distance: 'N/A', // Distância não aplicável para vestibulares
+        isFavorited: ValueNotifier<bool>(false),
+        onTap: () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => Convest(
+                title: 'Convest',
+                subtitle: 'Inscrições abertas',
+              ),
+            ),
+          );
+        },
+      ),
+      CarouselItem(
+        imagePath: 'lib/assets/enem.png',
+        title: 'Enem',
+        rating: 4.0,
+        subtitle: '',
+        tag: 'Inscrições abertas',
+        distance: 'N/A', // Distância não aplicável para vestibulares
+        isFavorited: ValueNotifier<bool>(false),
+        onTap: () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => Enem(
+                title: 'Enem',
+                subtitle: 'Inscrições abertas',
+              ),
+            ),
+          );
+        },
+      ),
+    ];
+  }
+
+  // Items melhores avaliadas
+  List<CarouselItem> melhoresAvaliadasItems(BuildContext context) {
+    return [
+      CarouselItem(
+        imagePath: 'lib/assets/unicamp_logo.png',
+        title: 'Unicamp',
+        rating: 4.6,
+        subtitle: 'Universidade renomada',
+        tag: 'Ver mais',
+        distance: _calculateDistance(-22.820833, -47.066476),
+        isFavorited: ValueNotifier<bool>(true),
+        onTap: () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => Unicamp(
+                title: 'Unicamp',
+                subtitle: 'Inscrições abertas',
+              ),
+            ),
+          );
+        },
+      ),
+    ];
+  }
+
+  // Items mais próximos
+  List<CarouselItem> maisProximosItems(BuildContext context) {
+    return [
+      CarouselItem(
+        imagePath: 'lib/assets/faculty.png',
+        title: 'Faculdade Mais Próxima 1',
+        rating: 4.0,
+        subtitle: 'Próxima de você',
+        tag: 'Ver mais',
+        distance:
+            _calculateDistance(-23.5505, -46.6333), // Coordenadas de exemplo
+        isFavorited: ValueNotifier<bool>(false),
+      ),
+      CarouselItem(
+        imagePath: 'lib/assets/faculty.png',
+        title: 'Faculdade Mais Próxima 2',
+        rating: 3.8,
+        subtitle: 'Próxima de você',
+        tag: 'Ver mais',
+        distance:
+            _calculateDistance(-23.5511, -46.6345), // Coordenadas de exemplo
+        isFavorited: ValueNotifier<bool>(false),
+      ),
+    ];
   }
 }
 
@@ -314,8 +517,12 @@ Widget buildCarouselCard(CarouselItem item, BuildContext context) {
                   children: [
                     buildRatingStars(item.rating),
                     Spacer(),
-                    Text('${item.distance} Km',
-                        style: TextStyle(fontSize: 12, color: Colors.grey)),
+                    Text(
+                      item.distance == 'N/A'
+                          ? item.distance
+                          : '${item.distance} Km',
+                      style: TextStyle(fontSize: 12, color: Colors.grey),
+                    ),
                   ],
                 ),
                 SizedBox(height: 10),
@@ -360,88 +567,4 @@ Widget buildRatingStars(double rating) {
           (index) => Icon(Icons.star_border, color: Colors.purple, size: 16)),
     ],
   );
-}
-
-List<CarouselItem> vestibularesItems(BuildContext context) {
-  return [
-    CarouselItem(
-      imagePath: 'lib/assets/convest_logo.png',
-      title: 'Convest',
-      rating: 4.5,
-      subtitle: '',
-      tag: '',
-      distance: '',
-      isFavorited: ValueNotifier<bool>(false),
-      onTap: () {
-        Navigator.push(
-          context,
-          MaterialPageRoute(
-            builder: (context) => Convest(
-              title: 'Convest',
-              subtitle: 'Inscrições abertas',
-            ),
-          ),
-        );
-      },
-    ),
-    CarouselItem(
-      imagePath: 'lib/assets/enem.png',
-      title: 'enem',
-      rating: 4.0,
-      subtitle: '',
-      tag: 'Inscrições abertas',
-      distance: '',
-      isFavorited: ValueNotifier<bool>(false),
-      onTap: () {
-        Navigator.push(
-          context,
-          MaterialPageRoute(
-            builder: (context) => Enem(
-              title: 'enem',
-              subtitle: 'Inscrições abertas',
-            ),
-          ),
-        );
-      },
-    ),
-  ];
-}
-
-List<CarouselItem> melhoresAvaliadasItems(BuildContext context) {
-  return [
-    CarouselItem(
-      imagePath: 'lib/assets/unicamp_logo.png',
-      title: 'Unicamp',
-      rating: 4.6,
-      subtitle: 'Universidade renomada',
-      tag: 'Ver mais',
-      distance: '15',
-      isFavorited: ValueNotifier<bool>(true),
-      onTap: () {
-        Navigator.push(
-          context,
-          MaterialPageRoute(
-            builder: (context) => Unicamp(
-              title: 'Unicamp',
-              subtitle: 'Inscrições abertas',
-            ),
-          ),
-        );
-      },
-    ),
-  ];
-}
-
-List<CarouselItem> maisProximosItems(BuildContext context) {
-  return [
-    CarouselItem(
-      imagePath: 'lib/assets/faculty.png',
-      title: 'Faculdade Mais Próxima 1',
-      rating: 4.0,
-      subtitle: 'Próxima de você',
-      tag: 'Ver mais',
-      distance: '2',
-      isFavorited: ValueNotifier<bool>(false),
-    ),
-  ];
 }

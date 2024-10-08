@@ -1,17 +1,20 @@
 import 'package:flutter/material.dart';
+import 'university.dart';
+import 'courses.dart';
+import 'entrance_exams.dart';
 
-class filter extends StatefulWidget {
+class Filter extends StatefulWidget {
   @override
-  _filterState createState() => _filterState();
+  _FilterState createState() => _FilterState();
 }
 
-class _filterState extends State<filter> {
+class _FilterState extends State<Filter> {
   // Controle do filtro ativo
   String activeFilter = 'Universidade';
   String selectedUniversidadeOption =
       'Presencial'; // Opção selecionada por padrão
-  String selectedVestibularesOption = '';
-  String selectedCursosOption = '';
+  String selectedVestibularesOption = 'Opção Vestibular 1';
+  String selectedCursosOption = 'Opção Curso 1';
 
   @override
   Widget build(BuildContext context) {
@@ -35,8 +38,8 @@ class _filterState extends State<filter> {
               // Ação para resetar os filtros
               setState(() {
                 selectedUniversidadeOption = 'Presencial';
-                selectedVestibularesOption = '';
-                selectedCursosOption = '';
+                selectedVestibularesOption = 'Opção Vestibular 1';
+                selectedCursosOption = 'Opção Curso 1';
               });
             },
           ),
@@ -64,7 +67,23 @@ class _filterState extends State<filter> {
             ElevatedButton(
               onPressed: () {
                 // Ação do botão Aplicar
-                // Adicione a lógica para aplicar o filtro aqui
+                if (activeFilter == 'Universidade') {
+                  // Redireciona para a página de universidades
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => universty(
+                        filterType: selectedUniversidadeOption,
+                      ),
+                    ),
+                  );
+                } else if (activeFilter == 'Vestibulares') {
+                  // Redireciona para a página de vestibulares
+                  // Adicione aqui a lógica para vestibulares
+                } else if (activeFilter == 'Cursos') {
+                  // Redireciona para a página de cursos
+                  // Adicione aqui a lógica para cursos
+                }
               },
               style: ElevatedButton.styleFrom(
                 backgroundColor: Colors.purple,
@@ -146,7 +165,18 @@ class _filterState extends State<filter> {
             selectedVestibularesOption = value!;
           });
         }),
-        // Adicione mais opções conforme necessário
+        buildRadioOption('Opção Vestibular 2', selectedVestibularesOption,
+            (value) {
+          setState(() {
+            selectedVestibularesOption = value!;
+          });
+        }),
+        buildRadioOption('Opção Vestibular 3', selectedVestibularesOption,
+            (value) {
+          setState(() {
+            selectedVestibularesOption = value!;
+          });
+        }),
       ],
     );
   }
@@ -160,7 +190,16 @@ class _filterState extends State<filter> {
             selectedCursosOption = value!;
           });
         }),
-        // Adicione mais opções conforme necessário
+        buildRadioOption('Opção Curso 2', selectedCursosOption, (value) {
+          setState(() {
+            selectedCursosOption = value!;
+          });
+        }),
+        buildRadioOption('Opção Curso 3', selectedCursosOption, (value) {
+          setState(() {
+            selectedCursosOption = value!;
+          });
+        }),
       ],
     );
   }

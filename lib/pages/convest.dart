@@ -52,7 +52,7 @@ class _ConvestState extends State<Convest> {
                     rating: 4.5,
                     locationType: 'teste1',
                     distance: '50Km',
-                    imagePath: 'lib/assets/faculty.png',
+                    imagePath: 'lib/assets/convest_logo.png',
                     isFavorited: isFavoritedNotifier,
                   ),
                   const TabBar(
@@ -121,6 +121,15 @@ class _ConvestState extends State<Convest> {
 class InscrevaSeTab extends StatelessWidget {
   const InscrevaSeTab({Key? key}) : super(key: key);
 
+  Future<void> _launchUrl(String url) async {
+    final Uri uri = Uri.parse(url);
+    if (await canLaunchUrl(uri)) {
+      await launchUrl(uri);
+    } else {
+      throw 'Não foi possível abrir o link: $url';
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return ListView(
@@ -130,8 +139,23 @@ class InscrevaSeTab extends StatelessWidget {
           title: 'Enem',
           description:
               'Período de inscrições será de 27 de maio a 7 de junho. Provas serão aplicadas nos dias 3 e 10 de novembro em todo o Brasil.',
-          onPressedInscrever: () {},
-          onPressedPagina: () {},
+          onPressedInscrever: () {
+            _launchUrl('https://enem.inep.gov.br/inscricao');
+          },
+          onPressedPagina: () {
+            _launchUrl('https://enem.inep.gov.br');
+          },
+        ),
+        ExamCard(
+          title: 'Convest',
+          description:
+              'Período de inscrições será de 27 de maio a 7 de junho. Provas serão aplicadas nos dias 3 e 10 de novembro em todo o Brasil.',
+          onPressedInscrever: () {
+            _launchUrl('https://convest.com.br/inscricao');
+          },
+          onPressedPagina: () {
+            _launchUrl('https://convest.com.br');
+          },
         ),
       ],
     );
@@ -762,7 +786,7 @@ class ProvasAnterioresTab extends StatelessWidget {
           ),
           const SizedBox(height: 20),
           const Text(
-            'texto imenso que eu vou colocar',
+            'A Unicamp oferece dezenas de cursos de graduação e pós-graduação nas áreas de artes, das ciências biológicas e da saúde, das ciências exatas e da terra e das ciências humanas. Os cursos de pós-graduação e mestrado da Unicamp são os que se destacam, sendo mais de 150 opções.\nOs cursos de artes são:\n\tArtes Cênicas\n\tArtes Visuais\n\tComunicação Social\n\tDança\n\tMúsica\nOs cursos de ciências biológicas e saúde são:\n\tCiências Biológicas\n\tCiências do Esporte\n\tEducação Física\n\tEnfermagem\n\tFarmácia\n\tFonoaudiologia\n\tMedicina\n\tNutrição\n\tOdontologia\nOs cursos das áreas de ciências exatas, tecnologia e terra são:\n\tArquitetura e Urbanismo\n\tCiência da Computação\n\tCurso Superior de Tecnologia em Análise e Desenvolvimento de Sistemas\n\tCurso Superior de Tecnologia em Construção de Edifícios\n\tCurso Superior de Tecnologia em Saneamento Ambiental\n\tEngenharia Agrícola\n\tEngenharia Ambiental\n\tEngenharia Civil\n\tEngenharia de Alimentos\n\tEngenharia de Computação\n\tEngenharia de Controle e Automação\n\tEngenharia de Manufatura\n\tEngenharia de Produção\n\tEngenharia de Telecomunicações\n\tEngenharia Elétrica\n\tEngenharia Física\n\tEngenharia Mecânica\n\tEngenharia Química\n\tEstatística\n\tFísica\n\tGeologia\n\tLicenciatura em Física\n\tLicenciatura em Matemática\n\tMatemática\n\tMatemática Aplicada e Computacional\n\tMatemática/Física/Matemática Aplicada e Computacional\n\tQuímica\n\tQuímica Tecnológica\n\tSistemas de Informação\nOs cursos de ciências humanas são:\n\tAdministração\n\tAdministração Pública\n\tCiências Econômicas\n\tCiências Sociais\n\tEstudos Literários\n\tFilosofia\n\tGeografia\n\tHistória\n\tLetras\n\tLicenciatura integrada Química/Física\n\tLinguística\n\tPedagogia\nUnicamp: cursos gratuitos\nA Unicamp também oferece cursos gratuitos à distância em várias áreas do conhecimento. A Escola de Extensão da Unicamp (Extecamp) disponibiliza em seu site dezenas de cursos de especialização, aperfeiçoamento, disciplina, difusão tecnológica, científica e cultural, entre outros.\nVale a pena acessar o site e conferir a lista completa de todos os cursos gratuitos fornecidos por essa universidade.',
             style: TextStyle(
               fontSize: 14.0,
               color: Colors.black,
@@ -954,45 +978,43 @@ class ExamCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Card(
-      margin: const EdgeInsets.symmetric(vertical: 8),
       child: Padding(
-        padding: const EdgeInsets.all(16),
+        padding: const EdgeInsets.all(16.0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
               title,
               style: const TextStyle(
-                fontSize: 18,
+                fontSize: 20,
                 fontWeight: FontWeight.bold,
               ),
             ),
             const SizedBox(height: 8),
-            Text(description),
+            Text(
+              description,
+              style: const TextStyle(fontSize: 16),
+            ),
             const SizedBox(height: 16),
             Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Expanded(
-                  child: ElevatedButton(
-                    onPressed: onPressedInscrever,
-                    style: ElevatedButton.styleFrom(
-                      foregroundColor: Colors.white,
-                      backgroundColor: Colors.purple, // Cor do texto do botão
-                    ),
-                    child: const Text('Inscreva-se'),
+                ElevatedButton(
+                  onPressed: onPressedInscrever,
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.purple, // Cor de fundo
+                    foregroundColor: Colors.white, // Cor do texto
                   ),
+                  child: const Text('Inscrever-se'),
                 ),
-                const SizedBox(width: 8),
-                Expanded(
-                  child: ElevatedButton(
-                    onPressed: onPressedPagina,
-                    style: ElevatedButton.styleFrom(
-                      foregroundColor: Colors.white,
-                      backgroundColor: Colors.purple, // Cor do texto do botão
-                    ),
-                    child: const Text('Acessar página'),
+                const SizedBox(width: 16),
+                OutlinedButton(
+                  onPressed: onPressedPagina,
+                  style: OutlinedButton.styleFrom(
+                    side:
+                        const BorderSide(color: Colors.purple), // Cor da borda
+                    foregroundColor: Colors.purple, // Cor do texto
                   ),
+                  child: const Text('Ir para a página'),
                 ),
               ],
             ),

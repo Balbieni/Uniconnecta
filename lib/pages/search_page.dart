@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'best_rated.dart';
+import 'universty.dart';
 import 'closest.dart';
 import 'entrance_exams.dart';
 import 'favorites_screen.dart' as fav; // Usando prefixo para evitar conflito
@@ -90,8 +90,8 @@ class SearchPage extends StatelessWidget {
                 buildCategoryCard(
                   context,
                   'Melhores avaliados',
-                  'lib/assets/best_rated.png', // Image URL
-                  best_rated(),
+                  'lib/assets/universty.png', // Image URL
+                  universty(),
                 ),
                 buildCategoryCard(
                   context,
