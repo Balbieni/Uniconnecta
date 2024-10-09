@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
-import 'university.dart';
+import 'university_with_filter.dart';
 import 'courses.dart';
-import 'entrance_exams.dart';
+import 'entrance_exams_with_filter.dart';
 
-class Filter extends StatefulWidget {
+class filter extends StatefulWidget {
   @override
   _FilterState createState() => _FilterState();
 }
 
-class _FilterState extends State<Filter> {
+class _FilterState extends State<filter> {
   // Controle do filtro ativo
   String activeFilter = 'Universidade';
   String selectedUniversidadeOption =
@@ -72,17 +72,31 @@ class _FilterState extends State<Filter> {
                   Navigator.push(
                     context,
                     MaterialPageRoute(
-                      builder: (context) => universty(
+                      builder: (context) => University_with_filter(
                         filterType: selectedUniversidadeOption,
                       ),
                     ),
                   );
                 } else if (activeFilter == 'Vestibulares') {
                   // Redireciona para a página de vestibulares
-                  // Adicione aqui a lógica para vestibulares
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => entrance_exams_with_filter(
+                        filterType: selectedUniversidadeOption,
+                      ),
+                    ),
+                  );
                 } else if (activeFilter == 'Cursos') {
                   // Redireciona para a página de cursos
-                  // Adicione aqui a lógica para cursos
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => Courses(
+                        filterType: selectedUniversidadeOption,
+                      ),
+                    ),
+                  );
                 }
               },
               style: ElevatedButton.styleFrom(

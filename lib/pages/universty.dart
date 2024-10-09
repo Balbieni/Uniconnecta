@@ -8,17 +8,12 @@ import 'package:uniconnecta/pages/favorites_screen.dart';
 import 'package:uniconnecta/pages/profile_screen.dart';
 import 'package:uniconnecta/components/back_button.dart';
 
-class Courses extends StatefulWidget {
-  final String
-      filterType; // Receber o tipo de filtro (Presencial, Online, etc.)
-
-  Courses({required this.filterType});
-
+class Universty extends StatefulWidget {
   @override
-  _CoursesState createState() => _CoursesState();
+  _best_rated_State createState() => _best_rated_State();
 }
 
-class _CoursesState extends State<Courses> {
+class _best_rated_State extends State<Universty> {
   int _selectedIndex = 0;
 
   final List<Widget> _pages = [
@@ -29,8 +24,7 @@ class _CoursesState extends State<Courses> {
     ProfileScreen(),
   ];
 
-  // Lista completa de cursos
-  final List<carousel_comp.CarouselItem> allCourses = [
+  final List<carousel_comp.CarouselItem> maisProximosItems = [
     carousel_comp.CarouselItem(
       imagePath: 'lib/assets/unicamp_logo.png',
       title: 'Unicamp',
@@ -43,27 +37,12 @@ class _CoursesState extends State<Courses> {
       imagePath: 'lib/assets/faculty.png',
       title: 'Facamp',
       rating: 4.8,
-      subtitle: 'Administração',
+      subtitle: 'Facamp',
       tag: 'Presencial',
       distance: '30Km',
     ),
-    carousel_comp.CarouselItem(
-      imagePath: 'lib/assets/online_course.png',
-      title: 'Engenharia da Computação',
-      rating: 4.7,
-      subtitle: 'Online - EAD',
-      tag: 'Online',
-      distance: '0Km',
-    ),
-    // Outros itens podem ser adicionados...
+    // Outros itens continuam...
   ];
-
-  // Função para aplicar o filtro
-  List<carousel_comp.CarouselItem> _getFilteredCourses() {
-    return allCourses
-        .where((course) => course.tag == widget.filterType)
-        .toList();
-  }
 
   void _onItemTapped(int index) {
     setState(() {
@@ -73,9 +52,6 @@ class _CoursesState extends State<Courses> {
 
   @override
   Widget build(BuildContext context) {
-    // Filtra os cursos com base no filtro recebido
-    List<carousel_comp.CarouselItem> filteredCourses = _getFilteredCourses();
-
     return Scaffold(
       backgroundColor: Colors.white,
       body: _selectedIndex == 0
@@ -90,7 +66,7 @@ class _CoursesState extends State<Courses> {
                       BackButtonComponent(), // Botão de voltar adicionado
                       SizedBox(width: 8), // Espaço entre o botão e o texto
                       Text(
-                        'Cursos - ${widget.filterType}', // Exibe o tipo de filtro
+                        'Universidades',
                         style: TextStyle(
                           fontSize: 24,
                           fontWeight: FontWeight.bold,
@@ -103,22 +79,15 @@ class _CoursesState extends State<Courses> {
                 Expanded(
                   child: Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 16.0),
-                    child: filteredCourses.isNotEmpty
-                        ? carousel_comp.CustomVerticalCarousel(
-                            items: filteredCourses,
-                            isVestibulares:
-                                false, // Aqui pode definir se é vestibular ou curso
-                          )
-                        : Center(
-                            child: Text(
-                                'Nenhum curso encontrado com o filtro selecionado'),
-                          ),
+                    child: carousel_comp.CustomVerticalCarousel(
+                      items: maisProximosItems,
+                      isVestibulares: true,
+                    ),
                   ),
                 ),
               ],
             )
-          : _pages[
-              _selectedIndex], // Exibe a página correspondente no BottomNavigation
+          : _pages[_selectedIndex], // Exibe a página correspondente
       bottomNavigationBar: BottomNavigationBar(
         items: const [
           BottomNavigationBarItem(

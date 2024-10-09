@@ -8,17 +8,17 @@ import 'package:uniconnecta/pages/favorites_screen.dart';
 import 'package:uniconnecta/pages/profile_screen.dart';
 import 'package:uniconnecta/components/back_button.dart';
 
-class Courses extends StatefulWidget {
-  final String
-      filterType; // Receber o tipo de filtro (Presencial, Online, etc.)
+class University_with_filter extends StatefulWidget {
+  final String filterType; // Adicionado para receber o filtro
 
-  Courses({required this.filterType});
+  University_with_filter(
+      {required this.filterType}); // Construtor para receber o filtro
 
   @override
-  _CoursesState createState() => _CoursesState();
+  _UniversityState createState() => _UniversityState();
 }
 
-class _CoursesState extends State<Courses> {
+class _UniversityState extends State<University_with_filter> {
   int _selectedIndex = 0;
 
   final List<Widget> _pages = [
@@ -29,8 +29,8 @@ class _CoursesState extends State<Courses> {
     ProfileScreen(),
   ];
 
-  // Lista completa de cursos
-  final List<carousel_comp.CarouselItem> allCourses = [
+  // Lista completa de universidades
+  final List<carousel_comp.CarouselItem> allUniversities = [
     carousel_comp.CarouselItem(
       imagePath: 'lib/assets/unicamp_logo.png',
       title: 'Unicamp',
@@ -48,21 +48,21 @@ class _CoursesState extends State<Courses> {
       distance: '30Km',
     ),
     carousel_comp.CarouselItem(
-      imagePath: 'lib/assets/online_course.png',
-      title: 'Engenharia da Computação',
+      imagePath: 'lib/assets/online_university.png',
+      title: 'UniOnline',
       rating: 4.7,
-      subtitle: 'Online - EAD',
+      subtitle: 'Engenharia da Computação',
       tag: 'Online',
       distance: '0Km',
     ),
     // Outros itens podem ser adicionados...
   ];
 
-  // Função para aplicar o filtro
-  List<carousel_comp.CarouselItem> _getFilteredCourses() {
-    return allCourses
-        .where((course) => course.tag == widget.filterType)
-        .toList();
+  // Função para aplicar o filtro nas universidades
+  List<carousel_comp.CarouselItem> _getFilteredUniversities() {
+    return allUniversities
+        .where((university) => university.tag == widget.filterType)
+        .toList(); // Filtra com base no tipo de filtro (tag)
   }
 
   void _onItemTapped(int index) {
@@ -73,8 +73,9 @@ class _CoursesState extends State<Courses> {
 
   @override
   Widget build(BuildContext context) {
-    // Filtra os cursos com base no filtro recebido
-    List<carousel_comp.CarouselItem> filteredCourses = _getFilteredCourses();
+    // Obtém as universidades filtradas
+    List<carousel_comp.CarouselItem> filteredUniversities =
+        _getFilteredUniversities();
 
     return Scaffold(
       backgroundColor: Colors.white,
@@ -87,10 +88,10 @@ class _CoursesState extends State<Courses> {
                       vertical: 16.0, horizontal: 16.0),
                   child: Row(
                     children: [
-                      BackButtonComponent(), // Botão de voltar adicionado
+                      BackButtonComponent(), // Botão de voltar
                       SizedBox(width: 8), // Espaço entre o botão e o texto
                       Text(
-                        'Cursos - ${widget.filterType}', // Exibe o tipo de filtro
+                        'Universidades - ${widget.filterType}', // Exibe o tipo de filtro
                         style: TextStyle(
                           fontSize: 24,
                           fontWeight: FontWeight.bold,
@@ -103,15 +104,15 @@ class _CoursesState extends State<Courses> {
                 Expanded(
                   child: Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 16.0),
-                    child: filteredCourses.isNotEmpty
+                    // Exibe as universidades filtradas no carousel
+                    child: filteredUniversities.isNotEmpty
                         ? carousel_comp.CustomVerticalCarousel(
-                            items: filteredCourses,
-                            isVestibulares:
-                                false, // Aqui pode definir se é vestibular ou curso
+                            items: filteredUniversities,
+                            isVestibulares: true,
                           )
                         : Center(
                             child: Text(
-                                'Nenhum curso encontrado com o filtro selecionado'),
+                                'Nenhuma universidade encontrada com o filtro selecionado'),
                           ),
                   ),
                 ),
