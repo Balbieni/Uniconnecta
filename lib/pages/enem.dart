@@ -1,12 +1,14 @@
 import 'package:flutter/material.dart';
-import 'package:uniconnecta/components/components.dart';
-import 'package:url_launcher/url_launcher.dart';
-import 'pages.dart';
+import 'package:provider/provider.dart';
+import 'package:uniconnecta/components/favorites_model.dart';
+import 'package:uniconnecta/components/class_of_model.dart';
 import 'package:uniconnecta/pages/home_screen.dart';
 import 'package:uniconnecta/pages/search_page.dart';
 import 'package:uniconnecta/pages/news_screen.dart';
 import 'package:uniconnecta/pages/favorites_screen.dart';
 import 'package:uniconnecta/pages/profile_screen.dart';
+import 'package:url_launcher/url_launcher.dart';
+import 'package:uniconnecta/components/entrance_exam_header.dart';
 
 class Enem extends StatefulWidget {
   final String title;
@@ -20,13 +22,12 @@ class Enem extends StatefulWidget {
 }
 
 class _EnemState extends State<Enem> {
-  final ValueNotifier<bool> isFavoritedNotifier = ValueNotifier<bool>(false);
   int _selectedIndex = 0;
 
   final List<Widget> _pages = [
     HomeScreen(),
     SearchPage(),
-    NewsScreen(), // Adicionando também a NewsScreen
+    NewsScreen(),
     FavoritesScreen(),
     ProfileScreen(),
   ];
@@ -45,14 +46,26 @@ class _EnemState extends State<Enem> {
         body: _selectedIndex == 0
             ? Column(
                 children: [
-                  UniversityHeader(
-                    universityOrEntranceExamName: 'Unicamp',
-                    courseName: 'Medicina',
-                    rating: 4.5,
-                    locationType: 'Presencial',
-                    distance: '50Km',
-                    imagePath: 'lib/assets/faculty.png',
-                    isFavorited: isFavoritedNotifier,
+                  // Utilizando o VestibularHeader para o Enem
+                  Consumer<FavoritesModel>(
+                    builder: (context, favoritesModel, child) {
+                      // Criar o objeto Vestibular com as informações do Enem
+                      final enem = Vestibular(
+                        nome: widget.title,
+                        curso: widget.subtitle,
+                        avaliacao: 4.5, // Avaliação fixa como exemplo
+                        modalidade: 'Presencial',
+                        logoUrl: 'lib/assets/enem.png', // Logo do Enem
+                      );
+
+                      return VestibularHeader(
+                        vestibularName: widget.title,
+                        courseName: widget.subtitle,
+                        rating: 4.5,
+                        imagePath: 'lib/assets/enem.png', // Caminho da imagem
+                        vestibular: enem, // Passa o objeto Enem
+                      );
+                    },
                   ),
                   const TabBar(
                     isScrollable: true,
@@ -71,7 +84,7 @@ class _EnemState extends State<Enem> {
                   const Expanded(
                     child: TabBarView(
                       children: [
-                        InscrevaSeTab(),
+                        InscrevaSeTab(), // Abas personalizadas para o Enem
                         EditalTab(),
                         ConteudosTab(),
                         ObrasLiterariasTab(),
@@ -82,8 +95,7 @@ class _EnemState extends State<Enem> {
                   ),
                 ],
               )
-            : _pages[
-                _selectedIndex], // Mostra a página selecionada fora da TabView
+            : _pages[_selectedIndex], // Mostra a página selecionada
         bottomNavigationBar: BottomNavigationBar(
           items: const [
             BottomNavigationBarItem(

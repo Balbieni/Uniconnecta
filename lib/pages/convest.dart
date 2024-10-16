@@ -1,12 +1,15 @@
 import 'package:flutter/material.dart';
-import 'package:uniconnecta/components/components.dart';
-import 'package:url_launcher/url_launcher.dart';
-import 'pages.dart';
+import 'package:provider/provider.dart';
+import 'package:uniconnecta/components/color_style.dart';
+import 'package:uniconnecta/components/favorites_model.dart';
 import 'package:uniconnecta/pages/home_screen.dart';
 import 'package:uniconnecta/pages/search_page.dart';
 import 'package:uniconnecta/pages/news_screen.dart';
 import 'package:uniconnecta/pages/favorites_screen.dart';
 import 'package:uniconnecta/pages/profile_screen.dart';
+import 'package:uniconnecta/components/class_of_model.dart'; // Import para o modelo Universidade
+import 'package:url_launcher/url_launcher.dart';
+import 'package:uniconnecta/components/entrance_exam_header.dart';
 
 class Convest extends StatefulWidget {
   final String title;
@@ -20,7 +23,6 @@ class Convest extends StatefulWidget {
 }
 
 class _ConvestState extends State<Convest> {
-  final ValueNotifier<bool> isFavoritedNotifier = ValueNotifier<bool>(false);
   int _selectedIndex = 0;
 
   final List<Widget> _pages = [
@@ -46,14 +48,26 @@ class _ConvestState extends State<Convest> {
         body: _selectedIndex == 0
             ? Column(
                 children: [
-                  UniversityHeader(
-                    universityOrEntranceExamName: 'Convest',
-                    courseName: 'teste',
-                    rating: 4.5,
-                    locationType: 'teste1',
-                    distance: '50Km',
-                    imagePath: 'lib/assets/convest_logo.png',
-                    isFavorited: isFavoritedNotifier,
+                  // Usando o Consumer para atualizar o estado de favoritos
+                  Consumer<FavoritesModel>(
+                    builder: (context, favoritesModel, child) {
+                      // Criar o objeto Vestibular com as informações relevantes
+                      final vestibular = Vestibular(
+                        nome: widget.title,
+                        curso: widget.subtitle,
+                        avaliacao: 4.5,
+                        modalidade: 'Presencial',
+                        logoUrl: 'lib/assets/convest_logo.png',
+                      );
+
+                      return VestibularHeader(
+                        vestibularName: widget.title,
+                        courseName: widget.subtitle,
+                        rating: 4.5,
+                        imagePath: 'lib/assets/convest_logo.png',
+                        vestibular: vestibular, // Passa o objeto vestibular
+                      );
+                    },
                   ),
                   const TabBar(
                     isScrollable: true, // Permite rolar as abas

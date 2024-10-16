@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
+import 'package:provider/provider.dart';
 import 'package:uniconnecta/pages/convest.dart';
-import 'package:uniconnecta/pages/closest.dart';
 import 'package:uniconnecta/pages/best_rated.dart';
 import 'package:uniconnecta/pages/entrance_exams.dart';
 import 'package:uniconnecta/pages/enem.dart';
@@ -10,7 +10,10 @@ import 'package:uniconnecta/pages/search_page.dart';
 import 'package:uniconnecta/pages/news_screen.dart';
 import 'package:uniconnecta/pages/favorites_screen.dart';
 import 'package:uniconnecta/pages/profile_screen.dart';
-import 'profile_screen.dart';
+import 'package:uniconnecta/components/favorites_model.dart'; // Modelo de favoritos
+import 'package:uniconnecta/components/class_of_model.dart';
+
+// pegar de volta menu hamburguer, enem, melhores avaliadas e maix proximos
 
 class CarouselItem {
   final String imagePath;
@@ -108,19 +111,15 @@ class _HomeScreenContentState extends State<HomeScreenContent> {
     _getCurrentLocation();
   }
 
-  // Função para obter a localização atual
   Future<void> _getCurrentLocation() async {
     bool serviceEnabled;
     LocationPermission permission;
 
-    // Verifica se o serviço de localização está ativado
     serviceEnabled = await Geolocator.isLocationServiceEnabled();
     if (!serviceEnabled) {
-      // Serviço de localização desativado, você pode exibir uma mensagem ao usuário
       return;
     }
 
-    // Verifica permissões de localização
     permission = await Geolocator.checkPermission();
     if (permission == LocationPermission.denied) {
       permission = await Geolocator.requestPermission();
@@ -135,7 +134,6 @@ class _HomeScreenContentState extends State<HomeScreenContent> {
       return;
     }
 
-    // Obtém a posição atual
     Position position = await Geolocator.getCurrentPosition(
         desiredAccuracy: LocationAccuracy.high);
 
@@ -144,7 +142,6 @@ class _HomeScreenContentState extends State<HomeScreenContent> {
     });
   }
 
-  // Função para calcular a distância
   String _calculateDistance(
       double destinationLatitude, double destinationLongitude) {
     if (_currentPosition == null) {
@@ -312,7 +309,6 @@ class _HomeScreenContentState extends State<HomeScreenContent> {
     );
   }
 
-  // Items de vestibulares
   List<CarouselItem> vestibularesItems(BuildContext context) {
     return [
       CarouselItem(
@@ -321,7 +317,7 @@ class _HomeScreenContentState extends State<HomeScreenContent> {
         rating: 4.5,
         subtitle: '',
         tag: '',
-        distance: 'N/A', // Distância não aplicável para vestibulares
+        distance: 'N/A',
         isFavorited: ValueNotifier<bool>(false),
         onTap: () {
           Navigator.push(
@@ -358,7 +354,6 @@ class _HomeScreenContentState extends State<HomeScreenContent> {
     ];
   }
 
-  // Items melhores avaliadas
   List<CarouselItem> melhoresAvaliadasItems(BuildContext context) {
     return [
       CarouselItem(
@@ -384,7 +379,6 @@ class _HomeScreenContentState extends State<HomeScreenContent> {
     ];
   }
 
-  // Items mais próximos
   List<CarouselItem> maisProximosItems(BuildContext context) {
     return [
       CarouselItem(
@@ -506,12 +500,58 @@ Widget buildCarouselCard(CarouselItem item, BuildContext context) {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(item.title,
-                    style:
-                        TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text(
+                      item.title,
+                      style: TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    Consumer<FavoritesModel>(
+                      builder: (context, favoritesModel, child) {
+                        // Criamos o objeto Universidade baseado no item
+                        final universidade = Universidade(
+                          nome: item.title,
+                          curso: item.subtitle,
+                          avaliacao: item.rating,
+                          distancia: item.distance,
+                          modalidade: "Presencial", // Exemplo de modalidade
+                          logoUrl: item.imagePath,
+                        );
+
+                        // Verifica se a universidade é favorita
+                        final isFavorited =
+                            favoritesModel.isUniversityFavorite(universidade);
+
+                        return IconButton(
+                          icon: Icon(
+                            isFavorited
+                                ? Icons.favorite
+                                : Icons.favorite_border,
+                            color: isFavorited ? Colors.purple : Colors.grey,
+                          ),
+                          onPressed: () {
+                            if (isFavorited) {
+                              favoritesModel
+                                  .removeUniversityFavorite(universidade);
+                            } else {
+                              favoritesModel
+                                  .addUniversityFavorite(universidade);
+                            }
+                          },
+                        );
+                      },
+                    ),
+                  ],
+                ),
                 SizedBox(height: 5),
-                Text(item.subtitle,
-                    style: TextStyle(fontSize: 12, color: Colors.grey)),
+                Text(
+                  item.subtitle,
+                  style: TextStyle(fontSize: 12, color: Colors.grey),
+                ),
                 SizedBox(height: 5),
                 Row(
                   children: [

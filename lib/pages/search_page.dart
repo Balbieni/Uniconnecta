@@ -90,7 +90,7 @@ class SearchPage extends StatelessWidget {
                 buildCategoryCard(
                   context,
                   'Melhores avaliados',
-                  'lib/assets/universty.png', // Image URL
+                  'lib/assets/best_rated.png', // Image URL
                   Universty(),
                 ),
                 buildCategoryCard(

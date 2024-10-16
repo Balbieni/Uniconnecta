@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:uniconnecta/components/components.dart';
 import 'package:uniconnecta/pages/convest.dart';
+import 'package:uniconnecta/components/class_of_model.dart'; // Import para o modelo Universidade
+import 'package:uniconnecta/components/university_header.dart';
+import 'package:uniconnecta/components/favorites_model.dart';
+import 'package:provider/provider.dart';
 
 class Unicamp extends StatelessWidget {
-  final ValueNotifier<bool> isFavoritedNotifier = ValueNotifier<bool>(false);
-
   final String title;
   final String subtitle;
 
@@ -19,14 +21,28 @@ class Unicamp extends StatelessWidget {
         backgroundColor: Colors.white,
         body: Column(
           children: [
-            UniversityHeader(
-              universityOrEntranceExamName: 'Enem',
-              courseName: 'teste',
-              rating: 4.5,
-              locationType: 'teste1',
-              distance: '50Km',
-              imagePath: 'lib/assets/faculty.png',
-              isFavorited: isFavoritedNotifier,
+            // Header com o botão de favorito integrado
+            Consumer<FavoritesModel>(
+              builder: (context, favoritesModel, child) {
+                // Criamos o objeto Universidade baseado no item
+                final universidade = Universidade(
+                  nome: title,
+                  curso: subtitle,
+                  avaliacao: 4.5, // Avaliação fixa como exemplo
+                  distancia: '5 Km', // Distância de exemplo
+                  modalidade: "Presencial", // Exemplo de modalidade
+                  logoUrl: 'lib/assets/unicamp_logo.png', // Caminho da logo
+                );
+
+                return UniversityHeader(
+                  universityOrEntranceExamName: title,
+                  courseName: subtitle,
+                  rating: 4.5,
+                  locationType: 'Presencial',
+                  imagePath: 'lib/assets/unicamp_logo.png',
+                  universidade: universidade, // Passa o objeto Universidade
+                );
+              },
             ),
             Container(
               color: Colors.white,
@@ -59,7 +75,6 @@ class Unicamp extends StatelessWidget {
             ),
           ],
         ),
-        bottomNavigationBar: NavBar(),
       ),
     );
   }
@@ -200,7 +215,7 @@ class AvaliacoesTab extends StatelessWidget {
       children: [
         const SizedBox(height: 16),
         AverageRating(
-          imagePath: 'lib/assets/faculdade1.png',
+          imagePath: 'lib/assets/unicamp_logo.png',
           rating: 4.5,
           recommendationText:
               '86.98% dos alunos que avaliaram recomendam este curso',
@@ -320,7 +335,7 @@ class SobreUniversidadeTab extends StatelessWidget {
               child: Column(
                 children: [
                   Image.asset(
-                    'assets/university_map.png',
+                    'assets/unicamp_map.png',
                     fit: BoxFit.cover,
                   ),
                   const Padding(

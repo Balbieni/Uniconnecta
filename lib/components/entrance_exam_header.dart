@@ -1,24 +1,21 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:uniconnecta/components/favorites_model.dart';
-import 'package:uniconnecta/components/class_of_model.dart'; // Para o modelo Universidade
+import 'package:uniconnecta/components/class_of_model.dart'; // Modelo de Vestibular
 
-class UniversityHeader extends StatelessWidget {
-  final String universityOrEntranceExamName;
+class VestibularHeader extends StatelessWidget {
+  final String vestibularName;
   final String courseName;
   final double rating;
-  final String locationType;
   final String imagePath;
-  final Universidade
-      universidade; // O objeto universidade, para salvar nos favoritos
+  final Vestibular vestibular; // O objeto Vestibular para salvar nos favoritos
 
-  UniversityHeader({
-    required this.universityOrEntranceExamName,
+  VestibularHeader({
+    required this.vestibularName,
     required this.courseName,
     required this.rating,
-    required this.locationType,
     required this.imagePath,
-    required this.universidade, // Passa o objeto universidade
+    required this.vestibular, // Passa o objeto Vestibular
   });
 
   @override
@@ -64,7 +61,7 @@ class UniversityHeader extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  universityOrEntranceExamName, // Usa o nome da universidade fornecido
+                  vestibularName, // Usa o nome do vestibular fornecido
                   style: TextStyle(
                     fontSize: 20,
                     fontWeight: FontWeight.bold,
@@ -107,18 +104,14 @@ class UniversityHeader extends StatelessWidget {
                         color: Colors.purple,
                         borderRadius: BorderRadius.circular(4),
                       ),
-                      child: Text(
-                        locationType, // Usa o tipo de local fornecido
-                        style: TextStyle(color: Colors.white, fontSize: 12),
-                      ),
                     ),
                     Spacer(),
                     // Botão de favorito usando o FavoritesModel
                     Consumer<FavoritesModel>(
                       builder: (context, favoritesModel, child) {
-                        // Verifica se a universidade já está nos favoritos
+                        // Verifica se o vestibular já está nos favoritos
                         final isFavorited =
-                            favoritesModel.isUniversityFavorite(universidade);
+                            favoritesModel.isVestibularFavorite(vestibular);
 
                         return IconButton(
                           icon: Icon(
@@ -130,10 +123,9 @@ class UniversityHeader extends StatelessWidget {
                           onPressed: () {
                             if (isFavorited) {
                               favoritesModel
-                                  .removeUniversityFavorite(universidade);
+                                  .removeVestibularFavorite(vestibular);
                             } else {
-                              favoritesModel
-                                  .addUniversityFavorite(universidade);
+                              favoritesModel.addVestibularFavorite(vestibular);
                             }
                           },
                         );
