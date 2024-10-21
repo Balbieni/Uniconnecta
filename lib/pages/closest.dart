@@ -8,14 +8,15 @@ import 'package:uniconnecta/pages/favorites_screen.dart';
 import 'package:uniconnecta/pages/profile_screen.dart';
 import 'package:uniconnecta/components/back_button.dart';
 
-class closest extends StatefulWidget {
+class Closest extends StatefulWidget {
   @override
-  _closestState createState() => _closestState();
+  _ClosestState createState() => _ClosestState();
 }
 
-class _closestState extends State<closest> {
+class _ClosestState extends State<Closest> {
   int _selectedIndex = 0;
 
+  // Definindo as páginas de navegação do BottomNavigationBar
   final List<Widget> _pages = [
     home_page.HomeScreen(),
     SearchPage(),
@@ -24,6 +25,7 @@ class _closestState extends State<closest> {
     ProfileScreen(),
   ];
 
+  // Lista de universidades mais próximas
   final List<carousel_comp.CarouselItem> maisProximosItems = [
     carousel_comp.CarouselItem(
       imagePath: 'lib/assets/unicamp_logo.png',
@@ -37,13 +39,14 @@ class _closestState extends State<closest> {
       imagePath: 'lib/assets/faculty.png',
       title: 'Facamp',
       rating: 4.8,
-      subtitle: 'Facamp',
+      subtitle: 'Administração',
       tag: 'Presencial',
       distance: '30Km',
     ),
-    // Adicione mais itens conforme necessário...
+    // Adicione mais itens conforme necessário
   ];
 
+  // Função para alterar a página no BottomNavigationBar
   void _onItemTapped(int index) {
     setState(() {
       _selectedIndex = index;
@@ -63,7 +66,7 @@ class _closestState extends State<closest> {
                       vertical: 16.0, horizontal: 16.0),
                   child: Row(
                     children: [
-                      BackButtonComponent(), // Botão de voltar adicionado
+                      BackButtonComponent(), // Botão de voltar
                       SizedBox(width: 8), // Espaço entre o botão e o texto
                       Text(
                         'Mais Próximos',
@@ -82,12 +85,22 @@ class _closestState extends State<closest> {
                     child: carousel_comp.CustomVerticalCarousel(
                       items: maisProximosItems,
                       isVestibulares: true,
+                      onItemTap: (carousel_comp.CarouselItem item) {
+                        // Navegação para a página de detalhes
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => DetailPage(item: item),
+                          ),
+                        );
+                      },
                     ),
                   ),
                 ),
               ],
             )
-          : _pages[_selectedIndex], // Exibe a página correspondente
+          : _pages[
+              _selectedIndex], // Exibe a página selecionada no BottomNavigationBar
       bottomNavigationBar: BottomNavigationBar(
         items: const [
           BottomNavigationBarItem(
@@ -120,6 +133,7 @@ class _closestState extends State<closest> {
   }
 }
 
+// Página de detalhes para cada universidade
 class DetailPage extends StatelessWidget {
   final carousel_comp.CarouselItem item;
 

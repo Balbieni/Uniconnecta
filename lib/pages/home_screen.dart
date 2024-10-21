@@ -3,7 +3,7 @@ import 'package:geolocator/geolocator.dart';
 import 'package:provider/provider.dart';
 import 'package:uniconnecta/pages/convest.dart';
 import 'package:uniconnecta/pages/best_rated.dart';
-import 'package:uniconnecta/pages/entrance_exams.dart';
+import 'package:uniconnecta/pages/entrance_exams.dart'; // Corrigido o nome do arquivo
 import 'package:uniconnecta/pages/enem.dart';
 import 'package:uniconnecta/pages/pages.dart';
 import 'package:uniconnecta/pages/search_page.dart';
@@ -12,8 +12,8 @@ import 'package:uniconnecta/pages/favorites_screen.dart';
 import 'package:uniconnecta/pages/profile_screen.dart';
 import 'package:uniconnecta/components/favorites_model.dart'; // Modelo de favoritos
 import 'package:uniconnecta/components/class_of_model.dart';
-
-// pegar de volta menu hamburguer, enem, melhores avaliadas e maix proximos
+import 'package:uniconnecta/components/university_header.dart';
+import 'package:uniconnecta/components/entrance_exam_header.dart';
 
 class CarouselItem {
   final String imagePath;
@@ -22,6 +22,7 @@ class CarouselItem {
   final String subtitle;
   final String tag;
   final String distance;
+  final bool isVestibular; // Indica se é um vestibular ou universidade
   final ValueNotifier<bool> isFavorited;
   final VoidCallback? onTap;
 
@@ -32,6 +33,7 @@ class CarouselItem {
     required this.subtitle,
     required this.tag,
     required this.distance,
+    required this.isVestibular, // Novo parâmetro para diferenciar
     ValueNotifier<bool>? isFavorited,
     this.onTap,
   }) : isFavorited = isFavorited ?? ValueNotifier<bool>(false);
@@ -124,13 +126,11 @@ class _HomeScreenContentState extends State<HomeScreenContent> {
     if (permission == LocationPermission.denied) {
       permission = await Geolocator.requestPermission();
       if (permission == LocationPermission.denied) {
-        // Permissão negada, você pode exibir uma mensagem ao usuário
         return;
       }
     }
 
     if (permission == LocationPermission.deniedForever) {
-      // Permissão negada permanentemente
       return;
     }
 
@@ -221,10 +221,10 @@ class _HomeScreenContentState extends State<HomeScreenContent> {
                 icon: Icons.school,
                 title: 'Universidades',
                 onTap: () {
-                  Navigator.pop(context); // Fecha o Drawer
+                  Navigator.pop(context);
                   Navigator.push(
                     context,
-                    MaterialPageRoute(builder: (context) => closest()),
+                    MaterialPageRoute(builder: (context) => Closest()),
                   );
                 },
               ),
@@ -233,10 +233,11 @@ class _HomeScreenContentState extends State<HomeScreenContent> {
                 icon: Icons.edit,
                 title: 'Vestibulares',
                 onTap: () {
-                  Navigator.pop(context); // Fecha o Drawer
+                  Navigator.pop(context);
                   Navigator.push(
                     context,
-                    MaterialPageRoute(builder: (context) => entrance_exams()),
+                    MaterialPageRoute(
+                        builder: (context) => EntranceExams()), // Corrigido
                   );
                 },
               ),
@@ -245,7 +246,7 @@ class _HomeScreenContentState extends State<HomeScreenContent> {
                 icon: Icons.article,
                 title: 'Notícias',
                 onTap: () {
-                  Navigator.pop(context); // Fecha o Drawer
+                  Navigator.pop(context);
                   Navigator.push(
                     context,
                     MaterialPageRoute(builder: (context) => NewsScreen()),
@@ -257,7 +258,7 @@ class _HomeScreenContentState extends State<HomeScreenContent> {
                 icon: Icons.favorite,
                 title: 'Favoritos',
                 onTap: () {
-                  Navigator.pop(context); // Fecha o Drawer
+                  Navigator.pop(context);
                   Navigator.push(
                     context,
                     MaterialPageRoute(builder: (context) => FavoritesScreen()),
@@ -269,7 +270,7 @@ class _HomeScreenContentState extends State<HomeScreenContent> {
                 icon: Icons.person,
                 title: 'Minha conta',
                 onTap: () {
-                  Navigator.pop(context); // Fecha o Drawer
+                  Navigator.pop(context);
                   Navigator.push(
                     context,
                     MaterialPageRoute(builder: (context) => ProfileScreen()),
@@ -281,7 +282,7 @@ class _HomeScreenContentState extends State<HomeScreenContent> {
                 icon: Icons.exit_to_app,
                 title: 'Sair da conta',
                 onTap: () {
-                  Navigator.pop(context); // Fecha o Drawer
+                  Navigator.pop(context);
                   Navigator.pushReplacement(
                     context,
                     MaterialPageRoute(
@@ -318,7 +319,7 @@ class _HomeScreenContentState extends State<HomeScreenContent> {
         subtitle: '',
         tag: '',
         distance: 'N/A',
-        isFavorited: ValueNotifier<bool>(false),
+        isVestibular: true, // Identificamos como Vestibular
         onTap: () {
           Navigator.push(
             context,
@@ -337,8 +338,8 @@ class _HomeScreenContentState extends State<HomeScreenContent> {
         rating: 4.0,
         subtitle: '',
         tag: 'Inscrições abertas',
-        distance: 'N/A', // Distância não aplicável para vestibulares
-        isFavorited: ValueNotifier<bool>(false),
+        distance: 'N/A',
+        isVestibular: true, // Identificamos como Vestibular
         onTap: () {
           Navigator.push(
             context,
@@ -363,7 +364,7 @@ class _HomeScreenContentState extends State<HomeScreenContent> {
         subtitle: 'Universidade renomada',
         tag: 'Ver mais',
         distance: _calculateDistance(-22.820833, -47.066476),
-        isFavorited: ValueNotifier<bool>(true),
+        isVestibular: false, // Identificamos como Universidade
         onTap: () {
           Navigator.push(
             context,
@@ -387,9 +388,8 @@ class _HomeScreenContentState extends State<HomeScreenContent> {
         rating: 4.0,
         subtitle: 'Próxima de você',
         tag: 'Ver mais',
-        distance:
-            _calculateDistance(-23.5505, -46.6333), // Coordenadas de exemplo
-        isFavorited: ValueNotifier<bool>(false),
+        distance: _calculateDistance(-23.5505, -46.6333),
+        isVestibular: false, // Identificamos como Universidade
       ),
       CarouselItem(
         imagePath: 'lib/assets/faculty.png',
@@ -397,9 +397,8 @@ class _HomeScreenContentState extends State<HomeScreenContent> {
         rating: 3.8,
         subtitle: 'Próxima de você',
         tag: 'Ver mais',
-        distance:
-            _calculateDistance(-23.5511, -46.6345), // Coordenadas de exemplo
-        isFavorited: ValueNotifier<bool>(false),
+        distance: _calculateDistance(-23.5511, -46.6345),
+        isVestibular: false, // Identificamos como Universidade
       ),
     ];
   }
@@ -436,21 +435,21 @@ Widget sectionHeader(String title, BuildContext context, String section) {
               Navigator.push(
                 context,
                 MaterialPageRoute(
-                  builder: (context) => entrance_exams(),
+                  builder: (context) => EntranceExams(), // Corrigido
                 ),
               );
             } else if (section == 'melhores_avaliadas') {
               Navigator.push(
                 context,
                 MaterialPageRoute(
-                  builder: (context) => best_rated(),
+                  builder: (context) => BestRated(),
                 ),
               );
             } else if (section == 'mais_proximos') {
               Navigator.push(
                 context,
                 MaterialPageRoute(
-                  builder: (context) => closest(),
+                  builder: (context) => Closest(),
                 ),
               );
             }
@@ -512,37 +511,68 @@ Widget buildCarouselCard(CarouselItem item, BuildContext context) {
                     ),
                     Consumer<FavoritesModel>(
                       builder: (context, favoritesModel, child) {
-                        // Criamos o objeto Universidade baseado no item
-                        final universidade = Universidade(
-                          nome: item.title,
-                          curso: item.subtitle,
-                          avaliacao: item.rating,
-                          distancia: item.distance,
-                          modalidade: "Presencial", // Exemplo de modalidade
-                          logoUrl: item.imagePath,
-                        );
+                        if (item.isVestibular) {
+                          // Lógica de favoritar Vestibulares
+                          final vestibular = Vestibular(
+                            nome: item.title,
+                            curso: item.subtitle,
+                            avaliacao: item.rating,
+                            modalidade: "Presencial",
+                            logoUrl: item.imagePath,
+                          );
 
-                        // Verifica se a universidade é favorita
-                        final isFavorited =
-                            favoritesModel.isUniversityFavorite(universidade);
+                          final isFavorited =
+                              favoritesModel.isVestibularFavorite(vestibular);
 
-                        return IconButton(
-                          icon: Icon(
-                            isFavorited
-                                ? Icons.favorite
-                                : Icons.favorite_border,
-                            color: isFavorited ? Colors.purple : Colors.grey,
-                          ),
-                          onPressed: () {
-                            if (isFavorited) {
-                              favoritesModel
-                                  .removeUniversityFavorite(universidade);
-                            } else {
-                              favoritesModel
-                                  .addUniversityFavorite(universidade);
-                            }
-                          },
-                        );
+                          return IconButton(
+                            icon: Icon(
+                              isFavorited
+                                  ? Icons.favorite
+                                  : Icons.favorite_border,
+                              color: isFavorited ? Colors.purple : Colors.grey,
+                            ),
+                            onPressed: () {
+                              if (isFavorited) {
+                                favoritesModel
+                                    .removeVestibularFavorite(vestibular);
+                              } else {
+                                favoritesModel
+                                    .addVestibularFavorite(vestibular);
+                              }
+                            },
+                          );
+                        } else {
+                          // Lógica de favoritar Universidades
+                          final universidade = Universidade(
+                            nome: item.title,
+                            curso: item.subtitle,
+                            avaliacao: item.rating,
+                            distancia: item.distance,
+                            modalidade: "Presencial",
+                            logoUrl: item.imagePath,
+                          );
+
+                          final isFavorited =
+                              favoritesModel.isUniversityFavorite(universidade);
+
+                          return IconButton(
+                            icon: Icon(
+                              isFavorited
+                                  ? Icons.favorite
+                                  : Icons.favorite_border,
+                              color: isFavorited ? Colors.purple : Colors.grey,
+                            ),
+                            onPressed: () {
+                              if (isFavorited) {
+                                favoritesModel
+                                    .removeUniversityFavorite(universidade);
+                              } else {
+                                favoritesModel
+                                    .addUniversityFavorite(universidade);
+                              }
+                            },
+                          );
+                        }
                       },
                     ),
                   ],

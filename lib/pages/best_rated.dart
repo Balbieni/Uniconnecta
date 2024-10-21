@@ -8,14 +8,15 @@ import 'package:uniconnecta/pages/favorites_screen.dart';
 import 'package:uniconnecta/pages/profile_screen.dart';
 import 'package:uniconnecta/components/back_button.dart';
 
-class best_rated extends StatefulWidget {
+class BestRated extends StatefulWidget {
   @override
-  _best_rated_State createState() => _best_rated_State();
+  _BestRatedState createState() => _BestRatedState();
 }
 
-class _best_rated_State extends State<best_rated> {
+class _BestRatedState extends State<BestRated> {
   int _selectedIndex = 0;
 
+  // Páginas do BottomNavigationBar
   final List<Widget> _pages = [
     HomeScreen(),
     SearchPage(),
@@ -24,7 +25,8 @@ class _best_rated_State extends State<best_rated> {
     ProfileScreen(),
   ];
 
-  final List<carousel_comp.CarouselItem> maisProximosItems = [
+  // Itens de universidades mais bem avaliadas
+  final List<carousel_comp.CarouselItem> bestRatedItems = [
     carousel_comp.CarouselItem(
       imagePath: 'lib/assets/unicamp_logo.png',
       title: 'Unicamp',
@@ -37,13 +39,14 @@ class _best_rated_State extends State<best_rated> {
       imagePath: 'lib/assets/faculty.png',
       title: 'Facamp',
       rating: 4.8,
-      subtitle: 'Facamp',
+      subtitle: 'Administração',
       tag: 'Presencial',
       distance: '30Km',
     ),
-    // Outros itens continuam...
+    // Adicione mais itens conforme necessário
   ];
 
+  // Atualiza o índice selecionado no BottomNavigationBar
   void _onItemTapped(int index) {
     setState(() {
       _selectedIndex = index;
@@ -80,14 +83,24 @@ class _best_rated_State extends State<best_rated> {
                   child: Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 16.0),
                     child: carousel_comp.CustomVerticalCarousel(
-                      items: maisProximosItems,
+                      items: bestRatedItems,
                       isVestibulares: true,
+                      onItemTap: (carousel_comp.CarouselItem item) {
+                        // Navegação para a página de detalhes
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => DetailPage(item: item),
+                          ),
+                        );
+                      },
                     ),
                   ),
                 ),
               ],
             )
-          : _pages[_selectedIndex], // Exibe a página correspondente
+          : _pages[
+              _selectedIndex], // Exibe a página correspondente no BottomNavigationBar
       bottomNavigationBar: BottomNavigationBar(
         items: const [
           BottomNavigationBarItem(
@@ -120,6 +133,7 @@ class _best_rated_State extends State<best_rated> {
   }
 }
 
+// Página de detalhes para cada universidade
 class DetailPage extends StatelessWidget {
   final carousel_comp.CarouselItem item;
 
@@ -128,6 +142,10 @@ class DetailPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        title: Text(item.title),
+        backgroundColor: Colors.white,
+      ),
       body: Center(
         child: Text('Detalhes sobre ${item.title}'),
       ),

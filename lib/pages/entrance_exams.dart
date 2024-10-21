@@ -8,12 +8,12 @@ import 'package:uniconnecta/pages/favorites_screen.dart';
 import 'package:uniconnecta/pages/profile_screen.dart';
 import 'package:uniconnecta/components/back_button.dart';
 
-class entrance_exams extends StatefulWidget {
+class EntranceExams extends StatefulWidget {
   @override
-  _entrance_examsState createState() => _entrance_examsState();
+  _EntranceExamsState createState() => _EntranceExamsState();
 }
 
-class _entrance_examsState extends State<entrance_exams> {
+class _EntranceExamsState extends State<EntranceExams> {
   int _selectedIndex = 0;
 
   final List<Widget> _pages = [
@@ -54,8 +54,8 @@ class _entrance_examsState extends State<entrance_exams> {
                       vertical: 16.0, horizontal: 16.0),
                   child: Row(
                     children: [
-                      BackButtonComponent(), // Botão de voltar adicionado
-                      SizedBox(width: 8), // Espaço entre o botão e o texto
+                      BackButtonComponent(),
+                      SizedBox(width: 8),
                       Text(
                         'Vestibulares',
                         style: TextStyle(
@@ -73,12 +73,21 @@ class _entrance_examsState extends State<entrance_exams> {
                     child: carousel_comp.CustomVerticalCarousel(
                       items: maisProximosItems,
                       isVestibulares: true,
+                      onItemTap: (item) {
+                        // Navega para a DetailPage ao clicar no item
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => DetailPage(item: item),
+                          ),
+                        );
+                      },
                     ),
                   ),
                 ),
               ],
             )
-          : _pages[_selectedIndex], // Exibe a página correspondente
+          : _pages[_selectedIndex],
       bottomNavigationBar: BottomNavigationBar(
         items: const [
           BottomNavigationBarItem(
@@ -124,7 +133,27 @@ class DetailPage extends StatelessWidget {
         backgroundColor: Colors.white,
       ),
       body: Center(
-        child: Text('Detalhes sobre ${item.title}'),
+        child: Column(
+          children: [
+            Image.asset(item.imagePath),
+            Text(
+              'Detalhes sobre ${item.title}',
+              style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+            ),
+            Text(
+              'Curso: ${item.subtitle}',
+              style: TextStyle(fontSize: 16),
+            ),
+            Text(
+              'Distância: ${item.distance}',
+              style: TextStyle(fontSize: 16),
+            ),
+            Text(
+              'Tag: ${item.tag}',
+              style: TextStyle(fontSize: 16),
+            ),
+          ],
+        ),
       ),
     );
   }

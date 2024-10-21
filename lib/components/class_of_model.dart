@@ -15,7 +15,7 @@ class Universidade {
     required this.logoUrl,
   });
 
-  // Sobrescrevendo o operador == para facilitar a comparação de objetos Universidade
+  // Sobrescrever o operador == para garantir comparação entre os campos relevantes
   @override
   bool operator ==(Object other) {
     if (identical(this, other)) return true;
@@ -29,6 +29,7 @@ class Universidade {
         other.logoUrl == logoUrl;
   }
 
+  // Sobrescrever o hashCode para usar uma combinação única de todos os campos
   @override
   int get hashCode {
     return nome.hashCode ^
@@ -55,7 +56,7 @@ class Vestibular {
     required this.modalidade,
   });
 
-  // Sobrescrevendo o operador == para facilitar a comparação de objetos Vestibular
+  // Sobrescrevendo o operador == para garantir comparação correta
   @override
   bool operator ==(Object other) {
     if (identical(this, other)) return true;
@@ -68,6 +69,7 @@ class Vestibular {
         other.modalidade == modalidade;
   }
 
+  // Sobrescrever o hashCode para garantir que objetos iguais tenham o mesmo hashCode
   @override
   int get hashCode {
     return nome.hashCode ^

@@ -25,7 +25,7 @@ class create_account_or_log_in extends StatelessWidget {
                     context,
                     MaterialPageRoute(
                       builder: (context) =>
-                          HomeScreen(), //colocar register_page HomeScreen
+                          RegisterPage(), //colocar register_page HomeScreen
                     ),
                   );
                 },

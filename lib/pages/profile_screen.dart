@@ -122,7 +122,36 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
   String _name = "";
   String _email = "";
   String _password = "";
+  String? _profileImageUrl;
   bool _toObscure = true;
+
+  @override
+  void initState() {
+    super.initState();
+    _loadUserData(); // Carrega os dados do usuário ao inicializar a tela
+  }
+
+  Future<void> _loadUserData() async {
+    try {
+      User? user = _auth.currentUser;
+      if (user != null) {
+        DocumentSnapshot userDoc =
+            await _firestore.collection('users').doc(user.uid).get();
+
+        if (userDoc.exists) {
+          setState(() {
+            _name = userDoc['name'] ?? '';
+            _email = userDoc['email'] ?? '';
+            _profileImageUrl = userDoc['profileImage'];
+          });
+        }
+      }
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Erro ao carregar dados do usuário: $e')),
+      );
+    }
+  }
 
   Future<void> _updateUserProfile() async {
     if (_formKey.currentState!.validate()) {
@@ -135,40 +164,28 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
           DocumentReference userDocRef =
               _firestore.collection('users').doc(user.uid);
 
-          DocumentSnapshot docSnapshot = await userDocRef.get();
+          // Atualiza email e senha no Firebase Authentication
+          await user.updateEmail(_email);
+          await user.updatePassword(_password);
 
-          if (docSnapshot.exists) {
-            await user.updateEmail(_email);
-            await user.updatePassword(_password);
+          // Atualiza os dados no Firestore
+          await userDocRef.update({
+            'name': _name,
+            'email': _email,
+          });
+
+          // Se uma nova imagem for selecionada, faz o upload e atualiza a URL no Firestore
+          if (_selectedImage != null) {
+            String imageUrl =
+                await _uploadProfileImage(user.uid, _selectedImage!);
             await userDocRef.update({
-              'name': _name,
-              'email': _email,
+              'profileImage': imageUrl,
             });
-
-            if (_selectedImage != null) {
-              // Upload da imagem no Firebase Storage (opcional)
-              String imageUrl =
-                  await _uploadProfileImage(user.uid, _selectedImage!);
-              await userDocRef.update({
-                'profileImage':
-                    imageUrl, // Atualiza a URL da imagem no Firestore
-              });
-            }
-
-            ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(content: Text('Dados atualizados com sucesso!')),
-            );
-          } else {
-            await userDocRef.set({
-              'name': _name,
-              'email': _email,
-              'createdAt': FieldValue.serverTimestamp(),
-            });
-
-            ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(content: Text('Dados salvos com sucesso!')),
-            );
           }
+
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(content: Text('Dados atualizados com sucesso!')),
+          );
         }
       } catch (e) {
         ScaffoldMessenger.of(context).showSnackBar(
@@ -184,15 +201,12 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
       Reference storageRef =
           FirebaseStorage.instance.ref().child('profile_images/$userId.jpg');
 
-      // Faz o upload da imagem
+      // Faz o upload do arquivo
       UploadTask uploadTask = storageRef.putFile(image);
-
-      // Aguarda a conclusão do upload
-      TaskSnapshot snapshot = await uploadTask.whenComplete(() {});
+      TaskSnapshot snapshot = await uploadTask;
 
       // Pega a URL pública da imagem
-      String downloadUrl = await snapshot.ref.getDownloadURL();
-      return downloadUrl;
+      return await snapshot.ref.getDownloadURL();
     } catch (e) {
       throw Exception('Erro ao fazer upload da imagem: $e');
     }
@@ -200,8 +214,8 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
 
   Future<void> _pickImage() async {
     final XFile? pickedFile = await _picker.pickImage(
-      source: ImageSource.gallery, // Você pode trocar por ImageSource.camera
-      imageQuality: 50, // Qualidade da imagem (0-100)
+      source: ImageSource.gallery,
+      imageQuality: 50, // Qualidade da imagem
     );
 
     if (pickedFile != null) {
@@ -239,15 +253,17 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                         CircleAvatar(
                           radius: 50,
                           backgroundImage: _selectedImage != null
-                              ? FileImage(_selectedImage!) as ImageProvider
-                              : NetworkImage('lib/assets/profile_image.png'),
+                              ? FileImage(_selectedImage!)
+                              : _profileImageUrl != null
+                                  ? NetworkImage(_profileImageUrl!)
+                                  : AssetImage('lib/assets/profile_image.png')
+                                      as ImageProvider,
                         ),
                         Positioned(
                           bottom: 0,
                           right: 0,
                           child: GestureDetector(
-                            onTap:
-                                _pickImage, // Chama a função de selecionar imagem
+                            onTap: _pickImage,
                             child: CircleAvatar(
                               backgroundColor: Colors.purple,
                               radius: 18,

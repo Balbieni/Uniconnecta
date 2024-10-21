@@ -8,28 +8,31 @@ class VestibularHeader extends StatelessWidget {
   final String courseName;
   final double rating;
   final String imagePath;
-  final Vestibular vestibular; // O objeto Vestibular para salvar nos favoritos
+  final Vestibular vestibular;
+  final bool isFavorited; // Indica se é favoritado
+  final VoidCallback
+      onFavoritePressed; // Callback para mudar o estado de favorito
 
   VestibularHeader({
     required this.vestibularName,
     required this.courseName,
     required this.rating,
     required this.imagePath,
-    required this.vestibular, // Passa o objeto Vestibular
+    required this.vestibular,
+    required this.isFavorited,
+    required this.onFavoritePressed,
   });
 
   @override
   Widget build(BuildContext context) {
     return Stack(
       children: [
-        // Imagem de fundo
         Image.asset(
-          imagePath, // Usa o caminho da imagem fornecido
+          imagePath,
           width: double.infinity,
           height: 200,
           fit: BoxFit.cover,
         ),
-        // Botão de voltar
         Positioned(
           top: 16,
           left: 8,
@@ -40,7 +43,6 @@ class VestibularHeader extends StatelessWidget {
             },
           ),
         ),
-        // Conteúdo na parte inferior
         Positioned(
           bottom: 0,
           left: 0,
@@ -51,17 +53,14 @@ class VestibularHeader extends StatelessWidget {
               gradient: LinearGradient(
                 begin: Alignment.topCenter,
                 end: Alignment.bottomCenter,
-                colors: [
-                  Colors.transparent,
-                  Colors.black.withOpacity(0.6),
-                ],
+                colors: [Colors.transparent, Colors.black.withOpacity(0.6)],
               ),
             ),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  vestibularName, // Usa o nome do vestibular fornecido
+                  vestibularName,
                   style: TextStyle(
                     fontSize: 20,
                     fontWeight: FontWeight.bold,
@@ -69,7 +68,7 @@ class VestibularHeader extends StatelessWidget {
                   ),
                 ),
                 Text(
-                  courseName, // Usa o nome do curso fornecido
+                  courseName,
                   style: TextStyle(fontSize: 16, color: Colors.white),
                 ),
                 SizedBox(height: 8),
@@ -80,56 +79,24 @@ class VestibularHeader extends StatelessWidget {
                         5,
                         (index) => Icon(
                           Icons.star,
-                          color: index < rating.round()
-                              ? Colors.purple
-                              : Colors
-                                  .grey, // Mostra as estrelas de acordo com a classificação
+                          color: index < rating ? Colors.purple : Colors.grey,
                           size: 16,
                         ),
                       ),
                     ),
                     SizedBox(width: 4),
                     Text(
-                      rating.toString(), // Mostra a classificação fornecida
+                      rating.toString(),
                       style: TextStyle(color: Colors.white),
                     ),
-                  ],
-                ),
-                SizedBox(height: 8),
-                Row(
-                  children: [
-                    Container(
-                      padding: EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-                      decoration: BoxDecoration(
-                        color: Colors.purple,
-                        borderRadius: BorderRadius.circular(4),
-                      ),
-                    ),
                     Spacer(),
-                    // Botão de favorito usando o FavoritesModel
-                    Consumer<FavoritesModel>(
-                      builder: (context, favoritesModel, child) {
-                        // Verifica se o vestibular já está nos favoritos
-                        final isFavorited =
-                            favoritesModel.isVestibularFavorite(vestibular);
-
-                        return IconButton(
-                          icon: Icon(
-                            isFavorited
-                                ? Icons.favorite
-                                : Icons.favorite_border,
-                            color: isFavorited ? Colors.purple : Colors.white,
-                          ),
-                          onPressed: () {
-                            if (isFavorited) {
-                              favoritesModel
-                                  .removeVestibularFavorite(vestibular);
-                            } else {
-                              favoritesModel.addVestibularFavorite(vestibular);
-                            }
-                          },
-                        );
-                      },
+                    IconButton(
+                      icon: Icon(
+                        isFavorited ? Icons.favorite : Icons.favorite_border,
+                        color: isFavorited ? Colors.purple : Colors.white,
+                      ),
+                      onPressed:
+                          onFavoritePressed, // Chama o callback ao clicar
                     ),
                   ],
                 ),

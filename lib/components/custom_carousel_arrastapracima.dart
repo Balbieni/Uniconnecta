@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+// Modelo para o item do carrossel
 class CarouselItem {
   final String imagePath;
   final String title;
@@ -18,17 +19,23 @@ class CarouselItem {
   });
 }
 
+// Widget CustomVerticalCarousel
 class CustomVerticalCarousel extends StatelessWidget {
   final List<CarouselItem> items;
   final bool isVestibulares;
+  final Function(CarouselItem) onItemTap;
 
-  CustomVerticalCarousel({required this.items, this.isVestibulares = false});
+  CustomVerticalCarousel({
+    required this.items,
+    this.isVestibulares = false,
+    required this.onItemTap,
+  });
 
   @override
   Widget build(BuildContext context) {
     return Center(
       child: Container(
-        width: 300, // Define a largura do carrossel
+        width: 300,
         child: ListView.builder(
           scrollDirection: Axis.vertical,
           itemCount: items.length,
@@ -36,6 +43,7 @@ class CustomVerticalCarousel extends StatelessWidget {
             return CarouselCard(
               item: items[index],
               isVestibulares: isVestibulares,
+              onTap: () => onItemTap(items[index]), // Ação ao clicar no item
             );
           },
         ),
@@ -44,23 +52,31 @@ class CustomVerticalCarousel extends StatelessWidget {
   }
 }
 
+// Widget para exibir cada card individual no carrossel
 class CarouselCard extends StatelessWidget {
   final CarouselItem item;
   final bool isVestibulares;
+  final VoidCallback onTap; // Função para tratar o clique no item
 
-  CarouselCard({required this.item, this.isVestibulares = false});
+  CarouselCard({
+    required this.item,
+    this.isVestibulares = false,
+    required this.onTap,
+  });
 
   @override
   Widget build(BuildContext context) {
     return Container(
-      width: 300, // Define a largura do item do carrossel
-      height: 200, // Ajuste a altura conforme necessário
+      width: 300,
+      height: 200,
       margin: EdgeInsets.only(bottom: 10.0),
       child: Card(
+        elevation: 3,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(12.0),
+        ),
         child: InkWell(
-          onTap: () {
-            // Ação ao tocar na caixa
-          },
+          onTap: onTap, // Ação ao tocar na caixa
           child: Padding(
             padding: const EdgeInsets.all(8.0),
             child: Column(
@@ -69,8 +85,8 @@ class CarouselCard extends StatelessWidget {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Image.asset(item.imagePath, height: 50),
-                    FavoriteButton(),
+                    Image.asset(item.imagePath, height: 50), // Imagem
+                    FavoriteButton(), // Botão de favorito
                   ],
                 ),
                 SizedBox(height: 20),
@@ -84,12 +100,13 @@ class CarouselCard extends StatelessWidget {
                     item.subtitle,
                     style: TextStyle(
                       fontSize: 14,
-                      color: const Color.fromARGB(255, 0, 0, 0),
+                      color: Colors.black87,
                     ),
                     overflow: TextOverflow.ellipsis,
                   ),
                 if (!isVestibulares) SizedBox(height: 18),
                 SizedBox(height: 26),
+                // Estrelas de avaliação
                 Row(
                   children: List.generate(5, (i) {
                     if (i < item.rating.floor()) {
@@ -114,6 +131,8 @@ class CarouselCard extends StatelessWidget {
                     }
                   }),
                 ),
+                SizedBox(height: 8),
+                // Tag e distância (condicional)
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
@@ -168,6 +187,7 @@ class CarouselCard extends StatelessWidget {
   }
 }
 
+// Botão de favorito como estado separado
 class FavoriteButton extends StatefulWidget {
   @override
   _FavoriteButtonState createState() => _FavoriteButtonState();

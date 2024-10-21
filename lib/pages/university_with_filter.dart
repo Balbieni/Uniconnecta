@@ -8,19 +8,19 @@ import 'package:uniconnecta/pages/favorites_screen.dart';
 import 'package:uniconnecta/pages/profile_screen.dart';
 import 'package:uniconnecta/components/back_button.dart';
 
-class University_with_filter extends StatefulWidget {
-  final String filterType; // Adicionado para receber o filtro
+class UniversityWithFilter extends StatefulWidget {
+  final String filterType; // Recebe o tipo de filtro (Presencial, Online, etc.)
 
-  University_with_filter(
-      {required this.filterType}); // Construtor para receber o filtro
+  UniversityWithFilter({required this.filterType});
 
   @override
-  _UniversityState createState() => _UniversityState();
+  _UniversityWithFilterState createState() => _UniversityWithFilterState();
 }
 
-class _UniversityState extends State<University_with_filter> {
+class _UniversityWithFilterState extends State<UniversityWithFilter> {
   int _selectedIndex = 0;
 
+  // Lista de páginas do BottomNavigationBar
   final List<Widget> _pages = [
     HomeScreen(),
     SearchPage(),
@@ -55,7 +55,7 @@ class _UniversityState extends State<University_with_filter> {
       tag: 'Online',
       distance: '0Km',
     ),
-    // Outros itens podem ser adicionados...
+    // Outros itens podem ser adicionados aqui...
   ];
 
   // Função para aplicar o filtro nas universidades
@@ -65,6 +65,7 @@ class _UniversityState extends State<University_with_filter> {
         .toList(); // Filtra com base no tipo de filtro (tag)
   }
 
+  // Função para gerenciar a navegação no BottomNavigationBar
   void _onItemTapped(int index) {
     setState(() {
       _selectedIndex = index;
@@ -73,7 +74,7 @@ class _UniversityState extends State<University_with_filter> {
 
   @override
   Widget build(BuildContext context) {
-    // Obtém as universidades filtradas
+    // Filtra as universidades com base no filtro recebido
     List<carousel_comp.CarouselItem> filteredUniversities =
         _getFilteredUniversities();
 
@@ -104,22 +105,32 @@ class _UniversityState extends State<University_with_filter> {
                 Expanded(
                   child: Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 16.0),
-                    // Exibe as universidades filtradas no carousel
+                    // Exibe as universidades filtradas no carrossel
                     child: filteredUniversities.isNotEmpty
                         ? carousel_comp.CustomVerticalCarousel(
                             items: filteredUniversities,
-                            isVestibulares: true,
+                            isVestibulares: true, // Configura como vestibular
+                            onItemTap: (carousel_comp.CarouselItem item) {
+                              // Navegação para página de detalhes
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => DetailPage(item: item),
+                                ),
+                              );
+                            },
                           )
                         : Center(
                             child: Text(
-                                'Nenhuma universidade encontrada com o filtro selecionado'),
+                              'Nenhuma universidade encontrada com o filtro selecionado',
+                              style: TextStyle(fontSize: 16),
+                            ),
                           ),
                   ),
                 ),
               ],
             )
-          : _pages[
-              _selectedIndex], // Exibe a página correspondente no BottomNavigation
+          : _pages[_selectedIndex], // Exibe a página correspondente
       bottomNavigationBar: BottomNavigationBar(
         items: const [
           BottomNavigationBarItem(
@@ -152,6 +163,7 @@ class _UniversityState extends State<University_with_filter> {
   }
 }
 
+// Página de detalhes para cada universidade
 class DetailPage extends StatelessWidget {
   final carousel_comp.CarouselItem item;
 
@@ -160,6 +172,10 @@ class DetailPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        title: Text(item.title),
+        backgroundColor: Colors.purple,
+      ),
       body: Center(
         child: Text('Detalhes sobre ${item.title}'),
       ),

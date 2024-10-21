@@ -8,20 +8,20 @@ import 'package:uniconnecta/pages/favorites_screen.dart';
 import 'package:uniconnecta/pages/profile_screen.dart';
 import 'package:uniconnecta/components/back_button.dart';
 
-class entrance_exams_with_filter extends StatefulWidget {
-  final String
-      filterType; // Adicionado para receber o filtro (Presencial, Online, etc.)
+class EntranceExamsWithFilter extends StatefulWidget {
+  final String filterType;
 
-  entrance_exams_with_filter(
-      {required this.filterType}); // Construtor modificado para aceitar o filtro
+  EntranceExamsWithFilter({required this.filterType});
 
   @override
-  _EntranceExamsState createState() => _EntranceExamsState();
+  _EntranceExamsWithFilterState createState() =>
+      _EntranceExamsWithFilterState();
 }
 
-class _EntranceExamsState extends State<entrance_exams_with_filter> {
+class _EntranceExamsWithFilterState extends State<EntranceExamsWithFilter> {
   int _selectedIndex = 0;
 
+  // Definindo as páginas de navegação do BottomNavigationBar
   final List<Widget> _pages = [
     home_page.HomeScreen(),
     SearchPage(),
@@ -48,14 +48,15 @@ class _EntranceExamsState extends State<entrance_exams_with_filter> {
       tag: 'Online',
       distance: '30Km',
     ),
-    // Adicione mais vestibulares aqui...
+    // Adicione mais vestibulares aqui conforme necessário
   ];
 
-  // Função para aplicar o filtro
+  // Função para filtrar vestibulares com base no tipo
   List<carousel_comp.CarouselItem> _getFilteredExams() {
     return allExams.where((exam) => exam.tag == widget.filterType).toList();
   }
 
+  // Atualiza o índice selecionado no BottomNavigationBar
   void _onItemTapped(int index) {
     setState(() {
       _selectedIndex = index;
@@ -64,7 +65,7 @@ class _EntranceExamsState extends State<entrance_exams_with_filter> {
 
   @override
   Widget build(BuildContext context) {
-    // Aplica o filtro na lista de vestibulares
+    // Filtra a lista de vestibulares com base no filtro selecionado
     List<carousel_comp.CarouselItem> filteredExams = _getFilteredExams();
 
     return Scaffold(
@@ -78,7 +79,7 @@ class _EntranceExamsState extends State<entrance_exams_with_filter> {
                       vertical: 16.0, horizontal: 16.0),
                   child: Row(
                     children: [
-                      BackButtonComponent(), // Botão de voltar adicionado
+                      BackButtonComponent(), // Botão de voltar
                       SizedBox(width: 8), // Espaço entre o botão e o texto
                       Text(
                         'Vestibulares - ${widget.filterType}', // Exibe o filtro selecionado
@@ -98,6 +99,14 @@ class _EntranceExamsState extends State<entrance_exams_with_filter> {
                         ? carousel_comp.CustomVerticalCarousel(
                             items: filteredExams,
                             isVestibulares: true,
+                            onItemTap: (carousel_comp.CarouselItem item) {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => DetailPage(item: item),
+                                ),
+                              );
+                            },
                           )
                         : Center(
                             child: Text(
@@ -108,7 +117,7 @@ class _EntranceExamsState extends State<entrance_exams_with_filter> {
               ],
             )
           : _pages[
-              _selectedIndex], // Exibe a página correspondente no BottomNavigation
+              _selectedIndex], // Exibe a página selecionada no BottomNavigationBar
       bottomNavigationBar: BottomNavigationBar(
         items: const [
           BottomNavigationBarItem(
@@ -141,6 +150,7 @@ class _EntranceExamsState extends State<entrance_exams_with_filter> {
   }
 }
 
+// Página de detalhes para cada item de vestibular
 class DetailPage extends StatelessWidget {
   final carousel_comp.CarouselItem item;
 

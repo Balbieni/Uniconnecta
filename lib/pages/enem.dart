@@ -46,7 +46,7 @@ class _EnemState extends State<Enem> {
         body: _selectedIndex == 0
             ? Column(
                 children: [
-                  // Utilizando o VestibularHeader para o Enem
+                  // Usando o Consumer para atualizar o estado de favoritos
                   Consumer<FavoritesModel>(
                     builder: (context, favoritesModel, child) {
                       // Criar o objeto Vestibular com as informações do Enem
@@ -58,12 +58,24 @@ class _EnemState extends State<Enem> {
                         logoUrl: 'lib/assets/enem.png', // Logo do Enem
                       );
 
+                      // Verifica se o Enem está nos favoritos
+                      final isFavorited =
+                          favoritesModel.isVestibularFavorite(enem);
+
                       return VestibularHeader(
                         vestibularName: widget.title,
                         courseName: widget.subtitle,
                         rating: 4.5,
                         imagePath: 'lib/assets/enem.png', // Caminho da imagem
                         vestibular: enem, // Passa o objeto Enem
+                        isFavorited: isFavorited,
+                        onFavoritePressed: () {
+                          if (isFavorited) {
+                            favoritesModel.removeVestibularFavorite(enem);
+                          } else {
+                            favoritesModel.addVestibularFavorite(enem);
+                          }
+                        },
                       );
                     },
                   ),
@@ -95,7 +107,8 @@ class _EnemState extends State<Enem> {
                   ),
                 ],
               )
-            : _pages[_selectedIndex], // Mostra a página selecionada
+            : _pages[
+                _selectedIndex], // Mostra a página selecionada fora do TabBarView
         bottomNavigationBar: BottomNavigationBar(
           items: const [
             BottomNavigationBarItem(

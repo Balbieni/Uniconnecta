@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:uniconnecta/components/favorites_model.dart';
+import 'package:uniconnecta/pages/convest.dart';
+import 'package:uniconnecta/pages/news_screen.dart';
 
 class FavoritesScreen extends StatelessWidget {
   @override
@@ -36,118 +38,94 @@ class FavoritesScreen extends StatelessWidget {
         ),
         body: TabBarView(
           children: [
-            _buildUniversityList(favoritesModel),
-            _buildNewsList(favoritesModel),
-            _buildVestibularList(favoritesModel),
+            _buildUniversityList(favoritesModel, context),
+            _buildNewsList(favoritesModel, context),
+            _buildVestibularList(favoritesModel, context),
           ],
         ),
       ),
     );
   }
 
-  Widget _buildUniversityList(FavoritesModel favoritesModel) {
+  // Lista de universidades favoritas
+  Widget _buildUniversityList(
+      FavoritesModel favoritesModel, BuildContext context) {
     return ListView.builder(
       padding: EdgeInsets.all(16),
       itemCount: favoritesModel.favoriteUniversities.length,
       itemBuilder: (context, index) {
         final universidade = favoritesModel.favoriteUniversities[index];
-        return Card(
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(10),
-          ),
-          elevation: 3,
-          margin: EdgeInsets.only(bottom: 16),
-          child: Padding(
-            padding: const EdgeInsets.all(16.0),
-            child: Row(
-              children: [
-                Image.asset(universidade.logoUrl, height: 50, width: 50),
-                SizedBox(width: 16),
-                Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        universidade.nome,
-                        style: TextStyle(
-                            fontSize: 16, fontWeight: FontWeight.bold),
-                      ),
-                      Text(
-                        universidade.curso,
-                        style: TextStyle(color: Colors.grey),
-                      ),
-                      Row(
-                        children: [
-                          Icon(Icons.star, color: Colors.yellow[700], size: 16),
-                          Icon(Icons.star, color: Colors.yellow[700], size: 16),
-                          Icon(Icons.star, color: Colors.yellow[700], size: 16),
-                          Icon(Icons.star, color: Colors.yellow[700], size: 16),
-                          Icon(Icons.star_border, color: Colors.grey, size: 16),
-                          SizedBox(width: 8),
-                          Text("4.5"),
-                        ],
-                      ),
-                    ],
+        return GestureDetector(
+          onTap: () {
+            // Verifique o nome da universidade favoritada e navegue para a página correta
+            if (universidade.nome == "Convest") {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => Convest(
+                    title: "Convest",
+                    subtitle:
+                        "Inscrições abertas", // Passe o subtítulo corretamente
                   ),
                 ),
-                Column(
-                  children: [
-                    IconButton(
-                      icon: Icon(Icons.favorite, color: Colors.purple),
-                      onPressed: () {
-                        favoritesModel.removeUniversityFavorite(universidade);
-                      },
+              );
+            }
+          },
+          child: Card(
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(10),
+            ),
+            elevation: 3,
+            margin: EdgeInsets.only(bottom: 16),
+            child: Padding(
+              padding: const EdgeInsets.all(16.0),
+              child: Row(
+                children: [
+                  Image.asset(universidade.logoUrl, height: 50, width: 50),
+                  SizedBox(width: 16),
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          universidade.nome,
+                          style: TextStyle(
+                              fontSize: 16, fontWeight: FontWeight.bold),
+                        ),
+                        Text(universidade.curso,
+                            style: TextStyle(color: Colors.grey)),
+                        Row(
+                          children: [
+                            Icon(Icons.star,
+                                color: Colors.yellow[700], size: 16),
+                            Icon(Icons.star,
+                                color: Colors.yellow[700], size: 16),
+                            Icon(Icons.star,
+                                color: Colors.yellow[700], size: 16),
+                            Icon(Icons.star,
+                                color: Colors.yellow[700], size: 16),
+                            Icon(Icons.star_border,
+                                color: Colors.grey, size: 16),
+                            SizedBox(width: 8),
+                            Text("4.5"),
+                          ],
+                        ),
+                      ],
                     ),
-                    Text("50Km", style: TextStyle(color: Colors.grey)),
-                  ],
-                )
-              ],
-            ),
-          ),
-        );
-      },
-    );
-  }
-
-  Widget _buildNewsList(FavoritesModel favoritesModel) {
-    return ListView.builder(
-      padding: EdgeInsets.all(16),
-      itemCount: favoritesModel.favoriteNews.length,
-      itemBuilder: (context, index) {
-        final noticia = favoritesModel.favoriteNews[index];
-        return Card(
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(10),
-          ),
-          elevation: 3,
-          margin: EdgeInsets.only(bottom: 16),
-          child: Padding(
-            padding: const EdgeInsets.all(16.0),
-            child: Row(
-              children: [
-                Image.asset(noticia['image']!, height: 50, width: 50),
-                SizedBox(width: 16),
-                Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        noticia['title']!,
-                        style: TextStyle(
-                            fontSize: 16, fontWeight: FontWeight.bold),
-                      ),
-                      Text(noticia['date']!,
-                          style: TextStyle(color: Colors.grey)),
-                    ],
                   ),
-                ),
-                IconButton(
-                  icon: Icon(Icons.delete, color: Colors.red),
-                  onPressed: () {
-                    favoritesModel.removeNewsFavorite(noticia);
-                  },
-                ),
-              ],
+                  Column(
+                    children: [
+                      IconButton(
+                        icon: Icon(Icons.favorite, color: Colors.purple),
+                        onPressed: () {
+                          favoritesModel.removeUniversityFavorite(universidade);
+                        },
+                      ),
+                      Text("50Km", style: TextStyle(color: Colors.grey)),
+                    ],
+                  )
+                ],
+              ),
             ),
           ),
         );
@@ -155,45 +133,147 @@ class FavoritesScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildVestibularList(FavoritesModel favoritesModel) {
+  // Lista de vestibulares favoritos
+  Widget _buildVestibularList(
+      FavoritesModel favoritesModel, BuildContext context) {
     return ListView.builder(
       padding: EdgeInsets.all(16),
       itemCount: favoritesModel.favoriteVestibulares.length,
       itemBuilder: (context, index) {
         final vestibular = favoritesModel.favoriteVestibulares[index];
-        return Card(
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(10),
-          ),
-          elevation: 3,
-          margin: EdgeInsets.only(bottom: 16),
-          child: Padding(
-            padding: const EdgeInsets.all(16.0),
-            child: Row(
-              children: [
-                Image.asset(vestibular.logoUrl, height: 50, width: 50),
-                SizedBox(width: 16),
-                Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        vestibular.nome,
-                        style: TextStyle(
-                            fontSize: 16, fontWeight: FontWeight.bold),
-                      ),
-                      Text(vestibular.curso,
-                          style: TextStyle(color: Colors.grey)),
-                    ],
+        return GestureDetector(
+          onTap: () {
+            if (vestibular.nome == "Convest") {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => Convest(
+                    title: "Convest",
+                    subtitle: "Inscrições abertas",
                   ),
                 ),
-                IconButton(
-                  icon: Icon(Icons.delete, color: Colors.red),
-                  onPressed: () {
-                    favoritesModel.removeVestibularFavorite(vestibular);
-                  },
-                ),
-              ],
+              );
+            }
+          },
+          child: Card(
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(10),
+            ),
+            elevation: 3,
+            margin: EdgeInsets.only(bottom: 16),
+            child: Padding(
+              padding: const EdgeInsets.all(16.0),
+              child: Row(
+                children: [
+                  Image.asset(vestibular.logoUrl, height: 50, width: 50),
+                  SizedBox(width: 16),
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          vestibular.nome,
+                          style: TextStyle(
+                              fontSize: 16, fontWeight: FontWeight.bold),
+                        ),
+                        SizedBox(height: 8),
+                        Row(
+                          children: [
+                            Icon(Icons.star, color: Colors.purple, size: 16),
+                            Icon(Icons.star, color: Colors.purple, size: 16),
+                            Icon(Icons.star, color: Colors.purple, size: 16),
+                            Icon(Icons.star, color: Colors.purple, size: 16),
+                            Icon(Icons.star_half,
+                                color: Colors.purple, size: 16),
+                            SizedBox(width: 8),
+                            Text("4.5"),
+                          ],
+                        ),
+                      ],
+                    ),
+                  ),
+                  Column(
+                    children: [
+                      IconButton(
+                        icon: Icon(Icons.favorite, color: Colors.purple),
+                        onPressed: () {
+                          favoritesModel.removeVestibularFavorite(vestibular);
+                        },
+                      ),
+                      SizedBox(height: 8),
+                      ElevatedButton(
+                        onPressed: () {
+                          // Ação de inscrição
+                        },
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: Colors.purple,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(20),
+                          ),
+                        ),
+                        child: Text("Inscrições abertas"),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+            ),
+          ),
+        );
+      },
+    );
+  }
+
+  // Lista de notícias favoritas
+  Widget _buildNewsList(FavoritesModel favoritesModel, BuildContext context) {
+    return ListView.builder(
+      padding: EdgeInsets.all(16),
+      itemCount: favoritesModel.favoriteNews.length,
+      itemBuilder: (context, index) {
+        final noticia = favoritesModel.favoriteNews[index];
+        return GestureDetector(
+          onTap: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => NewsScreen(),
+              ),
+            );
+          },
+          child: Card(
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(10),
+            ),
+            elevation: 3,
+            margin: EdgeInsets.only(bottom: 16),
+            child: Padding(
+              padding: const EdgeInsets.all(16.0),
+              child: Row(
+                children: [
+                  Image.asset(noticia['image']!, height: 50, width: 50),
+                  SizedBox(width: 16),
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          noticia['title']!,
+                          style: TextStyle(
+                              fontSize: 16, fontWeight: FontWeight.bold),
+                        ),
+                        Text(noticia['date']!,
+                            style: TextStyle(color: Colors.grey)),
+                      ],
+                    ),
+                  ),
+                  IconButton(
+                    icon: Icon(Icons.delete, color: Colors.red),
+                    onPressed: () {
+                      favoritesModel.removeNewsFavorite(noticia);
+                    },
+                  ),
+                ],
+              ),
             ),
           ),
         );

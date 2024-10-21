@@ -60,12 +60,24 @@ class _ConvestState extends State<Convest> {
                         logoUrl: 'lib/assets/convest_logo.png',
                       );
 
+                      // Verifica se o vestibular está nos favoritos
+                      final isFavorited =
+                          favoritesModel.isVestibularFavorite(vestibular);
+
                       return VestibularHeader(
                         vestibularName: widget.title,
                         courseName: widget.subtitle,
                         rating: 4.5,
                         imagePath: 'lib/assets/convest_logo.png',
-                        vestibular: vestibular, // Passa o objeto vestibular
+                        vestibular: vestibular,
+                        isFavorited: isFavorited,
+                        onFavoritePressed: () {
+                          if (isFavorited) {
+                            favoritesModel.removeVestibularFavorite(vestibular);
+                          } else {
+                            favoritesModel.addVestibularFavorite(vestibular);
+                          }
+                        },
                       );
                     },
                   ),

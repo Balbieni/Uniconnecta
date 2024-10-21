@@ -72,7 +72,7 @@ class _FilterState extends State<filter> {
                   Navigator.push(
                     context,
                     MaterialPageRoute(
-                      builder: (context) => University_with_filter(
+                      builder: (context) => UniversityWithFilter(
                         filterType: selectedUniversidadeOption,
                       ),
                     ),
@@ -82,7 +82,7 @@ class _FilterState extends State<filter> {
                   Navigator.push(
                     context,
                     MaterialPageRoute(
-                      builder: (context) => entrance_exams_with_filter(
+                      builder: (context) => EntranceExamsWithFilter(
                         filterType: selectedUniversidadeOption,
                       ),
                     ),

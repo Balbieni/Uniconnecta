@@ -85,19 +85,19 @@ class SearchPage extends StatelessWidget {
                   context,
                   'Mais Próximos',
                   'lib/assets/universities.png', // Image URL
-                  closest(),
+                  Closest(),
                 ),
                 buildCategoryCard(
                   context,
                   'Melhores avaliados',
                   'lib/assets/best_rated.png', // Image URL
-                  Universty(),
+                  University(),
                 ),
                 buildCategoryCard(
                   context,
                   'Vestibulares',
                   'lib/assets/entrance_exams.png', // Image URL
-                  entrance_exams(),
+                  EntranceExams(),
                 ),
                 buildCategoryCard(
                   context,

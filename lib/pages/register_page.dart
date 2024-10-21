@@ -1,55 +1,52 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:uniconnecta/components/components.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'pages.dart';
 
-class register_page extends StatefulWidget {
-  const register_page({Key? key}) : super(key: key);
+class RegisterPage extends StatefulWidget {
+  const RegisterPage({Key? key}) : super(key: key);
 
   @override
-  State<register_page> createState() => _CadastroPageState();
+  State<RegisterPage> createState() => _RegisterPageState();
 }
 
-class _CadastroPageState extends State<register_page> {
+class _RegisterPageState extends State<RegisterPage> {
   final TextEditingController _passwordController = TextEditingController();
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _nameController = TextEditingController();
 
   Future<void> _createAccount() async {
     try {
-      // Cria o usuário no Firebase com email e senha
+      // Cria o usuário no Firebase Auth
       UserCredential userCredential =
           await FirebaseAuth.instance.createUserWithEmailAndPassword(
         email: _emailController.text,
         password: _passwordController.text,
       );
 
-      // Atualiza o nome do usuário após a criação
-      await userCredential.user?.updateDisplayName(_nameController.text);
+      User? user = userCredential.user;
 
-      // Navega para a próxima tela após o cadastro bem-sucedido
-      Navigator.push(
-        context,
-        MaterialPageRoute(builder: (context) => PhotoScreen()),
-      );
-    } on FirebaseAuthException catch (e) {
-      String errorMessage;
-      switch (e.code) {
-        case 'email-already-in-use':
-          errorMessage = 'Este email já está em uso. Tente outro email.';
-          break;
-        case 'invalid-email':
-          errorMessage = 'O endereço de email está mal formatado.';
-          break;
-        case 'weak-password':
-          errorMessage = 'A senha é muito fraca. Use uma senha mais forte.';
-          break;
-        default:
-          errorMessage = 'Ocorreu um erro durante o cadastro. Tente novamente.';
+      if (user != null) {
+        // Atualiza o nome do usuário
+        await user.updateDisplayName(_nameController.text);
+
+        // Salva os dados iniciais no Firestore
+        await FirebaseFirestore.instance.collection('users').doc(user.uid).set({
+          'name': _nameController.text,
+          'email': _emailController.text,
+        });
+
+        // Navega para a próxima tela passando o UID
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+              builder: (context) => PhotoScreen(userId: user.uid)),
+        );
       }
-      _showErrorDialog('Erro no cadastro', errorMessage);
-    } catch (e) {
-      _showErrorDialog('Erro no cadastro', e.toString());
+    } on FirebaseAuthException catch (e) {
+      _showErrorDialog(
+          'Erro no cadastro', e.message ?? 'Ocorreu um erro inesperado.');
     }
   }
 

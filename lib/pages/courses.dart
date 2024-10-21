@@ -9,8 +9,7 @@ import 'package:uniconnecta/pages/profile_screen.dart';
 import 'package:uniconnecta/components/back_button.dart';
 
 class Courses extends StatefulWidget {
-  final String
-      filterType; // Receber o tipo de filtro (Presencial, Online, etc.)
+  final String filterType; // Tipo de filtro (Presencial, Online, etc.)
 
   Courses({required this.filterType});
 
@@ -58,13 +57,14 @@ class _CoursesState extends State<Courses> {
     // Outros itens podem ser adicionados...
   ];
 
-  // Função para aplicar o filtro
+  // Função para aplicar o filtro de cursos
   List<carousel_comp.CarouselItem> _getFilteredCourses() {
     return allCourses
         .where((course) => course.tag == widget.filterType)
         .toList();
   }
 
+  // Atualiza o índice selecionado no BottomNavigationBar
   void _onItemTapped(int index) {
     setState(() {
       _selectedIndex = index;
@@ -87,7 +87,7 @@ class _CoursesState extends State<Courses> {
                       vertical: 16.0, horizontal: 16.0),
                   child: Row(
                     children: [
-                      BackButtonComponent(), // Botão de voltar adicionado
+                      BackButtonComponent(), // Botão de voltar
                       SizedBox(width: 8), // Espaço entre o botão e o texto
                       Text(
                         'Cursos - ${widget.filterType}', // Exibe o tipo de filtro
@@ -106,19 +106,28 @@ class _CoursesState extends State<Courses> {
                     child: filteredCourses.isNotEmpty
                         ? carousel_comp.CustomVerticalCarousel(
                             items: filteredCourses,
-                            isVestibulares:
-                                false, // Aqui pode definir se é vestibular ou curso
+                            isVestibulares: false, // Define como cursos
+                            onItemTap: (carousel_comp.CarouselItem item) {
+                              // Ação ao tocar no curso
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => DetailPage(item: item),
+                                ),
+                              );
+                            },
                           )
                         : Center(
                             child: Text(
-                                'Nenhum curso encontrado com o filtro selecionado'),
+                              'Nenhum curso encontrado com o filtro selecionado',
+                              style: TextStyle(fontSize: 16),
+                            ),
                           ),
                   ),
                 ),
               ],
             )
-          : _pages[
-              _selectedIndex], // Exibe a página correspondente no BottomNavigation
+          : _pages[_selectedIndex], // Exibe a página correspondente
       bottomNavigationBar: BottomNavigationBar(
         items: const [
           BottomNavigationBarItem(
@@ -151,6 +160,7 @@ class _CoursesState extends State<Courses> {
   }
 }
 
+// Página de detalhes do curso
 class DetailPage extends StatelessWidget {
   final carousel_comp.CarouselItem item;
 
@@ -159,6 +169,10 @@ class DetailPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        title: Text(item.title),
+        backgroundColor: Colors.purple,
+      ),
       body: Center(
         child: Text('Detalhes sobre ${item.title}'),
       ),

@@ -5,6 +5,10 @@ import 'package:uniconnecta/components/cep.dart';
 import 'package:uniconnecta/components/button.dart';
 
 class LocationScreen extends StatefulWidget {
+  final String userId; // Recebe o UID do usuário
+
+  const LocationScreen({required this.userId});
+
   @override
   _LocationScreenState createState() => _LocationScreenState();
 }
@@ -17,6 +21,7 @@ class _LocationScreenState extends State<LocationScreen> {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
   bool _isFetchingAddress = false; // Controle para evitar múltiplos fetches
 
+  // Função chamada ao mudar o CEP
   void _onCepChanged(String value) async {
     if (value.length == 8 && !_isFetchingAddress) {
       setState(() {
@@ -24,7 +29,8 @@ class _LocationScreenState extends State<LocationScreen> {
       });
 
       try {
-        final address = await fetchAddressFromCep(value);
+        final address = await fetchAddressFromCep(
+            value); // Busca o endereço com base no CEP
         if (address != null) {
           setState(() {
             _ruaController.text = address['rua'] ?? '';
@@ -47,29 +53,39 @@ class _LocationScreenState extends State<LocationScreen> {
     }
   }
 
+  // Função para salvar os dados de localização
   Future<void> _saveLocationData() async {
     final cep = _cepController.text.trim();
     final rua = _ruaController.text.trim();
     final bairro = _bairroController.text.trim();
 
+    if (cep.isEmpty || rua.isEmpty || bairro.isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Preencha todos os campos.')),
+      );
+      return;
+    }
+
     try {
-      if (cep.isNotEmpty || rua.isNotEmpty || bairro.isNotEmpty) {
-        await _firestore.collection('locations').add({
+      // Salva os dados de localização no documento do usuário no Firestore
+      await _firestore.collection('users').doc(widget.userId).update({
+        'location': {
           'cep': cep,
           'rua': rua,
           'bairro': bairro,
-          'timestamp': FieldValue.serverTimestamp(),
-        });
+        },
+      });
 
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Dados salvos com sucesso!')),
-        );
-      }
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Localização salva com sucesso!')),
+      );
 
-      // Certifique-se de navegar após o await
+      // Navega para a tela principal ou próxima tela
       Navigator.pushReplacement(
         context,
-        MaterialPageRoute(builder: (context) => HomeScreen()),
+        MaterialPageRoute(
+            builder: (context) =>
+                HomeScreen()), // Substitua pela tela de favoritos ou home
       );
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
@@ -109,6 +125,7 @@ class _LocationScreenState extends State<LocationScreen> {
                 ),
                 textAlign: TextAlign.center,
               ),
+              SizedBox(height: 20),
               TextField(
                 controller: _cepController,
                 decoration: InputDecoration(
@@ -119,8 +136,7 @@ class _LocationScreenState extends State<LocationScreen> {
                 ),
                 keyboardType: TextInputType.number,
                 maxLength: 8, // O CEP tem 8 dígitos
-                onChanged:
-                    _onCepChanged, // Corrigido: passa o valor corretamente
+                onChanged: _onCepChanged, // Chama a função ao mudar o CEP
               ),
               SizedBox(height: 20),
               TextField(
@@ -148,7 +164,8 @@ class _LocationScreenState extends State<LocationScreen> {
                 marginSize: 16.0,
                 label: 'Continuar',
                 isPrimary: true,
-                onPressedButton: _saveLocationData,
+                onPressedButton:
+                    _saveLocationData, // Salva os dados de localização
               ),
             ],
           ),

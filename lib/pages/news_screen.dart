@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart'; // Para acessar o FavoritesModel
 import 'package:url_launcher/url_launcher.dart';
+import 'package:uniconnecta/components/favorites_model.dart'; // Modelo de favoritos
 
 class NewsScreen extends StatelessWidget {
   @override
@@ -37,10 +39,10 @@ class NewsScreen extends StatelessWidget {
               // Exibindo o conteúdo baseado na Tab ativa
               child: TabBarView(
                 children: [
-                  noticiasListView('Recentes'),
-                  noticiasListView('Vestibulares'),
-                  noticiasListView('Atualidades'),
-                  noticiasListView('Relacionados aos favoritos'),
+                  noticiasListView(context, 'Recentes'),
+                  noticiasListView(context, 'Vestibulares'),
+                  noticiasListView(context, 'Atualidades'),
+                  noticiasListView(context, 'Relacionados aos favoritos'),
                 ],
               ),
             ),
@@ -51,7 +53,8 @@ class NewsScreen extends StatelessWidget {
   }
 
   // Retorna uma lista de notícias específica para cada aba
-  Widget noticiasListView(String tab) {
+  Widget noticiasListView(BuildContext context, String tab) {
+    final favoritesModel = Provider.of<FavoritesModel>(context);
     List<Map<String, String>> noticias;
 
     switch (tab) {
@@ -97,13 +100,6 @@ class NewsScreen extends StatelessWidget {
             'url': 'https://example.com/noticia5',
             'image': 'lib/assets/unicamp_logo.png'
           },
-          {
-            'title': 'Notícia 3 - Vestibulares',
-            'date': '25/05/2024',
-            'description': 'Descrição da notícia 3 da aba Vestibulares...',
-            'url': 'https://example.com/noticia6',
-            'image': 'lib/assets/unicamp_logo.png'
-          },
         ];
         break;
 
@@ -116,50 +112,11 @@ class NewsScreen extends StatelessWidget {
             'url': 'https://example.com/noticia7',
             'image': 'lib/assets/unicamp_logo.png'
           },
-          {
-            'title': 'Notícia 2 - Atualidades',
-            'date': '27/05/2024',
-            'description': 'Descrição da notícia 2 da aba Atualidades...',
-            'url': 'https://example.com/noticia8',
-            'image': 'lib/assets/unicamp_logo.png'
-          },
-          {
-            'title': 'Notícia 3 - Atualidades',
-            'date': '28/05/2024',
-            'description': 'Descrição da notícia 3 da aba Atualidades...',
-            'url': 'https://example.com/noticia9',
-            'image': 'lib/assets/unicamp_logo.png'
-          },
         ];
         break;
 
       case 'Relacionados aos favoritos':
-        noticias = [
-          {
-            'title': 'Notícia 1 - Relacionados aos favoritos',
-            'date': '29/05/2024',
-            'description':
-                'Descrição da notícia 1 da aba Relacionados aos favoritos...',
-            'url': 'https://example.com/noticia10',
-            'image': 'lib/assets/unicamp_logo.png'
-          },
-          {
-            'title': 'Notícia 2 - Relacionados aos favoritos',
-            'date': '30/05/2024',
-            'description':
-                'Descrição da notícia 2 da aba Relacionados aos favoritos...',
-            'url': 'https://example.com/noticia11',
-            'image': 'lib/assets/unicamp_logo.png'
-          },
-          {
-            'title': 'Notícia 3 - Relacionados aos favoritos',
-            'date': '31/05/2024',
-            'description':
-                'Descrição da notícia 3 da aba Relacionados aos favoritos...',
-            'url': 'https://example.com/noticia12',
-            'image': 'lib/assets/unicamp_logo.png'
-          },
-        ];
+        noticias = favoritesModel.favoriteNews; // Pega as notícias favoritedas
         break;
 
       default:
@@ -171,6 +128,7 @@ class NewsScreen extends StatelessWidget {
       child: ListView(
         children: noticias.map((noticia) {
           return noticiaCard(
+            context,
             noticia['image']!,
             noticia['title']!,
             noticia['date']!,
@@ -182,8 +140,21 @@ class NewsScreen extends StatelessWidget {
     );
   }
 
-  Widget noticiaCard(String imageUrl, String title, String date,
-      String description, String url) {
+  Widget noticiaCard(BuildContext context, String imageUrl, String title,
+      String date, String description, String url) {
+    final favoritesModel = Provider.of<FavoritesModel>(context);
+
+    // Criação do objeto notícia para manipulação no modelo de favoritos
+    final noticia = {
+      'title': title,
+      'date': date,
+      'description': description,
+      'url': url,
+      'image': imageUrl,
+    };
+
+    final isFavorited = favoritesModel.isNewsFavorite(noticia);
+
     return GestureDetector(
       onTap: () => _launchURL(url), // Função para abrir o link da notícia
       child: Card(
@@ -225,10 +196,23 @@ class NewsScreen extends StatelessWidget {
                 style: TextStyle(color: Colors.grey[700]),
               ),
               SizedBox(height: 8),
-              Align(
-                alignment: Alignment.centerRight,
-                child:
-                    FavoriteIcon(), // Componente com estado para o ícone do coração
+              Row(
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: [
+                  IconButton(
+                    icon: Icon(
+                      isFavorited ? Icons.favorite : Icons.favorite_border,
+                      color: isFavorited ? Colors.purple : Colors.grey,
+                    ),
+                    onPressed: () {
+                      if (isFavorited) {
+                        favoritesModel.removeNewsFavorite(noticia);
+                      } else {
+                        favoritesModel.addNewsFavorite(noticia);
+                      }
+                    },
+                  ),
+                ],
               ),
             ],
           ),
@@ -244,29 +228,5 @@ class NewsScreen extends StatelessWidget {
     } else {
       throw 'Não foi possível abrir o link $url';
     }
-  }
-}
-
-class FavoriteIcon extends StatefulWidget {
-  @override
-  _FavoriteIconState createState() => _FavoriteIconState();
-}
-
-class _FavoriteIconState extends State<FavoriteIcon> {
-  bool _isFavorited = false;
-
-  @override
-  Widget build(BuildContext context) {
-    return IconButton(
-      icon: Icon(
-        _isFavorited ? Icons.favorite : Icons.favorite_border,
-        color: _isFavorited ? Colors.purple : Colors.grey,
-      ),
-      onPressed: () {
-        setState(() {
-          _isFavorited = !_isFavorited;
-        });
-      },
-    );
   }
 }
