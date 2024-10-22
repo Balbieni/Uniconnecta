@@ -7,7 +7,7 @@ import 'package:uniconnecta/pages/search_page.dart';
 import 'package:uniconnecta/pages/news_screen.dart';
 import 'package:uniconnecta/pages/favorites_screen.dart';
 import 'package:uniconnecta/pages/profile_screen.dart';
-import 'package:uniconnecta/components/class_of_model.dart'; // Import para o modelo Universidade
+import 'package:uniconnecta/components/class_of_model.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:uniconnecta/components/entrance_exam_header.dart';
 
@@ -88,11 +88,11 @@ class _ConvestState extends State<Convest> {
                     unselectedLabelColor: Colors.grey,
                     tabs: [
                       Tab(child: Text('Vestibulares')),
-                      Tab(child: Text('Sobre seu curso')),
-                      Tab(child: Text('Notas de corte')),
+                      Tab(child: Text('Edital')),
+                      Tab(child: Text('Conteudos')),
                       Tab(child: Text('Avaliações')),
-                      Tab(child: Text('Outros Cursos')),
-                      Tab(child: Text('Sobre a universidade')),
+                      Tab(child: Text('Provas Anteriores')),
+                      Tab(child: Text('Sobre o vestibular')),
                     ],
                   ),
                   const Expanded(

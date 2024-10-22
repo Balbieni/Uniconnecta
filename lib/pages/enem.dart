@@ -86,11 +86,11 @@ class _EnemState extends State<Enem> {
                     unselectedLabelColor: Colors.grey,
                     tabs: [
                       Tab(child: Text('Vestibulares')),
-                      Tab(child: Text('Sobre seu curso')),
-                      Tab(child: Text('Notas de corte')),
+                      Tab(child: Text('Edital')),
+                      Tab(child: Text('Conteudos')),
                       Tab(child: Text('Avaliações')),
-                      Tab(child: Text('Outros Cursos')),
-                      Tab(child: Text('Sobre a universidade')),
+                      Tab(child: Text('Provas Anteriores')),
+                      Tab(child: Text('Sobre o vestibular')),
                     ],
                   ),
                   const Expanded(

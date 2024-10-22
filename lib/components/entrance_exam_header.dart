@@ -1,6 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
-import 'package:uniconnecta/components/favorites_model.dart';
 import 'package:uniconnecta/components/class_of_model.dart'; // Modelo de Vestibular
 
 class VestibularHeader extends StatelessWidget {

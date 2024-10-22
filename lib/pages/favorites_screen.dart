@@ -2,7 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:uniconnecta/components/favorites_model.dart';
 import 'package:uniconnecta/pages/convest.dart';
+import 'package:uniconnecta/pages/enem.dart';
+import 'package:uniconnecta/pages/mackenzie.dart';
 import 'package:uniconnecta/pages/news_screen.dart';
+import 'package:uniconnecta/pages/pages.dart';
+import 'package:uniconnecta/pages/unesp.dart';
 
 class FavoritesScreen extends StatelessWidget {
   @override
@@ -58,14 +62,38 @@ class FavoritesScreen extends StatelessWidget {
         return GestureDetector(
           onTap: () {
             // Verifique o nome da universidade favoritada e navegue para a página correta
-            if (universidade.nome == "Convest") {
+            if (universidade.nome == "Unicamp") {
               Navigator.push(
                 context,
                 MaterialPageRoute(
-                  builder: (context) => Convest(
-                    title: "Convest",
+                  builder: (context) => Unicamp(
+                    title: "Unicamp",
                     subtitle:
-                        "Inscrições abertas", // Passe o subtítulo corretamente
+                        "Universidade renomada", // Passe o subtítulo corretamente
+                  ),
+                ),
+              );
+            }
+            if (universidade.nome == "Unesp") {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => Unesp(
+                    title: "Unesp",
+                    subtitle:
+                        "Universidade renomada", // Passe o subtítulo corretamente
+                  ),
+                ),
+              );
+            }
+            if (universidade.nome == "Mackenzie") {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => Mackenzie(
+                    title: "Mackenzie",
+                    subtitle:
+                        "Universidade renomada", // Passe o subtítulo corretamente
                   ),
                 ),
               );
@@ -149,6 +177,17 @@ class FavoritesScreen extends StatelessWidget {
                 MaterialPageRoute(
                   builder: (context) => Convest(
                     title: "Convest",
+                    subtitle: "Inscrições abertas",
+                  ),
+                ),
+              );
+            }
+            if (vestibular.nome == "enem") {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => Enem(
+                    title: "Enem",
                     subtitle: "Inscrições abertas",
                   ),
                 ),

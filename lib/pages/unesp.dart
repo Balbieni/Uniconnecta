@@ -7,11 +7,79 @@ import 'package:uniconnecta/components/favorites_model.dart';
 import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart';
 
-class Unicamp extends StatelessWidget {
+class ExamCard extends StatelessWidget {
+  final String title;
+  final String description;
+  final VoidCallback onPressedInscrever;
+  final VoidCallback onPressedPagina;
+
+  const ExamCard({
+    Key? key,
+    required this.title,
+    required this.description,
+    required this.onPressedInscrever,
+    required this.onPressedPagina,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Card(
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(8),
+      ),
+      child: Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              title,
+              style: const TextStyle(
+                fontSize: 20,
+                fontWeight: FontWeight.bold,
+                color: Colors.purple,
+              ),
+            ),
+            const SizedBox(height: 8),
+            Text(
+              description,
+              style: const TextStyle(fontSize: 16),
+            ),
+            const SizedBox(height: 16),
+            Row(
+              children: [
+                ElevatedButton(
+                  onPressed: onPressedInscrever,
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.purple,
+                    foregroundColor: Colors.white, // Texto branco
+                  ),
+                  child: const Text('Inscrever-se'),
+                ),
+                const SizedBox(width: 16),
+                OutlinedButton(
+                  onPressed: onPressedPagina,
+                  style: OutlinedButton.styleFrom(
+                    side: const BorderSide(
+                        color: Colors.purple), // Borda azul UNESP
+                    foregroundColor: Colors.purple, // Texto azul UNESP
+                  ),
+                  child: const Text('Ir para a página'),
+                ),
+              ],
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class Unesp extends StatelessWidget {
   final String title;
   final String subtitle;
 
-  Unicamp({Key? key, required this.title, required this.subtitle})
+  Unesp({Key? key, required this.title, required this.subtitle})
       : super(key: key);
 
   @override
@@ -25,22 +93,21 @@ class Unicamp extends StatelessWidget {
             // Header com o botão de favorito integrado
             Consumer<FavoritesModel>(
               builder: (context, favoritesModel, child) {
-                // Criamos o objeto Universidade baseado no item
                 final universidade = Universidade(
                   nome: title,
                   curso: subtitle,
-                  avaliacao: 4.5, // Avaliação fixa como exemplo
-                  distancia: '5 Km', // Distância de exemplo
+                  avaliacao: 4.2, // Avaliação fixa como exemplo
+                  distancia: '10 Km', // Distância de exemplo
                   modalidade: "Presencial", // Exemplo de modalidade
-                  logoUrl: 'lib/assets/unicamp_logo.png', // Caminho da logo
+                  logoUrl: 'lib/assets/unesp.png', // Caminho da logo
                 );
 
                 return UniversityHeader(
                   universityOrEntranceExamName: title,
                   courseName: subtitle,
-                  rating: 4.5,
+                  rating: 4.2,
                   locationType: 'Presencial',
-                  imagePath: 'lib/assets/unicamp_logo.png',
+                  imagePath: 'lib/assets/unesp.png',
                   universidade: universidade, // Passa o objeto Universidade
                 );
               },
@@ -90,16 +157,16 @@ class VestibularesTab extends StatelessWidget {
       padding: const EdgeInsets.all(16),
       children: [
         ExamCard(
-          title: 'Convest',
+          title: 'Vunesp',
           description:
-              'Período de inscrições será de 27 de maio a 7 de junho. Provas serão aplicadas nos dias 3 e 10 de novembro em todo o Brasil.',
+              'Inscrições de 1º de agosto a 15 de setembro. Prova aplicada em novembro.',
           onPressedInscrever: () {},
           onPressedPagina: () {},
         ),
         ExamCard(
           title: 'Enem',
           description:
-              'Período de inscrições será de 27 de maio a 7 de junho. Provas serão aplicadas nos dias 3 e 10 de novembro em todo o Brasil.',
+              'Período de inscrições será de 27 de maio a 7 de junho. Provas em novembro.',
           onPressedInscrever: () {},
           onPressedPagina: () {},
         ),
@@ -119,7 +186,7 @@ class SobreCursoTab extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           const Text(
-            'Sobre o curso de Medicina',
+            'Sobre o curso de Nutrição',
             style: TextStyle(
               fontSize: 20,
               fontWeight: FontWeight.bold,
@@ -127,21 +194,19 @@ class SobreCursoTab extends StatelessWidget {
             ),
           ),
           const SizedBox(height: 16),
-          _buildSection('Coordenadoria do Curso', [
-            'Diretor: Dr. Ricardo Medeiros',
-            'Coordenador Acadêmico: Dr. Marcos Soares',
-            'Coordenadora de Estágios: Dra. Patrícia Lima',
+          _buildSection('Coordenação e Corpo Docente', [
+            'Coordenadora: Dra. Ana Paula Ribeiro',
+            'Docente: Prof. Dr. João Mendes',
+            'Docente: Dra. Cláudia Pereira',
           ]),
           const SizedBox(height: 16),
-          _buildSection('Estrutura Curricular', [
-            '1º ano: Ciências básicas (anatomia, bioquímica, fisiologia)',
-            '2º e 3º ano: Estágios supervisionados em hospitais universitários',
-            '4º a 6º ano: Residência clínica, atendimento ambulatorial e emergencial',
+          _buildSection('Grade Curricular', [
+            '1º e 2º anos: Fundamentos de nutrição e saúde pública',
+            '3º e 4º anos: Nutrição clínica, esportiva e comunitária',
+            'Estágio supervisionado: 500 horas em instituições de saúde',
           ]),
           const SizedBox(height: 16),
-          _buildLink(
-              'Clique aqui para mais informações sobre o curso de Medicina na Unicamp',
-              '#'),
+          _buildLink('Saiba mais sobre o curso de Nutrição na Unesp', '#'),
         ],
       ),
     );
@@ -183,7 +248,7 @@ class SobreCursoTab extends StatelessWidget {
         text,
         style: const TextStyle(
           fontSize: 16,
-          color: Colors.blue,
+          color: Colors.purple,
           decoration: TextDecoration.underline,
         ),
       ),
@@ -207,9 +272,9 @@ class NotasDeCorteTab extends StatelessWidget {
     return ListView(
       padding: const EdgeInsets.all(16),
       children: [
-        _buildNotaCard(ano: '2023', vagas: 71, notaDeCorte: 726.8),
-        _buildNotaCard(ano: '2022', vagas: 88, notaDeCorte: 732.2),
-        _buildNotaCard(ano: '2021', vagas: 71, notaDeCorte: 720.5),
+        _buildNotaCard(ano: '2023', vagas: 60, notaDeCorte: 670.5),
+        _buildNotaCard(ano: '2022', vagas: 65, notaDeCorte: 662.0),
+        _buildNotaCard(ano: '2021', vagas: 60, notaDeCorte: 660.8),
       ],
     );
   }
@@ -230,26 +295,22 @@ class NotasDeCorteTab extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              'Medicina $ano',
+              'Nutrição $ano',
               style: const TextStyle(
                 fontSize: 18,
                 fontWeight: FontWeight.bold,
               ),
             ),
             const SizedBox(height: 8),
-            Text(
-              'Vagas: $vagas',
-              style: TextStyle(fontSize: 16, color: Colors.grey[600]),
-            ),
-            Text(
-              'Nota de corte: ${notaDeCorte.toStringAsFixed(1)}',
-              style: TextStyle(fontSize: 16, color: Colors.grey[600]),
-            ),
+            Text('Vagas: $vagas',
+                style: TextStyle(fontSize: 16, color: Colors.grey[600])),
+            Text('Nota de corte: ${notaDeCorte.toStringAsFixed(1)}',
+                style: TextStyle(fontSize: 16, color: Colors.grey[600])),
             const SizedBox(height: 16),
             SizedBox(
               width: double.infinity,
               child: ElevatedButton(
-                onPressed: () {}, // Lógica de ação
+                onPressed: () {},
                 style: ElevatedButton.styleFrom(
                   foregroundColor: Colors.white,
                   backgroundColor: Colors.purple,
@@ -275,71 +336,18 @@ class AvaliacoesTab extends StatelessWidget {
       children: [
         const SizedBox(height: 16),
         AverageRating(
-          imagePath: 'lib/assets/unicamp_logo.png',
-          rating: 4.5,
+          imagePath: 'lib/assets/unesp.png',
+          rating: 4.2,
           recommendationText:
-              '86.98% dos alunos que avaliaram recomendam este curso',
+              '89.5% dos alunos que avaliaram recomendam este curso',
         ),
         const SizedBox(height: 16),
         StudentReview(
-          name: 'Matheus Duarte',
-          rating: 4.0,
-          review: 'O curso de Medicina da Unicamp é um dos melhores do país...',
+          name: 'Joana Silva',
+          rating: 4.5,
+          review: 'Curso excelente, com foco em diversas áreas de atuação...',
         ),
       ],
-    );
-  }
-}
-
-class StudentReview extends StatelessWidget {
-  final String name;
-  final double rating;
-  final String review;
-
-  const StudentReview({
-    Key? key,
-    required this.name,
-    required this.rating,
-    required this.review,
-  }) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return Card(
-      margin: const EdgeInsets.symmetric(vertical: 8),
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(8),
-      ),
-      child: Padding(
-        padding: const EdgeInsets.all(16),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              name,
-              style: const TextStyle(
-                fontSize: 18,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-            const SizedBox(height: 8),
-            Row(
-              children: List.generate(
-                5,
-                (index) => Icon(
-                  index < rating ? Icons.star : Icons.star_border,
-                  color: Colors.amber,
-                ),
-              ),
-            ),
-            const SizedBox(height: 8),
-            Text(
-              review,
-              style: const TextStyle(fontSize: 16, color: Colors.grey),
-            ),
-          ],
-        ),
-      ),
     );
   }
 }
@@ -355,7 +363,7 @@ class OutrosCursosTab extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           const Text(
-            'Outros cursos oferecidos pela Unicamp',
+            'Outros cursos oferecidos pela Unesp',
             style: TextStyle(
               fontSize: 20,
               fontWeight: FontWeight.bold,
@@ -363,25 +371,25 @@ class OutrosCursosTab extends StatelessWidget {
             ),
           ),
           const SizedBox(height: 16),
-          _buildCourseSection('Faculdade de Ciências Médicas', [
-            'Fisioterapia',
-            'Odontologia',
-            'Enfermagem',
+          _buildCourseSection('Faculdade de Ciências Biológicas', [
+            'Biomedicina',
+            'Ciências Biológicas',
+            'Ecologia',
           ]),
           const SizedBox(height: 16),
           _buildCourseSection('Faculdade de Engenharia', [
-            'Engenharia Elétrica',
-            'Engenharia de Computação',
-            'Engenharia Química',
+            'Engenharia Civil',
+            'Engenharia Mecânica',
+            'Engenharia de Produção',
           ]),
           const SizedBox(height: 16),
-          _buildCourseSection('Faculdade de Artes', [
-            'Artes Visuais',
-            'Música',
-            'Dança',
+          _buildCourseSection('Faculdade de Humanidades', [
+            'Filosofia',
+            'História',
+            'Geografia',
           ]),
           const SizedBox(height: 16),
-          _buildLink('Veja a lista completa de cursos da Unicamp', '#'),
+          _buildLink('Veja a lista completa de cursos da Unesp', '#'),
         ],
       ),
     );
@@ -423,7 +431,7 @@ class OutrosCursosTab extends StatelessWidget {
         text,
         style: const TextStyle(
           fontSize: 16,
-          color: Colors.blue,
+          color: Colors.purple,
           decoration: TextDecoration.underline,
         ),
       ),
@@ -458,7 +466,7 @@ class SobreUniversidadeTab extends StatelessWidget {
           ),
           const SizedBox(height: 8.0),
           GestureDetector(
-            onTap: () {}, // Implementar lógica de abrir mapas
+            onTap: () {},
             child: Container(
               decoration: BoxDecoration(
                 border: Border.all(color: Colors.purple),
@@ -467,32 +475,19 @@ class SobreUniversidadeTab extends StatelessWidget {
               child: Column(
                 children: [
                   Image.asset(
-                    'assets/unicamp_map.png',
+                    'assets/unesp_map.png',
                     fit: BoxFit.cover,
                   ),
                   const Padding(
                     padding: EdgeInsets.all(8.0),
                     child: Text(
-                      'Universidade Estadual de Campinas\nInstituição de ensino superior',
+                      'Universidade Estadual Paulista (UNESP)\nInstituição pública de ensino superior',
                       style: TextStyle(fontSize: 14.0),
                     ),
                   ),
                 ],
               ),
             ),
-          ),
-          const SizedBox(height: 20.0),
-          const Text(
-            'Sobre a Universidade',
-            style: TextStyle(
-                fontSize: 18.0,
-                fontWeight: FontWeight.bold,
-                color: Colors.purple),
-          ),
-          const SizedBox(height: 8.0),
-          const Text(
-            'A Unicamp responde por 8% da pesquisa acadêmica no Brasil, 12% da pós-graduação nacional...',
-            style: TextStyle(fontSize: 14.0),
           ),
         ],
       ),

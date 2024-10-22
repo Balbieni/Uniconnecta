@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:uniconnecta/components/components.dart';
-import 'pages.dart';
-import 'package:uniconnecta/auth_service.dart';
+import 'package:uniconnecta/pages/register_page.dart';
 import 'home_screen.dart';
+import 'profile_screen.dart';
+import 'package:uniconnecta/auth_service.dart'; // Certifique-se que este arquivo está configurado corretamente
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({Key? key}) : super(key: key);
@@ -15,19 +17,38 @@ class LoginScreen extends StatefulWidget {
 class _LoginScreenState extends State<LoginScreen> {
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
+  final FirebaseAuth _auth = FirebaseAuth.instance;
+  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
+  // Função de login com email e senha
   Future<void> _loginWithEmail() async {
     try {
-      UserCredential userCredential =
-          await FirebaseAuth.instance.signInWithEmailAndPassword(
+      UserCredential userCredential = await _auth.signInWithEmailAndPassword(
         email: _emailController.text,
         password: _passwordController.text,
       );
 
-      Navigator.push(
-        context,
-        MaterialPageRoute(builder: (context) => HomeScreen()),
-      );
+      // Recupera o UID do usuário autenticado
+      User? user = userCredential.user;
+      if (user != null) {
+        // Verifica se o documento do usuário existe no Firestore
+        DocumentSnapshot userDoc =
+            await _firestore.collection('users').doc(user.uid).get();
+
+        if (userDoc.exists) {
+          // Navega para a HomeScreen (ou qualquer outra tela de destino)
+          Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(builder: (context) => HomeScreen()),
+          );
+        } else {
+          // Se o usuário não tem dados no Firestore, redireciona para a tela de edição de perfil
+          Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(builder: (context) => EditProfileScreen()),
+          );
+        }
+      }
     } on FirebaseAuthException catch (e) {
       String errorMessage;
       switch (e.code) {
@@ -49,14 +70,28 @@ class _LoginScreenState extends State<LoginScreen> {
     }
   }
 
+  // Função de login com Google
   Future<void> _loginWithGoogle() async {
     try {
       User? user = await AuthService().signInWithGoogle();
       if (user != null) {
-        Navigator.push(
-          context,
-          MaterialPageRoute(builder: (context) => HomeScreen()),
-        );
+        // Verifica se o documento do usuário existe no Firestore
+        DocumentSnapshot userDoc =
+            await _firestore.collection('users').doc(user.uid).get();
+
+        if (userDoc.exists) {
+          // Navega para a HomeScreen
+          Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(builder: (context) => HomeScreen()),
+          );
+        } else {
+          // Se o usuário é novo, navega para a tela de edição de perfil
+          Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(builder: (context) => EditProfileScreen()),
+          );
+        }
       } else {
         _showErrorDialog(
             'Falha no login', 'Não foi possível realizar o login com Google.');
@@ -66,6 +101,7 @@ class _LoginScreenState extends State<LoginScreen> {
     }
   }
 
+  // Função de redefinir senha
   void _resetPassword() {
     if (_emailController.text.isNotEmpty) {
       FirebaseAuth.instance

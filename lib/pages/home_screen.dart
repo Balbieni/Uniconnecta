@@ -5,6 +5,7 @@ import 'package:uniconnecta/pages/convest.dart';
 import 'package:uniconnecta/pages/best_rated.dart';
 import 'package:uniconnecta/pages/entrance_exams.dart'; // Corrigido o nome do arquivo
 import 'package:uniconnecta/pages/enem.dart';
+import 'package:uniconnecta/pages/mackenzie.dart';
 import 'package:uniconnecta/pages/pages.dart';
 import 'package:uniconnecta/pages/search_page.dart';
 import 'package:uniconnecta/pages/news_screen.dart';
@@ -14,6 +15,8 @@ import 'package:uniconnecta/components/favorites_model.dart'; // Modelo de favor
 import 'package:uniconnecta/components/class_of_model.dart';
 import 'package:uniconnecta/components/university_header.dart';
 import 'package:uniconnecta/components/entrance_exam_header.dart';
+import 'package:uniconnecta/pages/unesp.dart';
+import 'package:uniconnecta/pages/unimetrocamp.dart';
 
 class CarouselItem {
   final String imagePath;
@@ -377,28 +380,150 @@ class _HomeScreenContentState extends State<HomeScreenContent> {
           );
         },
       ),
+      CarouselItem(
+        imagePath: 'lib/assets/unesp.png',
+        title: 'Unesp',
+        rating: 4.8,
+        subtitle: 'Universidade renomada',
+        tag: 'Ver mais',
+        distance: _calculateDistance(-23.524279776770072, -46.66545861539335),
+        isVestibular: false, // Identificamos como Universidade
+        onTap: () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => Unesp(
+                title: 'Unesp',
+                subtitle: 'Inscrições abertas',
+              ),
+            ),
+          );
+        },
+      ),
+      CarouselItem(
+        imagePath: 'lib/assets/mackenzie.png',
+        title: 'Mackenzie',
+        rating: 4.6,
+        subtitle: 'Universidade renomada',
+        tag: 'Ver mais',
+        distance: _calculateDistance(-22.885506617749286, -47.06840751013286),
+        isVestibular: false, // Identificamos como Universidade
+        onTap: () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => Mackenzie(
+                title: 'Mackenzie',
+                subtitle: 'Inscrições abertas',
+              ),
+            ),
+          );
+        },
+      ),
+      CarouselItem(
+        imagePath: 'lib/assets/unimetrocamp.png',
+        title: 'Unimetrocamp',
+        rating: 4.2,
+        subtitle: 'Universidade renomada',
+        tag: 'Ver mais',
+        distance: _calculateDistance(-22.9086257044818, -47.07593050657596),
+        isVestibular: false, // Identificamos como Universidade
+        onTap: () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => Unimetrocamp(
+                title: 'Unimetrocamp',
+                subtitle: 'Inscrições abertas',
+              ),
+            ),
+          );
+        },
+      ),
     ];
   }
 
   List<CarouselItem> maisProximosItems(BuildContext context) {
     return [
       CarouselItem(
-        imagePath: 'lib/assets/faculty.png',
-        title: 'Faculdade Mais Próxima 1',
-        rating: 4.0,
-        subtitle: 'Próxima de você',
+        imagePath: 'lib/assets/unicamp_logo.png',
+        title: 'Unicamp',
+        rating: 4.6,
+        subtitle: 'Universidade renomada',
         tag: 'Ver mais',
-        distance: _calculateDistance(-23.5505, -46.6333),
+        distance: _calculateDistance(-22.820833, -47.066476),
         isVestibular: false, // Identificamos como Universidade
+        onTap: () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => Unicamp(
+                title: 'Unicamp',
+                subtitle: 'Inscrições abertas',
+              ),
+            ),
+          );
+        },
       ),
       CarouselItem(
-        imagePath: 'lib/assets/faculty.png',
-        title: 'Faculdade Mais Próxima 2',
-        rating: 3.8,
-        subtitle: 'Próxima de você',
+        imagePath: 'lib/assets/unesp.png',
+        title: 'Unesp',
+        rating: 4.8,
+        subtitle: 'Universidade renomada',
         tag: 'Ver mais',
-        distance: _calculateDistance(-23.5511, -46.6345),
+        distance: _calculateDistance(-23.524279776770072, -46.66545861539335),
         isVestibular: false, // Identificamos como Universidade
+        onTap: () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => Unesp(
+                title: 'Unesp',
+                subtitle: 'Inscrições abertas',
+              ),
+            ),
+          );
+        },
+      ),
+      CarouselItem(
+        imagePath: 'lib/assets/mackenzie.png',
+        title: 'Mackenzie',
+        rating: 4.6,
+        subtitle: 'Universidade renomada',
+        tag: 'Ver mais',
+        distance: _calculateDistance(-22.885506617749286, -47.06840751013286),
+        isVestibular: false, // Identificamos como Universidade
+        onTap: () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => Mackenzie(
+                title: 'Mackenzie',
+                subtitle: 'Inscrições abertas',
+              ),
+            ),
+          );
+        },
+      ),
+      CarouselItem(
+        imagePath: 'lib/assets/unimetrocamp.png',
+        title: 'Unimetrocamp',
+        rating: 4.2,
+        subtitle: 'Universidade renomada',
+        tag: 'Ver mais',
+        distance: _calculateDistance(-22.9086257044818, -47.07593050657596),
+        isVestibular: false, // Identificamos como Universidade
+        onTap: () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => Unimetrocamp(
+                title: 'Unimetrocamp',
+                subtitle: 'Inscrições abertas',
+              ),
+            ),
+          );
+        },
       ),
     ];
   }
