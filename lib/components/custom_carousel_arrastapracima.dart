@@ -8,6 +8,7 @@ class CarouselItem {
   final String subtitle;
   final String tag;
   final String distance;
+  final Function() onTap; // Adicione esta linha
 
   CarouselItem({
     required this.imagePath,
@@ -16,7 +17,7 @@ class CarouselItem {
     required this.subtitle,
     required this.tag,
     required this.distance,
-    required Null Function() onTap,
+    required this.onTap, // Mova este parâmetro para cá
   });
 }
 
@@ -24,12 +25,10 @@ class CarouselItem {
 class CustomVerticalCarousel extends StatelessWidget {
   final List<CarouselItem> items;
   final bool isVestibulares;
-  final Function(CarouselItem) onItemTap;
 
   CustomVerticalCarousel({
     required this.items,
     this.isVestibulares = false,
-    required this.onItemTap,
   });
 
   @override
@@ -44,7 +43,7 @@ class CustomVerticalCarousel extends StatelessWidget {
             return CarouselCard(
               item: items[index],
               isVestibulares: isVestibulares,
-              onTap: () => onItemTap(items[index]), // Ação ao clicar no item
+              onTap: items[index].onTap, // Ação ao clicar no item
             );
           },
         ),
@@ -57,7 +56,7 @@ class CustomVerticalCarousel extends StatelessWidget {
 class CarouselCard extends StatelessWidget {
   final CarouselItem item;
   final bool isVestibulares;
-  final VoidCallback onTap; // Função para tratar o clique no item
+  final VoidCallback onTap;
 
   CarouselCard({
     required this.item,
@@ -86,8 +85,8 @@ class CarouselCard extends StatelessWidget {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Image.asset(item.imagePath, height: 50), // Imagem
-                    FavoriteButton(), // Botão de favorito
+                    Image.asset(item.imagePath, height: 50),
+                    FavoriteButton(),
                   ],
                 ),
                 SizedBox(height: 20),

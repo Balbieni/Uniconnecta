@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:uniconnecta/components/class_of_model.dart';
 import 'package:uniconnecta/components/favorites_model.dart';
 import 'package:uniconnecta/pages/convest.dart';
 import 'package:uniconnecta/pages/enem.dart';
 import 'package:uniconnecta/pages/mackenzie.dart';
+import 'package:uniconnecta/pages/news_screen.dart';
 import 'package:uniconnecta/pages/news_screen.dart';
 import 'package:uniconnecta/pages/pages.dart';
 import 'package:uniconnecta/pages/unesp.dart';
@@ -61,43 +63,7 @@ class FavoritesScreen extends StatelessWidget {
         final universidade = favoritesModel.favoriteUniversities[index];
         return GestureDetector(
           onTap: () {
-            // Verifique o nome da universidade favoritada e navegue para a página correta
-            if (universidade.nome == "Unicamp") {
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => Unicamp(
-                    title: "Unicamp",
-                    subtitle:
-                        "Universidade renomada", // Passe o subtítulo corretamente
-                  ),
-                ),
-              );
-            }
-            if (universidade.nome == "Unesp") {
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => Unesp(
-                    title: "Unesp",
-                    subtitle:
-                        "Universidade renomada", // Passe o subtítulo corretamente
-                  ),
-                ),
-              );
-            }
-            if (universidade.nome == "Mackenzie") {
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => Mackenzie(
-                    title: "Mackenzie",
-                    subtitle:
-                        "Universidade renomada", // Passe o subtítulo corretamente
-                  ),
-                ),
-              );
-            }
+            _navigateToUniversityDetails(context, universidade);
           },
           child: Card(
             shape: RoundedRectangleBorder(
@@ -124,18 +90,7 @@ class FavoritesScreen extends StatelessWidget {
                             style: TextStyle(color: Colors.grey)),
                         Row(
                           children: [
-                            Icon(Icons.star,
-                                color: Colors.yellow[700], size: 16),
-                            Icon(Icons.star,
-                                color: Colors.yellow[700], size: 16),
-                            Icon(Icons.star,
-                                color: Colors.yellow[700], size: 16),
-                            Icon(Icons.star,
-                                color: Colors.yellow[700], size: 16),
-                            Icon(Icons.star_border,
-                                color: Colors.grey, size: 16),
-                            SizedBox(width: 8),
-                            Text("4.5"),
+                            buildRatingStars(universidade.avaliacao),
                           ],
                         ),
                       ],
@@ -149,7 +104,8 @@ class FavoritesScreen extends StatelessWidget {
                           favoritesModel.removeUniversityFavorite(universidade);
                         },
                       ),
-                      Text("50Km", style: TextStyle(color: Colors.grey)),
+                      Text("${universidade.distancia}Km",
+                          style: TextStyle(color: Colors.grey)),
                     ],
                   )
                 ],
@@ -161,7 +117,37 @@ class FavoritesScreen extends StatelessWidget {
     );
   }
 
-  // Lista de vestibulares favoritos
+  // Função para navegação para os detalhes da universidade
+  void _navigateToUniversityDetails(
+      BuildContext context, Universidade universidade) {
+    if (universidade.nome == "Unicamp") {
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) =>
+              Unicamp(title: "Unicamp", subtitle: "Universidade renomada"),
+        ),
+      );
+    } else if (universidade.nome == "Unesp") {
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) =>
+              Unesp(title: "Unesp", subtitle: "Universidade renomada"),
+        ),
+      );
+    } else if (universidade.nome == "Mackenzie") {
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) =>
+              Mackenzie(title: "Mackenzie", subtitle: "Universidade renomada"),
+        ),
+      );
+    }
+  }
+
+// Lista de vestibulares favoritos (modificado)
   Widget _buildVestibularList(
       FavoritesModel favoritesModel, BuildContext context) {
     return ListView.builder(
@@ -171,34 +157,12 @@ class FavoritesScreen extends StatelessWidget {
         final vestibular = favoritesModel.favoriteVestibulares[index];
         return GestureDetector(
           onTap: () {
-            if (vestibular.nome == "Convest") {
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => Convest(
-                    title: "Convest",
-                    subtitle: "Inscrições abertas",
-                  ),
-                ),
-              );
-            }
-            if (vestibular.nome == "enem") {
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => Enem(
-                    title: "Enem",
-                    subtitle: "Inscrições abertas",
-                  ),
-                ),
-              );
-            }
+            _navigateToVestibularDetails(context, vestibular);
           },
           child: Card(
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(10),
-            ),
             elevation: 3,
+            shape:
+                RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
             margin: EdgeInsets.only(bottom: 16),
             child: Padding(
               padding: const EdgeInsets.all(16.0),
@@ -215,44 +179,15 @@ class FavoritesScreen extends StatelessWidget {
                           style: TextStyle(
                               fontSize: 16, fontWeight: FontWeight.bold),
                         ),
-                        SizedBox(height: 8),
-                        Row(
-                          children: [
-                            Icon(Icons.star, color: Colors.purple, size: 16),
-                            Icon(Icons.star, color: Colors.purple, size: 16),
-                            Icon(Icons.star, color: Colors.purple, size: 16),
-                            Icon(Icons.star, color: Colors.purple, size: 16),
-                            Icon(Icons.star_half,
-                                color: Colors.purple, size: 16),
-                            SizedBox(width: 8),
-                            Text("4.5"),
-                          ],
-                        ),
+                        buildRatingStars(vestibular.avaliacao),
                       ],
                     ),
                   ),
-                  Column(
-                    children: [
-                      IconButton(
-                        icon: Icon(Icons.favorite, color: Colors.purple),
-                        onPressed: () {
-                          favoritesModel.removeVestibularFavorite(vestibular);
-                        },
-                      ),
-                      SizedBox(height: 8),
-                      ElevatedButton(
-                        onPressed: () {
-                          // Ação de inscrição
-                        },
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: Colors.purple,
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(20),
-                          ),
-                        ),
-                        child: Text("Inscrições abertas"),
-                      ),
-                    ],
+                  IconButton(
+                    icon: Icon(Icons.favorite, color: Colors.purple),
+                    onPressed: () {
+                      favoritesModel.removeVestibularFavorite(vestibular);
+                    },
                   ),
                 ],
               ),
@@ -263,60 +198,65 @@ class FavoritesScreen extends StatelessWidget {
     );
   }
 
+  // Função para navegação para os detalhes do vestibular
+  void _navigateToVestibularDetails(
+      BuildContext context, Vestibular vestibular) {
+    if (vestibular.nome == "Convest") {
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) =>
+              Convest(title: "Convest", subtitle: "Inscrições abertas"),
+        ),
+      );
+    } else if (vestibular.nome == "Enem") {
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) =>
+              Enem(title: "Enem", subtitle: "Inscrições abertas"),
+        ),
+      );
+    }
+  }
+
   // Lista de notícias favoritas
   Widget _buildNewsList(FavoritesModel favoritesModel, BuildContext context) {
-    return ListView.builder(
-      padding: EdgeInsets.all(16),
-      itemCount: favoritesModel.favoriteNews.length,
-      itemBuilder: (context, index) {
-        final noticia = favoritesModel.favoriteNews[index];
-        return GestureDetector(
-          onTap: () {
-            Navigator.push(
-              context,
-              MaterialPageRoute(
-                builder: (context) => NewsScreen(),
-              ),
-            );
-          },
-          child: Card(
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(10),
-            ),
-            elevation: 3,
-            margin: EdgeInsets.only(bottom: 16),
-            child: Padding(
-              padding: const EdgeInsets.all(16.0),
-              child: Row(
-                children: [
-                  Image.asset(noticia['image']!, height: 50, width: 50),
-                  SizedBox(width: 16),
-                  Expanded(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          noticia['title']!,
-                          style: TextStyle(
-                              fontSize: 16, fontWeight: FontWeight.bold),
-                        ),
-                        Text(noticia['date']!,
-                            style: TextStyle(color: Colors.grey)),
-                      ],
-                    ),
-                  ),
-                  IconButton(
-                    icon: Icon(Icons.delete, color: Colors.red),
-                    onPressed: () {
-                      favoritesModel.removeNewsFavorite(noticia);
-                    },
-                  ),
-                ],
-              ),
-            ),
-          ),
+    // Cria uma instância de NewsScreen
+    final newsScreen = NewsScreen();
+
+    return ListView(
+      padding: EdgeInsets.all(8),
+      children: favoritesModel.favoriteNews.map((noticia) {
+        // Usa a instância criada para chamar o método noticiaCard
+        return newsScreen.noticiaCard(
+          context,
+          favoritesModel,
+          noticia['image']!,
+          noticia['title']!,
+          noticia['date']!,
+          noticia['description']!,
+          noticia['url']!,
         );
-      },
+      }).toList(),
+    );
+  }
+
+  // Função para exibir estrelas de avaliação
+  Widget buildRatingStars(double rating) {
+    int fullStars = rating.floor();
+    int halfStars = (rating - fullStars >= 0.5) ? 1 : 0;
+    int emptyStars = 5 - fullStars - halfStars;
+
+    return Row(
+      children: [
+        ...List.generate(fullStars,
+            (index) => Icon(Icons.star, color: Colors.purple, size: 16)),
+        if (halfStars > 0)
+          Icon(Icons.star_half, color: Colors.purple, size: 16),
+        ...List.generate(emptyStars,
+            (index) => Icon(Icons.star_border, color: Colors.purple, size: 16)),
+      ],
     );
   }
 }

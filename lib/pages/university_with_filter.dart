@@ -13,7 +13,7 @@ import 'package:uniconnecta/pages/unesp.dart';
 import 'package:uniconnecta/pages/unimetrocamp.dart';
 
 class UniversityWithFilter extends StatefulWidget {
-  final String filterType; // Recebe o tipo de filtro (Presencial, Online, etc.)
+  final String filterType;
 
   UniversityWithFilter({required this.filterType});
 
@@ -22,9 +22,8 @@ class UniversityWithFilter extends StatefulWidget {
 }
 
 class _UniversityWithFilterState extends State<UniversityWithFilter> {
-  int _selectedIndex = 0;
+  int selectedIndex = 0;
 
-  // Lista de páginas do BottomNavigationBar
   final List<Widget> _pages = [
     HomeScreen(),
     SearchPage(),
@@ -33,13 +32,11 @@ class _UniversityWithFilterState extends State<UniversityWithFilter> {
     ProfileScreen(),
   ];
 
-  // Lista completa de universidades
   List<carousel_comp.CarouselItem> allUniversities = [];
 
   @override
   void initState() {
     super.initState();
-    // Inicializa a lista de universidades
     allUniversities = [
       carousel_comp.CarouselItem(
         imagePath: 'lib/assets/unicamp_logo.png',
@@ -123,26 +120,26 @@ class _UniversityWithFilterState extends State<UniversityWithFilter> {
   // Função para aplicar o filtro nas universidades
   List<carousel_comp.CarouselItem> _getFilteredUniversities() {
     return allUniversities
-        .where((university) => university.tag == widget.filterType)
-        .toList(); // Filtra com base no tipo de filtro (tag)
+        .where((university) => university.title
+            .toLowerCase()
+            .contains(widget.filterType.toLowerCase()))
+        .toList();
   }
 
-  // Função para gerenciar a navegação no BottomNavigationBar
   void _onItemTapped(int index) {
     setState(() {
-      _selectedIndex = index;
+      selectedIndex = index;
     });
   }
 
   @override
   Widget build(BuildContext context) {
-    // Filtra as universidades com base no filtro recebido
     List<carousel_comp.CarouselItem> filteredUniversities =
         _getFilteredUniversities();
 
     return Scaffold(
       backgroundColor: Colors.white,
-      body: _selectedIndex == 0
+      body: selectedIndex == 0
           ? Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -167,20 +164,10 @@ class _UniversityWithFilterState extends State<UniversityWithFilter> {
                 Expanded(
                   child: Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 16.0),
-                    // Exibe as universidades filtradas no carrossel
                     child: filteredUniversities.isNotEmpty
                         ? carousel_comp.CustomVerticalCarousel(
                             items: filteredUniversities,
                             isVestibulares: true, // Configura como vestibular
-                            onItemTap: (carousel_comp.CarouselItem item) {
-                              // Navegação para página de detalhes
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (context) => DetailPage(item: item),
-                                ),
-                              );
-                            },
                           )
                         : Center(
                             child: Text(
@@ -192,7 +179,7 @@ class _UniversityWithFilterState extends State<UniversityWithFilter> {
                 ),
               ],
             )
-          : _pages[_selectedIndex], // Exibe a página correspondente
+          : _pages[selectedIndex],
       bottomNavigationBar: BottomNavigationBar(
         items: const [
           BottomNavigationBarItem(
@@ -216,16 +203,14 @@ class _UniversityWithFilterState extends State<UniversityWithFilter> {
             label: 'Perfil',
           ),
         ],
-        currentIndex: _selectedIndex,
         selectedItemColor: Colors.purple,
-        unselectedItemColor: Colors.grey,
+        currentIndex: selectedIndex,
         onTap: _onItemTapped,
       ),
     );
   }
 }
 
-// Página de detalhes para cada universidade
 class DetailPage extends StatelessWidget {
   final carousel_comp.CarouselItem item;
 

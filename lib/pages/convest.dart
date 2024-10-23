@@ -15,9 +15,11 @@ class Convest extends StatefulWidget {
   final String title;
   final String subtitle;
 
-  Convest({Key? key, required this.title, required this.subtitle})
-      : super(key: key);
-
+  const Convest({
+    Key? key,
+    this.title = 'Convest',
+    this.subtitle = '',
+  }) : super(key: key);
   @override
   _ConvestState createState() => _ConvestState();
 }

@@ -252,15 +252,6 @@ class _ClosestState extends State<Closest> {
                         child: carousel_comp.CustomVerticalCarousel(
                           items: maisProximosItems(context),
                           isVestibulares: true,
-                          onItemTap: (carousel_comp.CarouselItem item) {
-                            // Navegação para a página de detalhes
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) => DetailPage(item: item),
-                              ),
-                            );
-                          },
                         ),
                       ),
                     ),

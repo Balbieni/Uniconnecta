@@ -34,22 +34,14 @@ class _EntranceExamsState extends State<EntranceExams> {
     // Inicializa a lista de universidades
     maisProximosItems = [
       carousel_comp.CarouselItem(
-        imagePath: 'lib/assets/convest_logo.png',
+        imagePath: 'lib/assets/Convest.png',
         title: 'Convest',
-        rating: 4.5,
+        rating: 4.0,
         subtitle: '',
-        tag: '',
+        tag: 'Inscrições abertas',
         distance: 'N/A',
         onTap: () {
-          Navigator.push(
-            context,
-            MaterialPageRoute(
-              builder: (context) => Convest(
-                title: 'Convest',
-                subtitle: 'Inscrições abertas',
-              ),
-            ),
-          );
+          Navigator.pushNamed(context, '/convest'); // Usando rotas nomeadas
         },
       ),
       carousel_comp.CarouselItem(
@@ -60,15 +52,7 @@ class _EntranceExamsState extends State<EntranceExams> {
         tag: 'Inscrições abertas',
         distance: 'N/A',
         onTap: () {
-          Navigator.push(
-            context,
-            MaterialPageRoute(
-              builder: (context) => Enem(
-                title: 'Enem',
-                subtitle: 'Inscrições abertas',
-              ),
-            ),
-          );
+          Navigator.pushNamed(context, '/enem'); // Usando rotas nomeadas
         },
       ),
     ];
@@ -112,15 +96,6 @@ class _EntranceExamsState extends State<EntranceExams> {
                     child: carousel_comp.CustomVerticalCarousel(
                       items: maisProximosItems,
                       isVestibulares: true,
-                      onItemTap: (item) {
-                        // Navega para a DetailPage ao clicar no item
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => DetailPage(item: item),
-                          ),
-                        );
-                      },
                     ),
                   ),
                 ),
@@ -154,45 +129,6 @@ class _EntranceExamsState extends State<EntranceExams> {
         selectedItemColor: Colors.purple,
         unselectedItemColor: Colors.grey,
         onTap: _onItemTapped,
-      ),
-    );
-  }
-}
-
-class DetailPage extends StatelessWidget {
-  final carousel_comp.CarouselItem item;
-
-  DetailPage({required this.item});
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text(item.title),
-        backgroundColor: Colors.white,
-      ),
-      body: Center(
-        child: Column(
-          children: [
-            Image.asset(item.imagePath),
-            Text(
-              'Detalhes sobre ${item.title}',
-              style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
-            ),
-            Text(
-              'Curso: ${item.subtitle}',
-              style: TextStyle(fontSize: 16),
-            ),
-            Text(
-              'Distância: ${item.distance}',
-              style: TextStyle(fontSize: 16),
-            ),
-            Text(
-              'Tag: ${item.tag}',
-              style: TextStyle(fontSize: 16),
-            ),
-          ],
-        ),
       ),
     );
   }

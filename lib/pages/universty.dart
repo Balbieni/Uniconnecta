@@ -155,15 +155,6 @@ class _UniversityState extends State<University> {
                     child: carousel_comp.CustomVerticalCarousel(
                       items: universityItems,
                       isVestibulares: true,
-                      onItemTap: (carousel_comp.CarouselItem item) {
-                        // Navegação para a página de detalhes
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => DetailPage(item: item),
-                          ),
-                        );
-                      },
                     ),
                   ),
                 ),

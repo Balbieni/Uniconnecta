@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart'; // Para acessar o FavoritesModel
+import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart';
-import 'package:uniconnecta/components/favorites_model.dart'; // Modelo de favoritos
+import 'package:uniconnecta/components/favorites_model.dart';
 
 class NewsScreen extends StatelessWidget {
   @override
@@ -9,50 +9,30 @@ class NewsScreen extends StatelessWidget {
     return DefaultTabController(
       length: 4, // Número de abas
       child: Scaffold(
-        body: Column(
+        appBar: AppBar(
+          title: Text('Notícias'),
+          bottom: TabBar(
+            labelColor: Colors.purple,
+            unselectedLabelColor: Colors.grey,
+            indicatorColor: Colors.purple,
+            tabs: [
+              Tab(text: 'Recentes'),
+              Tab(text: 'Vestibulares'),
+              Tab(text: 'Atualidades'),
+            ],
+          ),
+        ),
+        body: TabBarView(
           children: [
-            // Adicionando o título "Notícias"
-            Padding(
-              padding: const EdgeInsets.only(top: 40.0, bottom: 10.0),
-              child: Text(
-                'Notícias',
-                style: TextStyle(
-                  fontSize: 24,
-                  fontWeight: FontWeight.bold,
-                  color: Colors.black87,
-                ),
-              ),
-            ),
-            // Criando as Tabs
-            TabBar(
-              labelColor: Colors.purple,
-              unselectedLabelColor: Colors.grey,
-              indicatorColor: Colors.purple,
-              tabs: [
-                Tab(text: 'Recentes'),
-                Tab(text: 'Vestibulares'),
-                Tab(text: 'Atualidades'),
-                Tab(text: 'Relacionados aos favoritos'),
-              ],
-            ),
-            Expanded(
-              // Exibindo o conteúdo baseado na Tab ativa
-              child: TabBarView(
-                children: [
-                  noticiasListView(context, 'Recentes'),
-                  noticiasListView(context, 'Vestibulares'),
-                  noticiasListView(context, 'Atualidades'),
-                  noticiasListView(context, 'Relacionados aos favoritos'),
-                ],
-              ),
-            ),
+            noticiasListView(context, 'Recentes'),
+            noticiasListView(context, 'Vestibulares'),
+            noticiasListView(context, 'Atualidades'),
           ],
         ),
       ),
     );
   }
 
-  // Retorna uma lista de notícias específica para cada aba
   Widget noticiasListView(BuildContext context, String tab) {
     final favoritesModel = Provider.of<FavoritesModel>(context);
     List<Map<String, String>> noticias;
@@ -114,11 +94,6 @@ class NewsScreen extends StatelessWidget {
           },
         ];
         break;
-
-      case 'Relacionados aos favoritos':
-        noticias = favoritesModel.favoriteNews; // Pega as notícias favoritedas
-        break;
-
       default:
         noticias = [];
     }
@@ -129,6 +104,7 @@ class NewsScreen extends StatelessWidget {
         children: noticias.map((noticia) {
           return noticiaCard(
             context,
+            favoritesModel, // Passando o FavoritesModel como parâmetro
             noticia['image']!,
             noticia['title']!,
             noticia['date']!,
@@ -140,10 +116,14 @@ class NewsScreen extends StatelessWidget {
     );
   }
 
-  Widget noticiaCard(BuildContext context, String imageUrl, String title,
-      String date, String description, String url) {
-    final favoritesModel = Provider.of<FavoritesModel>(context);
-
+  Widget noticiaCard(
+      BuildContext context,
+      FavoritesModel favoritesModel,
+      String imageUrl,
+      String title,
+      String date,
+      String description,
+      String url) {
     // Criação do objeto notícia para manipulação no modelo de favoritos
     final noticia = {
       'title': title,
@@ -154,9 +134,8 @@ class NewsScreen extends StatelessWidget {
     };
 
     final isFavorited = favoritesModel.isNewsFavorite(noticia);
-
     return GestureDetector(
-      onTap: () => _launchURL(url), // Função para abrir o link da notícia
+      onTap: () => _launchURL(url),
       child: Card(
         elevation: 3,
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
@@ -222,7 +201,7 @@ class NewsScreen extends StatelessWidget {
   }
 
   void _launchURL(String url) async {
-    Uri uri = Uri.parse(url);
+    final uri = Uri.parse(url);
     if (await canLaunchUrl(uri)) {
       await launchUrl(uri);
     } else {

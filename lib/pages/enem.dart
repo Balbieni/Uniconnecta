@@ -14,8 +14,11 @@ class Enem extends StatefulWidget {
   final String title;
   final String subtitle;
 
-  Enem({Key? key, required this.title, required this.subtitle})
-      : super(key: key);
+  const Enem({
+    Key? key,
+    this.title = 'Enem',
+    this.subtitle = '',
+  }) : super(key: key);
 
   @override
   _EnemState createState() => _EnemState();

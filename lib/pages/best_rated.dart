@@ -155,15 +155,6 @@ class _BestRatedState extends State<BestRated> {
                     child: carousel_comp.CustomVerticalCarousel(
                       items: bestRatedItems,
                       isVestibulares: true,
-                      onItemTap: (carousel_comp.CarouselItem item) {
-                        // Navegação para a página de detalhes
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => DetailPage(item: item),
-                          ),
-                        );
-                      },
                     ),
                   ),
                 ),

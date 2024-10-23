@@ -169,15 +169,6 @@ class _CoursesState extends State<Courses> {
                         ? carousel_comp.CustomVerticalCarousel(
                             items: filteredCourses,
                             isVestibulares: false, // Define como cursos
-                            onItemTap: (carousel_comp.CarouselItem item) {
-                              // Ação ao tocar no curso
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (context) => DetailPage(item: item),
-                                ),
-                              );
-                            },
                           )
                         : Center(
                             child: Text(

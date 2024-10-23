@@ -1,6 +1,8 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:uniconnecta/pages/convest.dart';
+import 'package:uniconnecta/pages/enem.dart';
 import 'package:uniconnecta/pages/pages.dart';
 import 'package:uniconnecta/pages/want_to_go_to_college.dart';
 import 'package:uniconnecta/components/favorites_model.dart'; // Adicione o arquivo favorites_model.dart
@@ -74,6 +76,8 @@ class _uniconnectaState extends State<uniconnecta> {
         routes: {
           '/': (context) => const SplashScreen(),
           'want_to_go_to_college': (context) => const want_to_go_to_college(),
+          '/convest': (context) => Convest(),
+          '/enem': (context) => Enem(),
         },
       ),
     );

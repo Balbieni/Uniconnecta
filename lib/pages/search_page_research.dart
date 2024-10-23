@@ -1,5 +1,13 @@
 import 'package:flutter/material.dart';
-import 'filter.dart'; // Importação da tela de filtro
+import 'package:geolocator/geolocator.dart';
+import 'package:uniconnecta/pages/convest.dart';
+import 'package:uniconnecta/pages/enem.dart';
+import 'package:uniconnecta/pages/filter.dart';
+import 'package:uniconnecta/pages/mackenzie.dart';
+import 'package:uniconnecta/pages/pages.dart';
+import 'package:uniconnecta/pages/unesp.dart';
+import 'dart:math';
+import 'package:uniconnecta/pages/unimetrocamp.dart';
 
 // Classe para o item do Carousel
 class CarouselItem {
@@ -7,7 +15,7 @@ class CarouselItem {
   final String title;
   final String subtitle;
   final ValueNotifier<bool> isFavorited;
-  final double distance;
+  final String distance; // Mudado para String
   final VoidCallback? onTap;
   final String tag;
   final double rating;
@@ -37,7 +45,9 @@ class FilterButton extends StatelessWidget {
         // Navega para a tela de filtro
         Navigator.push(
           context,
-          MaterialPageRoute(builder: (context) => filter()),
+          MaterialPageRoute(
+              builder: (context) =>
+                  filter()), // Certifique-se de que FilterScreen está definido
         );
       },
       style: ElevatedButton.styleFrom(
@@ -57,50 +67,230 @@ class SearchPageResearch extends StatefulWidget {
 }
 
 class _SearchPageResearchState extends State<SearchPageResearch> {
-  int _selectedIndex =
-      1; // Indica que a tela de busca está ativa na barra inferior
+  int _selectedIndex = 1;
   TextEditingController _searchController = TextEditingController();
   List<CarouselItem> _items = [];
   List<CarouselItem> _filteredItems = [];
+  Position? _currentPosition; // Adicionado
 
   @override
   void initState() {
     super.initState();
-    // Exemplo de itens
+    _getCurrentLocation();
+    _initializeItems(); // Método separado para inicializar os itens
+  }
+
+  Future<void> _getCurrentLocation() async {
+    bool serviceEnabled;
+    LocationPermission permission;
+
+    serviceEnabled = await Geolocator.isLocationServiceEnabled();
+    if (!serviceEnabled) {
+      return;
+    }
+
+    permission = await Geolocator.checkPermission();
+    if (permission == LocationPermission.denied) {
+      permission = await Geolocator.requestPermission();
+      if (permission == LocationPermission.denied) {
+        return;
+      }
+    }
+
+    if (permission == LocationPermission.deniedForever) {
+      return;
+    }
+
+    Position position = await Geolocator.getCurrentPosition(
+        desiredAccuracy: LocationAccuracy.high);
+
+    setState(() {
+      _currentPosition = position;
+    });
+    if (_currentPosition == null) {
+      // Se a posição atual ainda é null, você pode querer mostrar uma mensagem ou um indicador de carregamento
+      // Por exemplo, você pode usar um SnackBar ou um diálogo para informar o usuário.
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Não foi possível obter a localização.')),
+      );
+    }
+  }
+
+  double _calculateDistance(
+      double lat1, double lon1, double lat2, double lon2) {
+    const double earthRadius = 6371;
+
+    double dLat = _degreesToRadians(lat2 - lat1);
+    double dLon = _degreesToRadians(lon2 - lon1);
+
+    double a = sin(dLat / 2) * sin(dLat / 2) +
+        cos(_degreesToRadians(lat1)) *
+            cos(_degreesToRadians(lat2)) *
+            sin(dLon / 2) *
+            sin(dLon / 2);
+
+    double c = 2 * atan2(sqrt(a), sqrt(1 - a));
+
+    double distance = earthRadius * c;
+
+    return distance;
+  }
+
+  double _degreesToRadians(double degrees) {
+    return degrees * pi / 180;
+  }
+
+  void _initializeItems() {
     _items = [
+      CarouselItem(
+        imagePath: 'lib/assets/convest_logo.png',
+        title: 'Convest',
+        rating: 4.5,
+        subtitle: '',
+        tag: '',
+        distance: 'N/A', // Distância padrão
+        isFavorited: ValueNotifier(false),
+        onTap: () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => Convest(
+                title: 'Convest',
+                subtitle: 'Inscrições abertas',
+              ),
+            ),
+          );
+        },
+      ),
+      CarouselItem(
+        imagePath: 'lib/assets/enem.png',
+        title: 'Enem',
+        rating: 4.0,
+        subtitle: '',
+        tag: 'Inscrições abertas',
+        distance: 'N/A',
+        isFavorited: ValueNotifier(false),
+        onTap: () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => Enem(
+                title: 'Enem',
+                subtitle: 'Inscrições abertas',
+              ),
+            ),
+          );
+        },
+      ),
       CarouselItem(
         imagePath: 'lib/assets/unicamp_logo.png',
         title: 'Unicamp',
-        subtitle: 'Medicina',
-        isFavorited: ValueNotifier<bool>(false),
-        distance: 50,
-        rating: 4.5,
-        onTap: () {},
-        tag: 'Presencial',
+        rating: 4.6,
+        subtitle: 'Universidade renomada',
+        tag: 'Ver mais',
+        distance: _currentPosition != null
+            ? _formatDistance(_calculateDistance(-22.820833, -47.066476,
+                _currentPosition!.latitude, _currentPosition!.longitude))
+            : 'N/A', // Verifica se _currentPosition não é nulo
+        isFavorited: ValueNotifier(false),
+        onTap: () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => Unicamp(
+                title: 'Unicamp',
+                subtitle: 'Inscrições abertas',
+              ),
+            ),
+          );
+        },
       ),
       CarouselItem(
-        imagePath: 'lib/assets/unicamp_logo.png',
-        title: 'USP',
-        subtitle: 'Engenharia',
-        isFavorited: ValueNotifier<bool>(false),
-        distance: 30,
+        imagePath: 'lib/assets/unesp.png',
+        title: 'Unesp',
         rating: 4.8,
-        onTap: () {},
-        tag: 'Presencial',
+        subtitle: 'Universidade renomada',
+        tag: 'Ver mais',
+        distance: _currentPosition != null
+            ? _formatDistance(_calculateDistance(
+                -23.524279776770072,
+                -46.66545861539335,
+                _currentPosition!.latitude,
+                _currentPosition!.longitude))
+            : 'N/A',
+        isFavorited: ValueNotifier(false),
+        onTap: () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => Unesp(
+                title: 'Unesp',
+                subtitle: 'Inscrições abertas',
+              ),
+            ),
+          );
+        },
       ),
       CarouselItem(
-        imagePath: 'lib/assets/unicamp_logo.png',
-        title: 'UFMG',
-        subtitle: 'Direito',
-        isFavorited: ValueNotifier<bool>(false),
-        distance: 70,
+        imagePath: 'lib/assets/mackenzie.png',
+        title: 'Mackenzie',
+        rating: 4.6,
+        subtitle: 'Universidade renomada',
+        tag: 'Ver mais',
+        distance: _currentPosition != null
+            ? _formatDistance(_calculateDistance(
+                -22.885506617749286,
+                -47.06840751013286,
+                _currentPosition!.latitude,
+                _currentPosition!.longitude))
+            : 'N/A',
+        isFavorited: ValueNotifier(false),
+        onTap: () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => Mackenzie(
+                title: 'Mackenzie',
+                subtitle: 'Inscrições abertas',
+              ),
+            ),
+          );
+        },
+      ),
+      CarouselItem(
+        imagePath: 'lib/assets/unimetrocamp.png',
+        title: 'Unimetrocamp',
         rating: 4.2,
-        onTap: () {},
-        tag: 'Presencial',
+        subtitle: 'Universidade renomada',
+        tag: 'Ver mais',
+        distance: _currentPosition != null
+            ? _formatDistance(_calculateDistance(
+                -22.9086257044818,
+                -47.07593050657596,
+                _currentPosition!.latitude,
+                _currentPosition!.longitude))
+            : 'N/A',
+        isFavorited: ValueNotifier(false),
+        onTap: () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => Unimetrocamp(
+                title: 'Unimetrocamp',
+                subtitle: 'Inscrições abertas',
+              ),
+            ),
+          );
+        },
       ),
     ];
+
     _filteredItems = List.from(_items);
     _searchController.addListener(_filterItems);
+  }
+
+  String _formatDistance(double distance) {
+    return distance.toStringAsFixed(2); // Formata a distância
   }
 
   void _filterItems() {
@@ -120,7 +310,6 @@ class _SearchPageResearchState extends State<SearchPageResearch> {
       body: _selectedIndex == 1
           ? Column(
               children: [
-                // Cabeçalho personalizado com botão de retorno
                 Padding(
                   padding: const EdgeInsets.symmetric(
                       horizontal: 16.0, vertical: 16.0),
@@ -129,12 +318,12 @@ class _SearchPageResearchState extends State<SearchPageResearch> {
                       IconButton(
                         icon: Icon(Icons.arrow_back, color: Colors.black),
                         onPressed: () {
-                          Navigator.pop(context); // Volta para a tela anterior
+                          Navigator.pop(context);
                         },
                       ),
                       SizedBox(width: 10),
                       CircleAvatar(
-                        backgroundImage: NetworkImage(
+                        backgroundImage: AssetImage(
                           'lib/assets/profile_image.png', // Imagem do perfil
                         ),
                       ),
@@ -157,25 +346,55 @@ class _SearchPageResearchState extends State<SearchPageResearch> {
                       ),
                       SizedBox(width: 10),
                       IconButton(
-                        icon: Icon(Icons.filter_list, color: Colors.purple),
+                        icon: Icon(Icons.filter_list, color: Colors.black),
                         onPressed: () {
-                          // Navega para a tela de filtro
+                          // Navegação para a tela de filtro
                           Navigator.push(
                             context,
-                            MaterialPageRoute(builder: (context) => filter()),
+                            MaterialPageRoute(
+                                builder: (context) =>
+                                    filter()), // Corrija aqui se necessário
                           );
                         },
                       ),
                     ],
                   ),
                 ),
-                SizedBox(height: 24), // Espaço entre filtros e lista de cartões
-                // Lista de cartões filtrada
                 Expanded(
                   child: ListView.builder(
                     itemCount: _filteredItems.length,
                     itemBuilder: (context, index) {
-                      return buildCarouselCard(_filteredItems[index], context);
+                      final item = _filteredItems[index];
+                      return GestureDetector(
+                        onTap: item.onTap,
+                        child: Card(
+                          elevation: 4,
+                          margin:
+                              EdgeInsets.symmetric(vertical: 8, horizontal: 16),
+                          child: ListTile(
+                            leading: Image.asset(item.imagePath),
+                            title: Text(item.title),
+                            subtitle: Text(item.subtitle),
+                            trailing: IconButton(
+                              icon: ValueListenableBuilder<bool>(
+                                valueListenable: item.isFavorited,
+                                builder: (context, isFavorited, _) {
+                                  return Icon(
+                                    isFavorited
+                                        ? Icons.favorite
+                                        : Icons.favorite_border,
+                                    color: isFavorited ? Colors.red : null,
+                                  );
+                                },
+                              ),
+                              onPressed: () {
+                                item.isFavorited.value =
+                                    !item.isFavorited.value; // Alterna o estado
+                              },
+                            ),
+                          ),
+                        ),
+                      );
                     },
                   ),
                 ),
@@ -184,76 +403,4 @@ class _SearchPageResearchState extends State<SearchPageResearch> {
           : Container(),
     );
   }
-}
-
-Widget buildCarouselCard(CarouselItem item, BuildContext context) {
-  return GestureDetector(
-    onTap: item.onTap,
-    child: Container(
-      margin: EdgeInsets.symmetric(vertical: 8, horizontal: 16),
-      decoration: BoxDecoration(
-        border: Border.all(color: Colors.grey.shade300),
-        borderRadius: BorderRadius.circular(8),
-      ),
-      child: Row(
-        children: [
-          Image.asset(item.imagePath, height: 80, width: 80, fit: BoxFit.cover),
-          Expanded(
-            child: Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(item.title,
-                      style:
-                          TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
-                  SizedBox(height: 5),
-                  Text(item.subtitle,
-                      style: TextStyle(fontSize: 12, color: Colors.grey)),
-                  SizedBox(height: 10),
-                  Row(
-                    children: [
-                      ElevatedButton(
-                        onPressed: item.onTap,
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: Colors.purple,
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(20),
-                          ),
-                        ),
-                        child: Text(
-                          item.tag,
-                          style: TextStyle(
-                            fontSize: 12,
-                            color: const Color.fromARGB(255, 255, 255, 255),
-                          ),
-                        ),
-                      ),
-                      Spacer(),
-                      Text('${item.distance} Km',
-                          style: TextStyle(fontSize: 12, color: Colors.grey)),
-                    ],
-                  ),
-                ],
-              ),
-            ),
-          ),
-          ValueListenableBuilder<bool>(
-            valueListenable: item.isFavorited,
-            builder: (context, isFavorited, _) {
-              return IconButton(
-                icon: Icon(
-                  isFavorited ? Icons.favorite : Icons.favorite_border,
-                  color: isFavorited ? Colors.purple : Colors.black,
-                ),
-                onPressed: () {
-                  item.isFavorited.value = !isFavorited;
-                },
-              );
-            },
-          ),
-        ],
-      ),
-    ),
-  );
 }
