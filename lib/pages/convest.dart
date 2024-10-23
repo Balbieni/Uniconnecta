@@ -91,7 +91,7 @@ class _ConvestState extends State<Convest> {
                       Tab(child: Text('Edital')),
                       Tab(child: Text('Conteudos')),
                       Tab(child: Text('Avaliações')),
-                      Tab(child: Text('Provas Anteriores')),
+                      Tab(child: Text('Outros cursos')),
                       Tab(child: Text('Sobre o vestibular')),
                     ],
                   ),
@@ -102,7 +102,7 @@ class _ConvestState extends State<Convest> {
                         EditalTab(),
                         ConteudosTab(),
                         ObrasLiterariasTab(),
-                        ProvasAnterioresTab(),
+                        OutroscursosTab(),
                         SobreOVestibularTab(),
                       ],
                     ),
@@ -795,27 +795,72 @@ class LinkItem {
   LinkItem({required this.text, required this.url});
 }
 
-class ProvasAnterioresTab extends StatelessWidget {
-  const ProvasAnterioresTab({Key? key}) : super(key: key);
+class OutroscursosTab extends StatelessWidget {
+  const OutroscursosTab({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return Center(
+    return SingleChildScrollView(
+      padding: const EdgeInsets.all(16.0),
       child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
             'Outros cursos serão exibidos aqui.',
             style: TextStyle(
-              color: ColorStyle.RoxoP,
+              color: ColorStyle
+                  .RoxoP, // Certifique-se que ColorStyle está definido
               fontSize: 16.0,
+              fontWeight: FontWeight.bold,
             ),
           ),
           const SizedBox(height: 20),
           const Text(
-            'A Unicamp oferece dezenas de cursos de graduação e pós-graduação nas áreas de artes, das ciências biológicas e da saúde, das ciências exatas e da terra e das ciências humanas. Os cursos de pós-graduação e mestrado da Unicamp são os que se destacam, sendo mais de 150 opções.\nOs cursos de artes são:\n\tArtes Cênicas\n\tArtes Visuais\n\tComunicação Social\n\tDança\n\tMúsica\nOs cursos de ciências biológicas e saúde são:\n\tCiências Biológicas\n\tCiências do Esporte\n\tEducação Física\n\tEnfermagem\n\tFarmácia\n\tFonoaudiologia\n\tMedicina\n\tNutrição\n\tOdontologia\nOs cursos das áreas de ciências exatas, tecnologia e terra são:\n\tArquitetura e Urbanismo\n\tCiência da Computação\n\tCurso Superior de Tecnologia em Análise e Desenvolvimento de Sistemas\n\tCurso Superior de Tecnologia em Construção de Edifícios\n\tCurso Superior de Tecnologia em Saneamento Ambiental\n\tEngenharia Agrícola\n\tEngenharia Ambiental\n\tEngenharia Civil\n\tEngenharia de Alimentos\n\tEngenharia de Computação\n\tEngenharia de Controle e Automação\n\tEngenharia de Manufatura\n\tEngenharia de Produção\n\tEngenharia de Telecomunicações\n\tEngenharia Elétrica\n\tEngenharia Física\n\tEngenharia Mecânica\n\tEngenharia Química\n\tEstatística\n\tFísica\n\tGeologia\n\tLicenciatura em Física\n\tLicenciatura em Matemática\n\tMatemática\n\tMatemática Aplicada e Computacional\n\tMatemática/Física/Matemática Aplicada e Computacional\n\tQuímica\n\tQuímica Tecnológica\n\tSistemas de Informação\nOs cursos de ciências humanas são:\n\tAdministração\n\tAdministração Pública\n\tCiências Econômicas\n\tCiências Sociais\n\tEstudos Literários\n\tFilosofia\n\tGeografia\n\tHistória\n\tLetras\n\tLicenciatura integrada Química/Física\n\tLinguística\n\tPedagogia\nUnicamp: cursos gratuitos\nA Unicamp também oferece cursos gratuitos à distância em várias áreas do conhecimento. A Escola de Extensão da Unicamp (Extecamp) disponibiliza em seu site dezenas de cursos de especialização, aperfeiçoamento, disciplina, difusão tecnológica, científica e cultural, entre outros.\nVale a pena acessar o site e conferir a lista completa de todos os cursos gratuitos fornecidos por essa universidade.',
+            'A Unicamp oferece dezenas de cursos de graduação e pós-graduação '
+            'nas áreas de artes, ciências biológicas e saúde, ciências exatas, '
+            'e ciências humanas. Os cursos de pós-graduação e mestrado da Unicamp '
+            'se destacam, com mais de 150 opções.\n\n'
+            'Cursos de artes:\n'
+            '• Artes Cênicas\n'
+            '• Artes Visuais\n'
+            '• Comunicação Social\n'
+            '• Dança\n'
+            '• Música\n\n'
+            'Cursos de ciências biológicas e saúde:\n'
+            '• Ciências Biológicas\n'
+            '• Ciências do Esporte\n'
+            '• Educação Física\n'
+            '• Enfermagem\n'
+            '• Farmácia\n'
+            '• Fonoaudiologia\n'
+            '• Medicina\n'
+            '• Nutrição\n'
+            '• Odontologia\n\n'
+            'Cursos de ciências exatas, tecnologia e terra:\n'
+            '• Arquitetura e Urbanismo\n'
+            '• Ciência da Computação\n'
+            '• Curso Superior de Tecnologia em Análise e Desenvolvimento de Sistemas\n'
+            '• Engenharia Civil\n'
+            '• Engenharia de Alimentos\n'
+            '• Engenharia Mecânica\n'
+            '• Física\n'
+            '• Química\n'
+            '• Sistemas de Informação\n\n'
+            'Cursos de ciências humanas:\n'
+            '• Administração\n'
+            '• Ciências Econômicas\n'
+            '• Geografia\n'
+            '• História\n'
+            '• Letras\n'
+            '• Pedagogia\n\n'
+            'Cursos gratuitos:\n'
+            'A Unicamp também oferece cursos gratuitos à distância em várias áreas. '
+            'A Escola de Extensão (Extecamp) disponibiliza cursos de especialização, '
+            'aperfeiçoamento, e mais. Confira o site da Unicamp para mais detalhes.',
             style: TextStyle(
               fontSize: 14.0,
               color: Colors.black,
+              height: 1.5, // Adiciona espaçamento entre as linhas
             ),
           ),
         ],

@@ -452,46 +452,113 @@ class OutrosCursosTab extends StatelessWidget {
 class SobreUniversidadeTab extends StatelessWidget {
   const SobreUniversidadeTab({Key? key}) : super(key: key);
 
+  // Método para abrir o link no Google Maps
+  void _openMapLocation() async {
+    const url =
+        'https://www.google.com/maps/place/Centro+Universitário+UniMetrocamp+-+Wyden/@-22.9085664,-47.078484,17z/data=!4m10!1m2!2m1!1sunimetrocamp!3m6!1s0x94c8cf4d86d44237:0xa0fc793d797a7e34!8m2!3d-22.90879!4d-47.075944!15sCgx1bmltZXRyb2NhbXCSARJwcml2YXRlX3VuaXZlcnNpdHngAQA!16s%2Fg%2F121y0gtq?entry=ttu&g_ep=EgoyMDI0MTAyMC4xIKXMDSoASAFQAw%3D%3D'; // Link da localização da Unimetrocamp no Google Maps
+    if (await canLaunch(url)) {
+      await launch(url);
+    } else {
+      throw 'Não foi possível abrir o mapa: $url';
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
-    return SingleChildScrollView(
-      padding: const EdgeInsets.all(16.0),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          const Text(
-            'Localização',
-            style: TextStyle(
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text('Faculdade Unimetrocamp Wyden'),
+      ),
+      body: SingleChildScrollView(
+        padding: const EdgeInsets.all(16.0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            const Text(
+              'Localização',
+              style: TextStyle(
                 fontSize: 18.0,
                 fontWeight: FontWeight.bold,
-                color: Colors.purple),
-          ),
-          const SizedBox(height: 8.0),
-          GestureDetector(
-            onTap: () {},
-            child: Container(
-              decoration: BoxDecoration(
-                border: Border.all(color: Colors.purple),
-                borderRadius: BorderRadius.circular(8.0),
-              ),
-              child: Column(
-                children: [
-                  Image.asset(
-                    'assets/Unimetrocamp_map.png',
-                    fit: BoxFit.cover,
-                  ),
-                  const Padding(
-                    padding: EdgeInsets.all(8.0),
-                    child: Text(
-                      'Universidade Presbiteriana Unimetrocamp\nInstituição de ensino superior privada',
-                      style: TextStyle(fontSize: 14.0),
-                    ),
-                  ),
-                ],
+                color: Colors.purple,
               ),
             ),
-          ),
-        ],
+            const SizedBox(height: 8.0),
+            GestureDetector(
+              onTap:
+                  _openMapLocation, // Ao clicar, o link do Google Maps é aberto
+              child: Container(
+                decoration: BoxDecoration(
+                  border: Border.all(color: Colors.purple),
+                  borderRadius: BorderRadius.circular(8.0),
+                ),
+                child: Column(
+                  children: [
+                    Image.asset(
+                      'lib/assets/Unimetrocamp_map.png', // Certifique-se de ter essa imagem
+                      fit: BoxFit.cover,
+                    ),
+                    const Padding(
+                      padding: EdgeInsets.all(8.0),
+                      child: Text(
+                        'Universidade Presbiteriana Unimetrocamp\nInstituição de ensino superior privada',
+                        style: TextStyle(fontSize: 14.0),
+                      ),
+                    ),
+                    Row(
+                      children: const [
+                        Icon(Icons.location_on, color: Colors.purple),
+                        SizedBox(width: 4.0),
+                        Expanded(
+                          child: Text(
+                            'Rua Dr. Sales de Oliveira, 1661 - Vila Industrial, Campinas - SP',
+                            style: TextStyle(fontSize: 14.0),
+                          ),
+                        ),
+                      ],
+                    ),
+                    const SizedBox(height: 8.0),
+                    Row(
+                      children: const [
+                        Icon(Icons.star, color: Colors.purple),
+                        SizedBox(width: 4.0),
+                        Text(
+                          '4.5',
+                          style: TextStyle(
+                            fontSize: 14.0,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                        SizedBox(width: 4.0),
+                        Text(
+                          '• 10Km de distância',
+                          style: TextStyle(fontSize: 14.0),
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
+              ),
+            ),
+            const SizedBox(height: 20.0),
+            const Text(
+              'Sobre a Universidade',
+              style: TextStyle(
+                fontSize: 18.0,
+                fontWeight: FontWeight.bold,
+                color: Colors.purple,
+              ),
+            ),
+            const SizedBox(height: 8.0),
+            const Text(
+              'A Faculdade Unimetrocamp Wyden faz parte da rede de ensino Wyden, '
+              'oferecendo cursos de graduação e pós-graduação em diversas áreas, como '
+              'saúde, tecnologia, negócios e muito mais. A faculdade é conhecida por '
+              'sua infraestrutura moderna e parcerias que promovem a integração entre '
+              'teoria e prática no mercado de trabalho.',
+              style: TextStyle(fontSize: 14.0),
+            ),
+          ],
+        ),
       ),
     );
   }

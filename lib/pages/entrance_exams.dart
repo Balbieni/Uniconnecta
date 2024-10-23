@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:uniconnecta/components/custom_carousel_arrastapracima.dart'
     as carousel_comp;
+import 'package:uniconnecta/pages/convest.dart';
+import 'package:uniconnecta/pages/enem.dart';
 import 'package:uniconnecta/pages/home_screen.dart' as home_page;
 import 'package:uniconnecta/pages/search_page.dart';
 import 'package:uniconnecta/pages/news_screen.dart';
@@ -24,16 +26,53 @@ class _EntranceExamsState extends State<EntranceExams> {
     ProfileScreen(),
   ];
 
-  final List<carousel_comp.CarouselItem> maisProximosItems = [
-    carousel_comp.CarouselItem(
-      imagePath: 'lib/assets/unicamp_logo.png',
-      title: 'Unicamp',
-      rating: 4.9,
-      subtitle: 'Medicina',
-      tag: 'Presencial',
-      distance: '10Km',
-    ),
-  ];
+  List<carousel_comp.CarouselItem> maisProximosItems = [];
+
+  @override
+  void initState() {
+    super.initState();
+    // Inicializa a lista de universidades
+    maisProximosItems = [
+      carousel_comp.CarouselItem(
+        imagePath: 'lib/assets/convest_logo.png',
+        title: 'Convest',
+        rating: 4.5,
+        subtitle: '',
+        tag: '',
+        distance: 'N/A',
+        onTap: () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => Convest(
+                title: 'Convest',
+                subtitle: 'Inscrições abertas',
+              ),
+            ),
+          );
+        },
+      ),
+      carousel_comp.CarouselItem(
+        imagePath: 'lib/assets/enem.png',
+        title: 'Enem',
+        rating: 4.0,
+        subtitle: '',
+        tag: 'Inscrições abertas',
+        distance: 'N/A',
+        onTap: () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => Enem(
+                title: 'Enem',
+                subtitle: 'Inscrições abertas',
+              ),
+            ),
+          );
+        },
+      ),
+    ];
+  }
 
   void _onItemTapped(int index) {
     setState(() {

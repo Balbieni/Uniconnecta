@@ -129,14 +129,14 @@ class Unesp extends StatelessWidget {
                 ],
               ),
             ),
-            const Expanded(
+            Expanded(
               child: TabBarView(
                 children: [
-                  VestibularesTab(),
-                  SobreCursoTab(),
-                  NotasDeCorteTab(),
-                  AvaliacoesTab(),
-                  OutrosCursosTab(),
+                  const VestibularesTab(),
+                  const SobreCursoTab(),
+                  const NotasDeCorteTab(),
+                  const AvaliacoesTab(),
+                  const OutrosCursosTab(),
                   SobreUniversidadeTab(),
                 ],
               ),
@@ -448,48 +448,113 @@ class OutrosCursosTab extends StatelessWidget {
 }
 
 class SobreUniversidadeTab extends StatelessWidget {
-  const SobreUniversidadeTab({Key? key}) : super(key: key);
+  // Método para abrir o link no Google Maps
+  void _openMapLocation() async {
+    const url =
+        'https://www.google.com/maps/place/Instituto+de+Artes+da+Universidade+Estadual+Paulista+-+IA%2FUNESP+(Câmpus+de+São+Paulo+-+Unesp)/@-23.524152,-46.6712248,17z/data=!4m10!1m2!2m1!1sunesp!3m6!1s0x94ce5800fd7f4c0d:0x84518d70a9844bcf!8m2!3d-23.524152!4d-46.6664612!15sCgV1bmVzcCIDiAEBkgERcHVibGljX3VuaXZlcnNpdHngAQA!16s%2Fg%2F1t_khnx0?entry=ttu&g_ep=EgoyMDI0MTAyMC4xIKXMDSoASAFQAw%3D%3D'; // Link da localização da Unesp no Google Maps
+    if (await canLaunch(url)) {
+      await launch(url);
+    } else {
+      throw 'Não foi possível abrir o mapa: $url';
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
-    return SingleChildScrollView(
-      padding: const EdgeInsets.all(16.0),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          const Text(
-            'Localização',
-            style: TextStyle(
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text('Universidade Estadual Paulista Unesp (UNESP)'),
+      ),
+      body: SingleChildScrollView(
+        padding: const EdgeInsets.all(16.0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            const Text(
+              'Localização',
+              style: TextStyle(
                 fontSize: 18.0,
                 fontWeight: FontWeight.bold,
-                color: Colors.purple),
-          ),
-          const SizedBox(height: 8.0),
-          GestureDetector(
-            onTap: () {},
-            child: Container(
-              decoration: BoxDecoration(
-                border: Border.all(color: Colors.purple),
-                borderRadius: BorderRadius.circular(8.0),
-              ),
-              child: Column(
-                children: [
-                  Image.asset(
-                    'assets/unesp_map.png',
-                    fit: BoxFit.cover,
-                  ),
-                  const Padding(
-                    padding: EdgeInsets.all(8.0),
-                    child: Text(
-                      'Universidade Estadual Paulista (UNESP)\nInstituição pública de ensino superior',
-                      style: TextStyle(fontSize: 14.0),
-                    ),
-                  ),
-                ],
+                color: Colors.purple,
               ),
             ),
-          ),
-        ],
+            const SizedBox(height: 8.0),
+            GestureDetector(
+              onTap:
+                  _openMapLocation, // Ao clicar, o link do Google Maps é aberto
+              child: Container(
+                decoration: BoxDecoration(
+                  border: Border.all(color: Colors.purple),
+                  borderRadius: BorderRadius.circular(8.0),
+                ),
+                child: Column(
+                  children: [
+                    // Exibe a imagem do mapa (substitua pela sua própria imagem de mapa)
+                    Image.asset(
+                      'lib/assets/unesp_map.png', // Certifique-se de ter essa imagem
+                      fit: BoxFit.cover,
+                    ),
+                    const Padding(
+                      padding: EdgeInsets.all(8.0),
+                      child: Text(
+                        'Universidade Estadual Paulista Unesp (UNESP)\nInstituição pública de ensino superior',
+                        style: TextStyle(fontSize: 14.0),
+                      ),
+                    ),
+                    Row(
+                      children: const [
+                        Icon(Icons.location_on, color: Colors.purple),
+                        SizedBox(width: 4.0),
+                        Expanded(
+                          child: Text(
+                            'Instituto de Artes da Universidade Estadual Paulista - IA/UNESP, São Paulo - SP',
+                            style: TextStyle(fontSize: 14.0),
+                          ),
+                        ),
+                      ],
+                    ),
+                    const SizedBox(height: 8.0),
+                    Row(
+                      children: const [
+                        Icon(Icons.star, color: Colors.purple),
+                        SizedBox(width: 4.0),
+                        Text(
+                          '4.5',
+                          style: TextStyle(
+                            fontSize: 14.0,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                        SizedBox(width: 4.0),
+                        Text(
+                          '• 50Km de distância',
+                          style: TextStyle(fontSize: 14.0),
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
+              ),
+            ),
+            const SizedBox(height: 20.0),
+            const Text(
+              'Sobre a Universidade',
+              style: TextStyle(
+                fontSize: 18.0,
+                fontWeight: FontWeight.bold,
+                color: Colors.purple,
+              ),
+            ),
+            const SizedBox(height: 8.0),
+            const Text(
+              'A Universidade Estadual Paulista (Unesp) é uma das maiores e mais '
+              'importantes instituições de ensino superior do Brasil, com diversos '
+              'campi espalhados pelo estado de São Paulo. Oferece cursos em variadas '
+              'áreas do conhecimento, como artes, ciências exatas, humanas e biológicas.',
+              style: TextStyle(fontSize: 14.0),
+            ),
+          ],
+        ),
       ),
     );
   }

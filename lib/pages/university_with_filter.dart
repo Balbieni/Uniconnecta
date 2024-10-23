@@ -2,11 +2,15 @@ import 'package:flutter/material.dart';
 import 'package:uniconnecta/components/custom_carousel_arrastapracima.dart'
     as carousel_comp;
 import 'package:uniconnecta/pages/home_screen.dart';
+import 'package:uniconnecta/pages/mackenzie.dart';
+import 'package:uniconnecta/pages/pages.dart';
 import 'package:uniconnecta/pages/search_page.dart';
 import 'package:uniconnecta/pages/news_screen.dart';
 import 'package:uniconnecta/pages/favorites_screen.dart';
 import 'package:uniconnecta/pages/profile_screen.dart';
 import 'package:uniconnecta/components/back_button.dart';
+import 'package:uniconnecta/pages/unesp.dart';
+import 'package:uniconnecta/pages/unimetrocamp.dart';
 
 class UniversityWithFilter extends StatefulWidget {
   final String filterType; // Recebe o tipo de filtro (Presencial, Online, etc.)
@@ -30,33 +34,91 @@ class _UniversityWithFilterState extends State<UniversityWithFilter> {
   ];
 
   // Lista completa de universidades
-  final List<carousel_comp.CarouselItem> allUniversities = [
-    carousel_comp.CarouselItem(
-      imagePath: 'lib/assets/unicamp_logo.png',
-      title: 'Unicamp',
-      rating: 4.9,
-      subtitle: 'Medicina',
-      tag: 'Presencial',
-      distance: '10Km',
-    ),
-    carousel_comp.CarouselItem(
-      imagePath: 'lib/assets/faculty.png',
-      title: 'Facamp',
-      rating: 4.8,
-      subtitle: 'Administração',
-      tag: 'Presencial',
-      distance: '30Km',
-    ),
-    carousel_comp.CarouselItem(
-      imagePath: 'lib/assets/online_university.png',
-      title: 'UniOnline',
-      rating: 4.7,
-      subtitle: 'Engenharia da Computação',
-      tag: 'Online',
-      distance: '0Km',
-    ),
-    // Outros itens podem ser adicionados aqui...
-  ];
+  List<carousel_comp.CarouselItem> allUniversities = [];
+
+  @override
+  void initState() {
+    super.initState();
+    // Inicializa a lista de universidades
+    allUniversities = [
+      carousel_comp.CarouselItem(
+        imagePath: 'lib/assets/unicamp_logo.png',
+        title: 'Unicamp',
+        rating: 4.6,
+        subtitle: 'Universidade renomada',
+        tag: 'Ver mais',
+        distance: "",
+        onTap: () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => Unicamp(
+                title: 'Unicamp',
+                subtitle: 'Inscrições abertas',
+              ),
+            ),
+          );
+        },
+      ),
+      carousel_comp.CarouselItem(
+        imagePath: 'lib/assets/unesp.png',
+        title: 'Unesp',
+        rating: 4.8,
+        subtitle: 'Universidade renomada',
+        tag: 'Ver mais',
+        distance: "",
+        onTap: () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => Unesp(
+                title: 'Unesp',
+                subtitle: 'Inscrições abertas',
+              ),
+            ),
+          );
+        },
+      ),
+      carousel_comp.CarouselItem(
+        imagePath: 'lib/assets/mackenzie.png',
+        title: 'Mackenzie',
+        rating: 4.6,
+        subtitle: 'Universidade renomada',
+        tag: 'Ver mais',
+        distance: "",
+        onTap: () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => Mackenzie(
+                title: 'Mackenzie',
+                subtitle: 'Inscrições abertas',
+              ),
+            ),
+          );
+        },
+      ),
+      carousel_comp.CarouselItem(
+        imagePath: 'lib/assets/unimetrocamp.png',
+        title: 'Unimetrocamp',
+        rating: 4.2,
+        subtitle: 'Universidade renomada',
+        tag: 'Ver mais',
+        distance: "",
+        onTap: () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => Unimetrocamp(
+                title: 'Unimetrocamp',
+                subtitle: 'Inscrições abertas',
+              ),
+            ),
+          );
+        },
+      ),
+    ];
+  }
 
   // Função para aplicar o filtro nas universidades
   List<carousel_comp.CarouselItem> _getFilteredUniversities() {

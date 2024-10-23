@@ -173,20 +173,12 @@ class _FilterState extends State<filter> {
   Widget buildVestibularesOptions() {
     return Column(
       children: [
-        buildRadioOption('Opção Vestibular 1', selectedVestibularesOption,
-            (value) {
+        buildRadioOption('Avalição', selectedVestibularesOption, (value) {
           setState(() {
             selectedVestibularesOption = value!;
           });
         }),
-        buildRadioOption('Opção Vestibular 2', selectedVestibularesOption,
-            (value) {
-          setState(() {
-            selectedVestibularesOption = value!;
-          });
-        }),
-        buildRadioOption('Opção Vestibular 3', selectedVestibularesOption,
-            (value) {
+        buildRadioOption('Nome', selectedVestibularesOption, (value) {
           setState(() {
             selectedVestibularesOption = value!;
           });
@@ -199,19 +191,25 @@ class _FilterState extends State<filter> {
   Widget buildCursosOptions() {
     return Column(
       children: [
-        buildRadioOption('Opção Curso 1', selectedCursosOption, (value) {
+        buildRadioOption('Presencial', selectedUniversidadeOption, (value) {
           setState(() {
-            selectedCursosOption = value!;
+            selectedUniversidadeOption = value!;
           });
         }),
-        buildRadioOption('Opção Curso 2', selectedCursosOption, (value) {
+        buildRadioOption('Online', selectedUniversidadeOption, (value) {
           setState(() {
-            selectedCursosOption = value!;
+            selectedUniversidadeOption = value!;
           });
         }),
-        buildRadioOption('Opção Curso 3', selectedCursosOption, (value) {
+        buildRadioOption('Mais próximas', selectedUniversidadeOption, (value) {
           setState(() {
-            selectedCursosOption = value!;
+            selectedUniversidadeOption = value!;
+          });
+        }),
+        buildRadioOption('Melhores avaliadas', selectedUniversidadeOption,
+            (value) {
+          setState(() {
+            selectedUniversidadeOption = value!;
           });
         }),
       ],

@@ -2,11 +2,15 @@ import 'package:flutter/material.dart';
 import 'package:uniconnecta/components/custom_carousel_arrastapracima.dart'
     as carousel_comp;
 import 'package:uniconnecta/pages/home_screen.dart' as home_page;
+import 'package:uniconnecta/pages/mackenzie.dart';
+import 'package:uniconnecta/pages/pages.dart';
 import 'package:uniconnecta/pages/search_page.dart';
 import 'package:uniconnecta/pages/news_screen.dart';
 import 'package:uniconnecta/pages/favorites_screen.dart';
 import 'package:uniconnecta/pages/profile_screen.dart';
 import 'package:uniconnecta/components/back_button.dart';
+import 'package:uniconnecta/pages/unesp.dart';
+import 'package:uniconnecta/pages/unimetrocamp.dart';
 
 class EntranceExamsWithFilter extends StatefulWidget {
   final String filterType;
@@ -31,25 +35,91 @@ class _EntranceExamsWithFilterState extends State<EntranceExamsWithFilter> {
   ];
 
   // Lista completa de vestibulares
-  final List<carousel_comp.CarouselItem> allExams = [
-    carousel_comp.CarouselItem(
-      imagePath: 'lib/assets/unicamp_logo.png',
-      title: 'Unicamp',
-      rating: 4.9,
-      subtitle: 'Medicina',
-      tag: 'Presencial',
-      distance: '10Km',
-    ),
-    carousel_comp.CarouselItem(
-      imagePath: 'lib/assets/faculty.png',
-      title: 'Facamp',
-      rating: 4.8,
-      subtitle: 'Administração',
-      tag: 'Online',
-      distance: '30Km',
-    ),
-    // Adicione mais vestibulares aqui conforme necessário
-  ];
+  List<carousel_comp.CarouselItem> allExams = [];
+
+  @override
+  void initState() {
+    super.initState();
+    // Inicializa a lista de universidades
+    allExams = [
+      carousel_comp.CarouselItem(
+        imagePath: 'lib/assets/unicamp_logo.png',
+        title: 'Unicamp',
+        rating: 4.6,
+        subtitle: 'Universidade renomada',
+        tag: 'Ver mais',
+        distance: "",
+        onTap: () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => Unicamp(
+                title: 'Unicamp',
+                subtitle: 'Inscrições abertas',
+              ),
+            ),
+          );
+        },
+      ),
+      carousel_comp.CarouselItem(
+        imagePath: 'lib/assets/unesp.png',
+        title: 'Unesp',
+        rating: 4.8,
+        subtitle: 'Universidade renomada',
+        tag: 'Ver mais',
+        distance: "",
+        onTap: () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => Unesp(
+                title: 'Unesp',
+                subtitle: 'Inscrições abertas',
+              ),
+            ),
+          );
+        },
+      ),
+      carousel_comp.CarouselItem(
+        imagePath: 'lib/assets/mackenzie.png',
+        title: 'Mackenzie',
+        rating: 4.6,
+        subtitle: 'Universidade renomada',
+        tag: 'Ver mais',
+        distance: "",
+        onTap: () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => Mackenzie(
+                title: 'Mackenzie',
+                subtitle: 'Inscrições abertas',
+              ),
+            ),
+          );
+        },
+      ),
+      carousel_comp.CarouselItem(
+        imagePath: 'lib/assets/unimetrocamp.png',
+        title: 'Unimetrocamp',
+        rating: 4.2,
+        subtitle: 'Universidade renomada',
+        tag: 'Ver mais',
+        distance: "",
+        onTap: () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => Unimetrocamp(
+                title: 'Unimetrocamp',
+                subtitle: 'Inscrições abertas',
+              ),
+            ),
+          );
+        },
+      ),
+    ];
+  }
 
   // Função para filtrar vestibulares com base no tipo
   List<carousel_comp.CarouselItem> _getFilteredExams() {

@@ -17,6 +17,7 @@ import 'package:uniconnecta/components/university_header.dart';
 import 'package:uniconnecta/components/entrance_exam_header.dart';
 import 'package:uniconnecta/pages/unesp.dart';
 import 'package:uniconnecta/pages/unimetrocamp.dart';
+import 'dart:math';
 
 class CarouselItem {
   final String imagePath;
@@ -145,24 +146,30 @@ class _HomeScreenContentState extends State<HomeScreenContent> {
     });
   }
 
-  String _calculateDistance(
-      double destinationLatitude, double destinationLongitude) {
-    if (_currentPosition == null) {
-      return "Calculando...";
-    }
+  double _calculateDistance(
+      double lat1, double lon1, double lat2, double lon2) {
+    const double earthRadius = 6371; // Raio da Terra em quilômetros
 
-    double distanceInMeters = Geolocator.distanceBetween(
-      _currentPosition!.latitude,
-      _currentPosition!.longitude,
-      destinationLatitude,
-      destinationLongitude,
-    );
+    double dLat = _degreesToRadians(lat2 - lat1);
+    double dLon = _degreesToRadians(lon2 - lon1);
 
-    double distanceInKm = distanceInMeters / 1000;
-    return distanceInKm.toStringAsFixed(2);
+    double a = sin(dLat / 2) * sin(dLat / 2) +
+        cos(_degreesToRadians(lat1)) *
+            cos(_degreesToRadians(lat2)) *
+            sin(dLon / 2) *
+            sin(dLon / 2);
+
+    double c = 2 * atan2(sqrt(a), sqrt(1 - a));
+
+    double distance = earthRadius * c;
+
+    return distance;
   }
 
-  @override
+  double _degreesToRadians(double degrees) {
+    return degrees * pi / 180;
+  }
+
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
@@ -359,15 +366,21 @@ class _HomeScreenContentState extends State<HomeScreenContent> {
   }
 
   List<CarouselItem> melhoresAvaliadasItems(BuildContext context) {
-    return [
+    //arrumar essa parte
+    if (_currentPosition == null) {
+      // Enquanto a posição do usuário ainda não foi obtida
+      return [];
+    }
+    List<CarouselItem> items = [
       CarouselItem(
         imagePath: 'lib/assets/unicamp_logo.png',
         title: 'Unicamp',
         rating: 4.6,
         subtitle: 'Universidade renomada',
         tag: 'Ver mais',
-        distance: _calculateDistance(-22.820833, -47.066476),
-        isVestibular: false, // Identificamos como Universidade
+        distance: _formatDistance(_calculateDistance(-22.820833, -47.066476,
+            _currentPosition!.latitude, _currentPosition!.longitude)),
+        isVestibular: false,
         onTap: () {
           Navigator.push(
             context,
@@ -386,8 +399,12 @@ class _HomeScreenContentState extends State<HomeScreenContent> {
         rating: 4.8,
         subtitle: 'Universidade renomada',
         tag: 'Ver mais',
-        distance: _calculateDistance(-23.524279776770072, -46.66545861539335),
-        isVestibular: false, // Identificamos como Universidade
+        distance: _formatDistance(_calculateDistance(
+            -23.524279776770072,
+            -46.66545861539335,
+            _currentPosition!.latitude,
+            _currentPosition!.longitude)),
+        isVestibular: false,
         onTap: () {
           Navigator.push(
             context,
@@ -406,8 +423,12 @@ class _HomeScreenContentState extends State<HomeScreenContent> {
         rating: 4.6,
         subtitle: 'Universidade renomada',
         tag: 'Ver mais',
-        distance: _calculateDistance(-22.885506617749286, -47.06840751013286),
-        isVestibular: false, // Identificamos como Universidade
+        distance: _formatDistance(_calculateDistance(
+            -22.885506617749286,
+            -47.06840751013286,
+            _currentPosition!.latitude,
+            _currentPosition!.longitude)),
+        isVestibular: false,
         onTap: () {
           Navigator.push(
             context,
@@ -426,8 +447,12 @@ class _HomeScreenContentState extends State<HomeScreenContent> {
         rating: 4.2,
         subtitle: 'Universidade renomada',
         tag: 'Ver mais',
-        distance: _calculateDistance(-22.9086257044818, -47.07593050657596),
-        isVestibular: false, // Identificamos como Universidade
+        distance: _formatDistance(_calculateDistance(
+            -22.9086257044818,
+            -47.07593050657596,
+            _currentPosition!.latitude,
+            _currentPosition!.longitude)),
+        isVestibular: false,
         onTap: () {
           Navigator.push(
             context,
@@ -441,18 +466,25 @@ class _HomeScreenContentState extends State<HomeScreenContent> {
         },
       ),
     ];
+    return items;
   }
 
   List<CarouselItem> maisProximosItems(BuildContext context) {
-    return [
+    if (_currentPosition == null) {
+      // Enquanto a posição do usuário ainda não foi obtida
+      return [];
+    }
+
+    List<CarouselItem> items = [
       CarouselItem(
         imagePath: 'lib/assets/unicamp_logo.png',
         title: 'Unicamp',
         rating: 4.6,
         subtitle: 'Universidade renomada',
         tag: 'Ver mais',
-        distance: _calculateDistance(-22.820833, -47.066476),
-        isVestibular: false, // Identificamos como Universidade
+        distance: _formatDistance(_calculateDistance(-22.820833, -47.066476,
+            _currentPosition!.latitude, _currentPosition!.longitude)),
+        isVestibular: false,
         onTap: () {
           Navigator.push(
             context,
@@ -471,8 +503,12 @@ class _HomeScreenContentState extends State<HomeScreenContent> {
         rating: 4.8,
         subtitle: 'Universidade renomada',
         tag: 'Ver mais',
-        distance: _calculateDistance(-23.524279776770072, -46.66545861539335),
-        isVestibular: false, // Identificamos como Universidade
+        distance: _formatDistance(_calculateDistance(
+            -23.524279776770072,
+            -46.66545861539335,
+            _currentPosition!.latitude,
+            _currentPosition!.longitude)),
+        isVestibular: false,
         onTap: () {
           Navigator.push(
             context,
@@ -491,8 +527,12 @@ class _HomeScreenContentState extends State<HomeScreenContent> {
         rating: 4.6,
         subtitle: 'Universidade renomada',
         tag: 'Ver mais',
-        distance: _calculateDistance(-22.885506617749286, -47.06840751013286),
-        isVestibular: false, // Identificamos como Universidade
+        distance: _formatDistance(_calculateDistance(
+            -22.885506617749286,
+            -47.06840751013286,
+            _currentPosition!.latitude,
+            _currentPosition!.longitude)),
+        isVestibular: false,
         onTap: () {
           Navigator.push(
             context,
@@ -511,8 +551,12 @@ class _HomeScreenContentState extends State<HomeScreenContent> {
         rating: 4.2,
         subtitle: 'Universidade renomada',
         tag: 'Ver mais',
-        distance: _calculateDistance(-22.9086257044818, -47.07593050657596),
-        isVestibular: false, // Identificamos como Universidade
+        distance: _formatDistance(_calculateDistance(
+            -22.9086257044818,
+            -47.07593050657596,
+            _currentPosition!.latitude,
+            _currentPosition!.longitude)),
+        isVestibular: false,
         onTap: () {
           Navigator.push(
             context,
@@ -526,240 +570,254 @@ class _HomeScreenContentState extends State<HomeScreenContent> {
         },
       ),
     ];
+
+    // Ordena os itens pela distância em ordem crescente
+    items.sort((a, b) => a.distance.compareTo(b.distance));
+
+    return items;
   }
-}
 
-ListTile buildDrawerItem(BuildContext context,
-    {required IconData icon,
-    required String title,
-    required GestureTapCallback onTap}) {
-  return ListTile(
-    leading: Icon(icon),
-    title: Text(title),
-    onTap: onTap,
-  );
-}
+// Função para formatar a distância como String
+  String _formatDistance(double distance) {
+    return distance.toStringAsFixed(2) + ' Km';
+  }
 
-Widget sectionHeader(String title, BuildContext context, String section) {
-  return Padding(
-    padding: const EdgeInsets.symmetric(vertical: 10.0),
-    child: Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      children: [
-        Text(
-          title,
-          style: TextStyle(
-            fontSize: 18,
-            fontWeight: FontWeight.bold,
-            color: Colors.purple,
-          ),
-        ),
-        GestureDetector(
-          onTap: () {
-            if (section == 'vestibulares') {
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => EntranceExams(), // Corrigido
-                ),
-              );
-            } else if (section == 'melhores_avaliadas') {
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => BestRated(),
-                ),
-              );
-            } else if (section == 'mais_proximos') {
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => Closest(),
-                ),
-              );
-            }
-          },
-          child: Text(
-            'Ver tudo',
+  ListTile buildDrawerItem(BuildContext context,
+      {required IconData icon,
+      required String title,
+      required GestureTapCallback onTap}) {
+    return ListTile(
+      leading: Icon(icon),
+      title: Text(title),
+      onTap: onTap,
+    );
+  }
+
+  Widget sectionHeader(String title, BuildContext context, String section) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 10.0),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Text(
+            title,
             style: TextStyle(
-              fontSize: 14,
-              color: const Color.fromARGB(255, 95, 95, 95),
+              fontSize: 18,
+              fontWeight: FontWeight.bold,
+              color: Colors.purple,
             ),
           ),
-        ),
-      ],
-    ),
-  );
-}
-
-Widget buildHorizontalCarousel(BuildContext context, List<CarouselItem> items) {
-  return SizedBox(
-    height: 235,
-    child: ListView.builder(
-      scrollDirection: Axis.horizontal,
-      itemCount: items.length,
-      itemBuilder: (context, index) {
-        return buildCarouselCard(items[index], context);
-      },
-    ),
-  );
-}
-
-Widget buildCarouselCard(CarouselItem item, BuildContext context) {
-  return GestureDetector(
-    onTap: item.onTap,
-    child: Container(
-      width: 260,
-      margin: EdgeInsets.only(right: 10),
-      decoration: BoxDecoration(
-        border: Border.all(color: Colors.grey.shade300),
-        borderRadius: BorderRadius.circular(8),
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Image.asset(item.imagePath, height: 80, fit: BoxFit.cover),
-          Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Text(
-                      item.title,
-                      style: TextStyle(
-                        fontSize: 16,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                    Consumer<FavoritesModel>(
-                      builder: (context, favoritesModel, child) {
-                        if (item.isVestibular) {
-                          // Lógica de favoritar Vestibulares
-                          final vestibular = Vestibular(
-                            nome: item.title,
-                            curso: item.subtitle,
-                            avaliacao: item.rating,
-                            modalidade: "Presencial",
-                            logoUrl: item.imagePath,
-                          );
-
-                          final isFavorited =
-                              favoritesModel.isVestibularFavorite(vestibular);
-
-                          return IconButton(
-                            icon: Icon(
-                              isFavorited
-                                  ? Icons.favorite
-                                  : Icons.favorite_border,
-                              color: isFavorited ? Colors.purple : Colors.grey,
-                            ),
-                            onPressed: () {
-                              if (isFavorited) {
-                                favoritesModel
-                                    .removeVestibularFavorite(vestibular);
-                              } else {
-                                favoritesModel
-                                    .addVestibularFavorite(vestibular);
-                              }
-                            },
-                          );
-                        } else {
-                          // Lógica de favoritar Universidades
-                          final universidade = Universidade(
-                            nome: item.title,
-                            curso: item.subtitle,
-                            avaliacao: item.rating,
-                            distancia: item.distance,
-                            modalidade: "Presencial",
-                            logoUrl: item.imagePath,
-                          );
-
-                          final isFavorited =
-                              favoritesModel.isUniversityFavorite(universidade);
-
-                          return IconButton(
-                            icon: Icon(
-                              isFavorited
-                                  ? Icons.favorite
-                                  : Icons.favorite_border,
-                              color: isFavorited ? Colors.purple : Colors.grey,
-                            ),
-                            onPressed: () {
-                              if (isFavorited) {
-                                favoritesModel
-                                    .removeUniversityFavorite(universidade);
-                              } else {
-                                favoritesModel
-                                    .addUniversityFavorite(universidade);
-                              }
-                            },
-                          );
-                        }
-                      },
-                    ),
-                  ],
-                ),
-                SizedBox(height: 5),
-                Text(
-                  item.subtitle,
-                  style: TextStyle(fontSize: 12, color: Colors.grey),
-                ),
-                SizedBox(height: 5),
-                Row(
-                  children: [
-                    buildRatingStars(item.rating),
-                    Spacer(),
-                    Text(
-                      item.distance == 'N/A'
-                          ? item.distance
-                          : '${item.distance} Km',
-                      style: TextStyle(fontSize: 12, color: Colors.grey),
-                    ),
-                  ],
-                ),
-                SizedBox(height: 10),
-                ElevatedButton(
-                  onPressed: () {
-                    item.onTap?.call();
-                  },
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.purple,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(20),
-                    ),
+          GestureDetector(
+            onTap: () {
+              if (section == 'vestibulares') {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => EntranceExams(), // Corrigido
                   ),
-                  child: Text(
-                    item.tag.isEmpty ? 'Ver mais' : item.tag,
-                    style: TextStyle(
-                      fontSize: 12,
-                      color: Colors.white,
-                    ),
+                );
+              } else if (section == 'melhores_avaliadas') {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => BestRated(),
                   ),
-                ),
-              ],
+                );
+              } else if (section == 'mais_proximos') {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => Closest(),
+                  ),
+                );
+              }
+            },
+            child: Text(
+              'Ver tudo',
+              style: TextStyle(
+                fontSize: 14,
+                color: const Color.fromARGB(255, 95, 95, 95),
+              ),
             ),
           ),
         ],
       ),
-    ),
-  );
-}
+    );
+  }
 
-Widget buildRatingStars(double rating) {
-  int fullStars = rating.floor();
-  int halfStars = (rating - fullStars >= 0.5) ? 1 : 0;
-  int emptyStars = 5 - fullStars - halfStars;
+  Widget buildHorizontalCarousel(
+      BuildContext context, List<CarouselItem> items) {
+    return SizedBox(
+      height: 235,
+      child: ListView.builder(
+        scrollDirection: Axis.horizontal,
+        itemCount: items.length,
+        itemBuilder: (context, index) {
+          return buildCarouselCard(items[index], context);
+        },
+      ),
+    );
+  }
 
-  return Row(
-    children: [
-      ...List.generate(fullStars,
-          (index) => Icon(Icons.star, color: Colors.purple, size: 16)),
-      if (halfStars > 0) Icon(Icons.star_half, color: Colors.purple, size: 16),
-      ...List.generate(emptyStars,
-          (index) => Icon(Icons.star_border, color: Colors.purple, size: 16)),
-    ],
-  );
+  Widget buildCarouselCard(CarouselItem item, BuildContext context) {
+    return GestureDetector(
+      onTap: item.onTap,
+      child: Container(
+        width: 260,
+        margin: EdgeInsets.only(right: 10),
+        decoration: BoxDecoration(
+          border: Border.all(color: Colors.grey.shade300),
+          borderRadius: BorderRadius.circular(8),
+        ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Image.asset(item.imagePath, height: 80, fit: BoxFit.cover),
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text(
+                        item.title,
+                        style: TextStyle(
+                          fontSize: 16,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      Consumer<FavoritesModel>(
+                        builder: (context, favoritesModel, child) {
+                          if (item.isVestibular) {
+                            // Lógica de favoritar Vestibulares
+                            final vestibular = Vestibular(
+                              nome: item.title,
+                              curso: item.subtitle,
+                              avaliacao: item.rating,
+                              modalidade: "Presencial",
+                              logoUrl: item.imagePath,
+                            );
+
+                            final isFavorited =
+                                favoritesModel.isVestibularFavorite(vestibular);
+
+                            return IconButton(
+                              icon: Icon(
+                                isFavorited
+                                    ? Icons.favorite
+                                    : Icons.favorite_border,
+                                color:
+                                    isFavorited ? Colors.purple : Colors.grey,
+                              ),
+                              onPressed: () {
+                                if (isFavorited) {
+                                  favoritesModel
+                                      .removeVestibularFavorite(vestibular);
+                                } else {
+                                  favoritesModel
+                                      .addVestibularFavorite(vestibular);
+                                }
+                              },
+                            );
+                          } else {
+                            // Lógica de favoritar Universidades
+                            final universidade = Universidade(
+                              nome: item.title,
+                              curso: item.subtitle,
+                              avaliacao: item.rating,
+                              distancia: item.distance,
+                              modalidade: "Presencial",
+                              logoUrl: item.imagePath,
+                            );
+
+                            final isFavorited = favoritesModel
+                                .isUniversityFavorite(universidade);
+
+                            return IconButton(
+                              icon: Icon(
+                                isFavorited
+                                    ? Icons.favorite
+                                    : Icons.favorite_border,
+                                color:
+                                    isFavorited ? Colors.purple : Colors.grey,
+                              ),
+                              onPressed: () {
+                                if (isFavorited) {
+                                  favoritesModel
+                                      .removeUniversityFavorite(universidade);
+                                } else {
+                                  favoritesModel
+                                      .addUniversityFavorite(universidade);
+                                }
+                              },
+                            );
+                          }
+                        },
+                      ),
+                    ],
+                  ),
+                  SizedBox(height: 5),
+                  Text(
+                    item.subtitle,
+                    style: TextStyle(fontSize: 12, color: Colors.grey),
+                  ),
+                  SizedBox(height: 5),
+                  Row(
+                    children: [
+                      buildRatingStars(item.rating),
+                      Spacer(),
+                      Text(
+                        item.distance == 'N/A'
+                            ? item.distance
+                            : '${item.distance} Km',
+                        style: TextStyle(fontSize: 12, color: Colors.grey),
+                      ),
+                    ],
+                  ),
+                  SizedBox(height: 10),
+                  ElevatedButton(
+                    onPressed: () {
+                      item.onTap?.call();
+                    },
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.purple,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(20),
+                      ),
+                    ),
+                    child: Text(
+                      item.tag.isEmpty ? 'Ver mais' : item.tag,
+                      style: TextStyle(
+                        fontSize: 12,
+                        color: Colors.white,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget buildRatingStars(double rating) {
+    int fullStars = rating.floor();
+    int halfStars = (rating - fullStars >= 0.5) ? 1 : 0;
+    int emptyStars = 5 - fullStars - halfStars;
+
+    return Row(
+      children: [
+        ...List.generate(fullStars,
+            (index) => Icon(Icons.star, color: Colors.purple, size: 16)),
+        if (halfStars > 0)
+          Icon(Icons.star_half, color: Colors.purple, size: 16),
+        ...List.generate(emptyStars,
+            (index) => Icon(Icons.star_border, color: Colors.purple, size: 16)),
+      ],
+    );
+  }
 }

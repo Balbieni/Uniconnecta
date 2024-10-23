@@ -16,6 +16,7 @@ class CarouselItem {
     required this.subtitle,
     required this.tag,
     required this.distance,
+    required Null Function() onTap,
   });
 }
 
@@ -68,7 +69,7 @@ class CarouselCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       width: 300,
-      height: 200,
+      height: 205,
       margin: EdgeInsets.only(bottom: 10.0),
       child: Card(
         elevation: 3,
